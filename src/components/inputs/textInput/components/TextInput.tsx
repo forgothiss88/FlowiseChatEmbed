@@ -46,11 +46,10 @@ export const TextInput = (props: Props) => {
 
   return (
     <div
-      class={'flex items-end justify-between chatbot-input rounded-full shadow-sm'}
+      class={'flex items-end justify-between chatbot-input rounded-full shadow-sm fixed'}
       data-testid="input"
       style={{
         'border-top': '1px solid #eeeeee',
-        position: 'absolute',
         left: '30px',
         right: '30px',
         bottom: '30px',
