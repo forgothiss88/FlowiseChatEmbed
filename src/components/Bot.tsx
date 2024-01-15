@@ -469,15 +469,29 @@ export const Bot = (props: BotProps & { class?: string }) => {
     <>
       <div
         ref={botContainer}
-        class={'relative flex w-full h-full text-base bg-cover bg-center flex-col items-center chatbot-container ' + props.class}
+        class={
+          (props.isFullPage
+            ? 'relative flex text-base bg-cover bg-center items-center chatbot-container '
+            : 'relative flex w-full h-full text-base bg-cover bg-center flex-col items-center chatbot-container ') + props.class
+        }
       >
-        <div class="flex flex-col w-full h-full justify-center">
+        <div
+          class="flex flex-col w-full h-full justify-between"
+          style={
+            props.isFullPage
+              ? {
+                  'overflow-y': 'auto',
+                  'flex-grow': '1',
+                }
+              : ''
+          }
+        >
           <div
             style={{ 'padding-bottom': '100px', 'padding-top': '70px' }}
             ref={chatContainer}
             class={
-              (props.isFullPage ? 'overflow-y-scroll' : 'overflow-y-scroll') +
-              ' min-w-full w-full min-h-full px-3 pt-10 relative scrollable-container chatbot-chat-view scroll-smooth'
+              (props.isFullPage ? '' : 'min-h-full') +
+              ' overflow-y-scroll min-w-full w-full px-3 pt-10 relative scrollable-container chatbot-chat-view scroll-smooth'
             }
           >
             <For each={[...messages()]}>
@@ -566,7 +580,7 @@ export const Bot = (props: BotProps & { class?: string }) => {
               <span style={{ 'font-family': 'Poppins, sans-serif' }}>Clear</span>
             </DeleteButton>
           </div>
-          <div class={(props.isFullPage ? 'fixed bottom-0' : 'fixed bottom-0') + ' w-full'}>
+          <div class={(props.isFullPage ? '' : 'fixed bottom-0') + ' w-full'}>
             <Show when={messages().length === 1 && starterPrompts().length > 0}>
               <div class="flex flex-row flex-wrap w-full p-3">
                 <For each={[...starterPrompts()]}>{(key) => <StarterPromptBubble prompt={key} onPromptClick={() => promptClick(key)} />}</For>
