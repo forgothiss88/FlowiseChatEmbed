@@ -471,14 +471,13 @@ export const Bot = (props: BotProps & { class?: string }) => {
         ref={botContainer}
         class={'relative flex w-full h-full text-base bg-cover bg-center flex-col items-center chatbot-container ' + props.class}
       >
-        <div class="flex w-full h-full justify-center">
+        <div class="flex flex-col w-full h-full justify-center">
           <div
             style={{ 'padding-bottom': '100px', 'padding-top': '70px' }}
             ref={chatContainer}
             class={
-              props.isFullPage
-                ? ''
-                : 'overflow-y-scroll' + ' min-w-full w-full min-h-full px-3 pt-10 relative scrollable-container chatbot-chat-view scroll-smooth'
+              (props.isFullPage ? 'overflow-y-scroll' : 'overflow-y-scroll') +
+              ' min-w-full w-full min-h-full px-3 pt-10 relative scrollable-container chatbot-chat-view scroll-smooth'
             }
           >
             <For each={[...messages()]}>
@@ -538,7 +537,7 @@ export const Bot = (props: BotProps & { class?: string }) => {
               'flex-direction': 'row',
               'align-items': 'center',
               height: '50px',
-              position: props.isFullPage ? 'fixed' : 'absolute',
+              position: props.isFullPage ? 'absolute' : 'absolute',
               top: 0,
               left: 0,
               width: '100%',
@@ -567,24 +566,25 @@ export const Bot = (props: BotProps & { class?: string }) => {
               <span style={{ 'font-family': 'Poppins, sans-serif' }}>Clear</span>
             </DeleteButton>
           </div>
-          <TextInput
-            backgroundColor={props.textInput?.backgroundColor}
-            textColor={props.textInput?.textColor}
-            placeholder={props.textInput?.placeholder}
-            sendButtonColor={props.textInput?.sendButtonColor}
-            fontSize={props.fontSize}
-            disabled={loading()}
-            defaultValue={userInput()}
-            onSubmit={handleSubmit}
-          />
+          <div class={(props.isFullPage ? 'fixed bottom-0' : 'fixed bottom-0') + ' w-full'}>
+            <Show when={messages().length === 1 && starterPrompts().length > 0}>
+              <div class="flex flex-row flex-wrap w-full p-3">
+                <For each={[...starterPrompts()]}>{(key) => <StarterPromptBubble prompt={key} onPromptClick={() => promptClick(key)} />}</For>
+              </div>
+            </Show>
+            <TextInput
+              backgroundColor={props.textInput?.backgroundColor}
+              textColor={props.textInput?.textColor}
+              placeholder={props.textInput?.placeholder}
+              sendButtonColor={props.textInput?.sendButtonColor}
+              fontSize={props.fontSize}
+              disabled={loading()}
+              defaultValue={userInput()}
+              onSubmit={handleSubmit}
+              isFullPage={props.isFullPage}
+            />
+          </div>
         </div>
-        <Show when={messages().length === 1}>
-          <Show when={starterPrompts().length > 0}>
-            <div style={{ display: 'flex', 'flex-direction': 'row', padding: '10px', width: '100%', 'flex-wrap': 'wrap' }}>
-              <For each={[...starterPrompts()]}>{(key) => <StarterPromptBubble prompt={key} onPromptClick={() => promptClick(key)} />}</For>
-            </div>
-          </Show>
-        </Show>
       </div>
       {sourcePopupOpen() && <Popup isOpen={sourcePopupOpen()} value={sourcePopupSrc()} onClose={() => setSourcePopupOpen(false)} />}
     </>
