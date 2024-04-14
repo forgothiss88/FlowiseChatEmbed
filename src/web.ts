@@ -1,3 +1,4 @@
+import { JSX } from 'solid-js';
 import { registerWebComponents } from './register';
 import { parseChatbot, injectChatbotInWindow } from './window';
 
@@ -22,7 +23,7 @@ const createDefaultChatBot = () => {
         const customerEmail: string | null = getFromUrlParamOrLocal('customerEmail');
         const customerName: string | null = getFromUrlParamOrLocal('customerName');
 
-        let cfg, msg;
+        let cfg, msg: JSX.Element;
 
         if (customerEmail && customerName) {
             cfg = { // overrideConfig
@@ -30,10 +31,10 @@ const createDefaultChatBot = () => {
                     "customerEmail": customerEmail,
                 }
             };
-            msg = `Ciao ${customerName}! Sono Glowi, il tuo skin coach :). Ho qui il tuo quiz, da dove cominciamo?`;
+            msg = `Ciao ${customerName} :) sono l'assistente virtuale di @holidoit! Come posso aiutarti oggi?`;
         } else {
             cfg = {};
-            msg = "Ciao! Sono Glowi, il tuo skin coach :) Puoi farmi tutte le domande che vuoi sulla cura della pelle. Da dove cominciamo?";
+            msg = "🎉 Hello, digital explorer! 🌍 I'm Twini, the digital twin of <a href='https://instgram.com/holidoit'>@holidoit</a>, eager to unveil the secrets behind the most thrilling experiences and the latest in social media content! 📸✨\nAre you ready to embark on this adventure? Tell me what interests you and let’s set off! 🎈\nFor more insights, check out our website <a href='https://holidoit.com'>holidoit.com</a> and let yourself be inspired!";
         }
         return {
             chatflowid: chatflowId,
@@ -43,27 +44,35 @@ const createDefaultChatBot = () => {
             customerEmail: customerEmail,
             theme: {
                 button: {
-                    backgroundColor: "#FFF2E0",
+                    backgroundColor: "#efedff",
                     right: 20,
                     bottom: 20,
                     size: "medium",
                     iconColor: "white",
-                    bubbleButtonColor: "#fdcdab",
-                    topbarColor: "#fff1e0",
+                    bubbleButtonColor: "#050a30",
+                    topbarColor: "#33365e",
                 },
                 chatWindow: {
                     welcomeMessage: msg,
-                    backgroundColor: "#FFF2E0",
+                    starterPrompts: [
+                        "Hello! Can you recommend an experience in Liguria?",
+                        "Hey, what nice things can I do in Milan?",
+                        "Where can I go on vacation in Italy?",
+                    ],
+                    backgroundColor: "#efedff",
                     fontSize: 16,
                     poweredByTextColor: "#ffffff",
-                    title: 'GLOWI',
-                    titleColor: "black",
+                    title: '@holidoit',
+                    titleAvatarSrc: "/public/avatars/holidoit.jpg",
+                    titleColor: "#ffffff",
                     botMessage: {
-                        backgroundColor: "#ffffff",
+                        backgroundColor: "#ffefca",
                         textColor: "#283E4D",
+                        avatarSrc: "/public/avatars/holidoit.jpg",
+                        showAvatar: true,
                     },
                     userMessage: {
-                        backgroundColor: "#fdcdab",
+                        backgroundColor: "#ffffff",
                         textColor: "#283E4D",
                         showAvatar: false,
                     },
@@ -72,7 +81,7 @@ const createDefaultChatBot = () => {
                         textColor: "#283E4D",
                         placeholder: "Scrivi qui...",
                         sendButtonColor: "#7f7970",
-                    }
+                    },
                 }
             }
         }

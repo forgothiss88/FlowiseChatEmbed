@@ -1,11 +1,11 @@
 import { createSignal, createEffect, For, onMount, Show, createMemo } from 'solid-js';
 import { v4 as uuidv4 } from 'uuid';
-import { sendMessageQuery, isStreamAvailableQuery, IncomingInput, getChatbotConfig } from '@/queries/sendMessageQuery';
+import { sendMessageQuery, isStreamAvailableQuery, IncomingInput, getChatbotConfig, MessageBE } from '@/queries/sendMessageQuery';
 import { TextInput } from './inputs/textInput';
 import { GuestBubble } from './bubbles/GuestBubble';
 import { BotBubble } from './bubbles/BotBubble';
 import { LoadingBubble } from './bubbles/LoadingBubble';
-import { SourceBubble } from './bubbles/SourceBubble';
+import { Slideshow, ProductSourcesBubble, InstagramSourcesBubble } from './bubbles/SourceBubble';
 import { StarterPromptBubble } from './bubbles/StarterPromptBubble';
 import { BotMessageTheme, TextInputTheme, UserMessageTheme } from '@/features/bubble/types';
 import socketIOClient from 'socket.io-client';
@@ -13,13 +13,50 @@ import { Popup } from '@/features/popup';
 import { Avatar } from '@/components/avatars/Avatar';
 import { DeleteButton } from '@/components/SendButton';
 import { products, setProducts, updateProducts } from './Products';
+import { EventStreamContentType, fetchEventSource } from '@microsoft/fetch-event-source';
+import { config } from 'process';
+import { create } from 'lodash';
 
 type messageType = 'apiMessage' | 'userMessage' | 'usermessagewaiting';
+
+export type InstagramMetadata = {
+  caption: string;
+  kind: string;
+  pk: number;
+  resource_url: string;
+  media_url: string;
+  subtitles: string;
+};
+
+export type ProductMetadata = {
+  name: string;
+  price: string;
+  item_url: string;
+};
+
+export type SourceDocument = {
+  page_content: string;
+  metadata: ProductMetadata | InstagramMetadata;
+  type: 'Document';
+};
+
+export type ContextEvent = {
+  context: SourceDocument[]; // JSON string of source documents
+};
+
+export type AnswerEvent = {
+  answer: string;
+};
+
+export type MetadataEvent = {
+  run_id: string;
+};
 
 export type MessageType = {
   message: string;
   type: messageType;
-  sourceDocuments?: any;
+  sourceProducts?: SourceDocument[];
+  sourceInstagramPosts?: SourceDocument[];
   fileAnnotations?: any;
 };
 
@@ -30,8 +67,9 @@ export type UserProps = {
 
 export type BotProps = {
   chatflowid: string;
-  apiHost?: string;
+  apiHost: string;
   chatflowConfig?: Record<string, unknown>;
+  starterPrompts?: string[];
   welcomeMessage?: string;
   botMessage?: BotMessageTheme;
   userMessage?: UserMessageTheme;
@@ -49,6 +87,9 @@ export type BotProps = {
 };
 
 const defaultWelcomeMessage = 'Hi there! How can I help?';
+
+class RetriableError extends Error {}
+class FatalError extends Error {}
 
 /*const sourceDocuments = [
     {
@@ -131,6 +172,7 @@ export const Bot = (props: BotProps & { class?: string } & UserProps) => {
   let chatContainer: HTMLDivElement | undefined;
   let bottomSpacer: HTMLDivElement | undefined;
   let botContainer: HTMLDivElement | undefined;
+  console.log('props', props);
 
   const [userInput, setUserInput] = createSignal('');
   const [loading, setLoading] = createSignal(false);
@@ -145,11 +187,10 @@ export const Bot = (props: BotProps & { class?: string } & UserProps) => {
     ],
     { equals: false },
   );
-  const [socketIOClientId, setSocketIOClientId] = createSignal('');
   const [isChatFlowAvailableToStream, setIsChatFlowAvailableToStream] = createSignal(false);
 
   const [chatId, setChatId] = createSignal(props.customerEmail);
-  const [starterPrompts, setStarterPrompts] = createSignal<string[]>([], { equals: false });
+  const [starterPrompts, setStarterPrompts] = createSignal<string[]>(props.starterPrompts || [], { equals: false });
 
   onMount(() => {
     if (!bottomSpacer) return;
@@ -172,8 +213,14 @@ export const Bot = (props: BotProps & { class?: string } & UserProps) => {
   };
 
   const getSkus = (message: string) => {
-    return [...(message.matchAll(/<pr sku=(\d+)><\/pr>/g))].map((m) => m[1]);
+    return [...message.matchAll(/<pr sku=(\d+)><\/pr>/g)].map((m) => m[1]);
   };
+
+  const addEmptyMessage = () =>
+    setMessages((prevMessages) => {
+      const messages: MessageType[] = [...prevMessages, { message: '', type: 'apiMessage' }];
+      return messages;
+    });
 
   const updateLastMessage = (new_token: string) => {
     setMessages((data) => {
@@ -205,11 +252,15 @@ export const Bot = (props: BotProps & { class?: string } & UserProps) => {
     });
   };
 
-  const updateLastMessageSourceDocuments = (sourceDocuments: any) => {
+  const updateLastMessageSources = (sourceProducts?: SourceDocument[], sourceInstagramPosts?: SourceDocument[]) => {
     setMessages((data) => {
       const updated = data.map((item, i) => {
         if (i === data.length - 1) {
-          return { ...item, sourceDocuments: sourceDocuments };
+          return {
+            ...item,
+            sourceProducts: sourceProducts || item.sourceProducts,
+            sourceInstagramPosts: sourceInstagramPosts || item.sourceInstagramPosts,
+          };
         }
         return item;
       });
@@ -234,8 +285,22 @@ export const Bot = (props: BotProps & { class?: string } & UserProps) => {
     handleSubmit(prompt);
   };
 
+  const messageTypeFEtoBE = (msg: messageType) => {
+    switch (msg) {
+      case 'apiMessage':
+        return 'ai';
+      case 'userMessage':
+        return 'human';
+      case 'usermessagewaiting':
+        return 'human';
+      default:
+        return 'system';
+    }
+  };
+
   // Handle form submission
   const handleSubmit = async (value: string) => {
+    console.log('handleSubmit', value);
     setUserInput(value);
 
     if (value.trim() === '') {
@@ -245,61 +310,84 @@ export const Bot = (props: BotProps & { class?: string } & UserProps) => {
     setLoading(true);
     scrollToBottom();
 
-    // Send user question and history to API
-    const welcomeMessage = props.welcomeMessage ?? defaultWelcomeMessage;
-    const messageList = messages().filter((msg) => msg.message !== welcomeMessage);
-
     setMessages((prevMessages) => {
       const messages: MessageType[] = [...prevMessages, { message: value, type: 'userMessage' }];
       addChatMessage(messages);
       return messages;
     });
 
+    // Send user question and history to API
+    const messageList: MessageBE[] = messages().map((message) => {
+      return { content: message.message, type: messageTypeFEtoBE(message.type) };
+    });
     const body: IncomingInput = {
-      question: value,
-      history: messageList,
-      chatId: chatId(),
+      input: {
+        question: value,
+        chat_history: messageList,
+      },
+      config: {},
     };
 
-    if (props.chatflowConfig) body.overrideConfig = props.chatflowConfig;
+    setIsChatFlowAvailableToStream(false);
+    const abortCtrl = new AbortController();
 
-    if (isChatFlowAvailableToStream()) body.socketIOClientId = socketIOClientId();
+    let currMsg = '';
+    let sourceProducts: SourceDocument[] = [];
+    let sourceInstagramPosts: SourceDocument[] = [];
 
-    const result = await sendMessageQuery({
-      chatflowid: props.chatflowid,
-      apiHost: props.apiHost,
-      body,
+    await fetchEventSource(`${props.apiHost}/${props.chatflowid}/stream`, {
+      signal: abortCtrl.signal,
+      method: 'POST',
+      body: JSON.stringify(body),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      openWhenHidden: true,
+      onclose: () => {
+        console.log('EventSource closed');
+      },
+      onerror: (err) => {
+        console.error('EventSource error:', err);
+        abortCtrl.abort();
+      },
+      onopen: async (response) => {
+        console.log('EventSource opened', response);
+      },
+      onmessage(ev) {
+        console.log('EventSource message:', ev.data);
+        if (ev.event === 'metadata') {
+          const data: MetadataEvent = JSON.parse(ev.data);
+          setChatId(data.run_id);
+        } else if (ev.event === 'close') {
+          abortCtrl.abort();
+        } else if (ev.event === 'data') {
+          const data: ContextEvent | AnswerEvent = JSON.parse(ev.data);
+          if (data.answer) {
+            if (currMsg === '') {
+              addEmptyMessage();
+            }
+            currMsg += data.answer;
+            updateLastMessage(data.answer);
+          } else if (data.context) {
+            let ctx: SourceDocument[] = data.context;
+            sourceInstagramPosts = ctx.filter((doc) => doc.metadata?.media_url);
+            sourceProducts = ctx.filter((doc) => doc.metadata?.item_url);
+          }
+        }
+      },
     });
 
-    if (result.data) {
-      const data = result.data;
-      if (!isChatFlowAvailableToStream()) {
-        let text = '';
-        if (data.text) text = data.text;
-        else if (data.json) text = JSON.stringify(data.json, null, 2);
-        else text = JSON.stringify(data, null, 2);
+    setIsChatFlowAvailableToStream(true);
+    updateLastMessageSources(sourceProducts, sourceInstagramPosts);
+    setLoading(false);
+    setUserInput('');
+    scrollToBottom();
 
-        setMessages((prevMessages) => {
-          const messages: MessageType[] = [
-            ...prevMessages,
-            { message: text, sourceDocuments: data?.sourceDocuments, fileAnnotations: data?.fileAnnotations, type: 'apiMessage' },
-          ];
-          addChatMessage(messages);
-          return messages;
-        });
-      }
-      setLoading(false);
-      setUserInput('');
-      scrollToBottom();
-    }
-    if (result.error) {
-      const error = result.error;
-      console.error(error);
-      const err: any = error;
-      const errorData = typeof err === 'string' ? err : err.response.data || `${err.response.status}: ${err.response.statusText}`;
-      handleError(errorData);
-      return;
-    }
+    setMessages((prevMessages) => {
+      const messages: MessageType[] = [...prevMessages];
+      addChatMessage(messages);
+      return messages;
+    });
   };
 
   const clearChat = () => {
@@ -331,56 +419,16 @@ export const Bot = (props: BotProps & { class?: string } & UserProps) => {
   createEffect(async () => {
     const localChatsData = localStorage.getItem(`${props.chatflowid}_EXTERNAL`);
     if (localChatsData) {
-      const localChats: {chatHistory: MessageType[], chatId: string} = JSON.parse(localChatsData);
+      const localChats: { chatHistory: MessageType[]; chatId: string } = JSON.parse(localChatsData);
       setChatId(localChats.chatId);
       const msgs: MessageType[] = [];
       localChats.chatHistory.forEach((message: MessageType) => {
         msgs.push(message);
         setMessages([...msgs]);
-        updateLastMessage("");
+        updateLastMessage('');
       });
     }
-
-    // Determine if particular chatflow is available for streaming
-    const { data } = await isStreamAvailableQuery({
-      chatflowid: props.chatflowid,
-      apiHost: props.apiHost,
-    });
-
-    if (data) {
-      setIsChatFlowAvailableToStream(data?.isStreaming ?? false);
-    }
-
-    // Get the chatbotConfig
-    const result = await getChatbotConfig({
-      chatflowid: props.chatflowid,
-      apiHost: props.apiHost,
-    });
-
-    if (result.data) {
-      const chatbotConfig = result.data;
-      if (chatbotConfig.starterPrompts) {
-        const prompts: string[] = [];
-        Object.getOwnPropertyNames(chatbotConfig.starterPrompts).forEach((key) => {
-          prompts.push(chatbotConfig.starterPrompts[key].prompt);
-        });
-        setStarterPrompts(prompts);
-      }
-    }
-
-    const socket = socketIOClient(props.apiHost as string);
-
-    socket.on('connect', () => {
-      setSocketIOClientId(socket.id);
-    });
-
-    socket.on('start', () => {
-      setMessages((prevMessages) => [...prevMessages, { message: '', type: 'apiMessage' }]);
-    });
-
-    socket.on('sourceDocuments', updateLastMessageSourceDocuments);
-
-    socket.on('token', updateLastMessage);
+    setIsChatFlowAvailableToStream(true);
 
     // eslint-disable-next-line solid/reactivity
     return () => {
@@ -392,10 +440,6 @@ export const Bot = (props: BotProps & { class?: string } & UserProps) => {
           type: 'apiMessage',
         },
       ]);
-      if (socket) {
-        socket.disconnect();
-        setSocketIOClientId('');
-      }
     };
   });
 
@@ -407,30 +451,14 @@ export const Bot = (props: BotProps & { class?: string } & UserProps) => {
     }
   };
 
-  const removeDuplicateURL = (message: MessageType) => {
-    const visitedURLs: string[] = [];
-    const newSourceDocuments: any = [];
-
-    message.sourceDocuments.forEach((source: any) => {
-      if (isValidURL(source.metadata.source) && !visitedURLs.includes(source.metadata.source)) {
-        visitedURLs.push(source.metadata.source);
-        newSourceDocuments.push(source);
-      } else if (!isValidURL(source.metadata.source)) {
-        newSourceDocuments.push(source);
-      }
-    });
-    return newSourceDocuments;
-  };
-
   return (
     <>
       <div
         ref={botContainer}
         class={'relative flex w-full h-full text-base overflow-hidden bg-cover bg-center flex-col items-center chatbot-container ' + props.class}
       >
-        <div class="flex w-full h-full justify-center">
+        <div class="flex w-full h-full justify-center pb-5 pt-16">
           <div
-            style={{ 'padding-bottom': '100px', 'padding-top': '70px' }}
             ref={chatContainer}
             class="overflow-y-scroll min-w-full w-full min-h-full px-3 pt-10 relative scrollable-container chatbot-chat-view scroll-smooth"
           >
@@ -458,28 +486,11 @@ export const Bot = (props: BotProps & { class?: string } & UserProps) => {
                     />
                   )}
                   {message.type === 'userMessage' && loading() && index() === messages().length - 1 && <LoadingBubble />}
-                  {message.sourceDocuments && message.sourceDocuments.length && (
-                    <div style={{ display: 'flex', 'flex-direction': 'row', width: '100%' }}>
-                      <For each={[...removeDuplicateURL(message)]}>
-                        {(src) => {
-                          const URL = isValidURL(src.metadata.source);
-                          return (
-                            <SourceBubble
-                              pageContent={URL ? URL.pathname : src.pageContent}
-                              metadata={src.metadata}
-                              onSourceClick={() => {
-                                if (URL) {
-                                  window.open(src.metadata.source, '_blank');
-                                } else {
-                                  setSourcePopupSrc(src);
-                                  setSourcePopupOpen(true);
-                                }
-                              }}
-                            />
-                          );
-                        }}
-                      </For>
-                    </div>
+                  {message.sourceProducts && message.sourceProducts.length > 0 && (
+                    <ProductSourcesBubble sources={message.sourceProducts} backgroundColor={props.botMessage?.backgroundColor} />
+                  )}
+                  {message.sourceInstagramPosts && message.sourceInstagramPosts.length > 0 && (
+                    <InstagramSourcesBubble sources={message.sourceInstagramPosts} backgroundColor={props.botMessage?.backgroundColor} />
                   )}
                 </>
               )}
@@ -491,14 +502,16 @@ export const Bot = (props: BotProps & { class?: string } & UserProps) => {
               color: props.bubbleTextColor,
               'border-bottom-color': props.bubbleButtonColor,
             }}
-            class={(props.isFullPage ? 'fixed' : 'absolute rounded-t-3xl') + " flex flex-row items-center top-0 left-0 w-full border-b-2 h-14"}
+            class={(props.isFullPage ? 'fixed' : 'absolute rounded-t-3xl') + ' flex flex-row items-center top-0 left-0 w-full border-b-2 h-14'}
           >
-            <div class='w-2' />
+            <div class="w-2" />
             <Show when={props.titleAvatarSrc}>
-                <Avatar initialAvatarSrc={props.titleAvatarSrc} />
+              <Avatar initialAvatarSrc={props.titleAvatarSrc} />
             </Show>
             <Show when={props.title}>
-              <span class="px-3 whitespace-pre-wrap font-semibold max-w-full" style={{"font-family":"Jost","color":props.titleColor}}>{props.title}</span>
+              <span class="px-3 whitespace-pre-wrap font-semibold max-w-full" style={{ 'font-family': 'Jost', color: props.titleColor }}>
+                {props.title}
+              </span>
             </Show>
             <div style={{ flex: 1 }} />
           </div>
@@ -518,8 +531,8 @@ export const Bot = (props: BotProps & { class?: string } & UserProps) => {
         </div>
         <Show when={messages().length === 1}>
           <Show when={starterPrompts().length > 0}>
-            <div style={{ display: 'flex', 'flex-direction': 'row', padding: '10px', width: '100%', 'flex-wrap': 'wrap' }}>
-              <For each={[...starterPrompts()]}>{(key) => <StarterPromptBubble prompt={key} onPromptClick={() => promptClick(key)} />}</For>
+            <div class="relative flex flex-row p-2 w-full flex-wrap">
+              <For each={[...starterPrompts()]}>{(prompt) => <StarterPromptBubble prompt={prompt} onPromptClick={() => promptClick(prompt)} />}</For>
             </div>
           </Show>
         </Show>
@@ -536,5 +549,3 @@ type BottomSpacerProps = {
 const BottomSpacer = (props: BottomSpacerProps) => {
   return <div ref={props.ref} class="w-full h-16" />;
 };
-
-
