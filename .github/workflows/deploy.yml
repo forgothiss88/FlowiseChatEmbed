@@ -41,6 +41,7 @@ jobs:
         run: yarn build
       - name: Publish to npmjs.org
         run: yarn publish --access public --tag latest
+        continue-on-error: true
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPMJS_TOKEN }}
       - name: copy index.html to dist
