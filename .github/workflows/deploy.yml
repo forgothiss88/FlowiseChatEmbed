@@ -44,14 +44,3 @@ jobs:
         continue-on-error: true
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPMJS_TOKEN }}
-      - name: copy index.html to dist
-        run: cp index.html dist/index.html
-      - name: copy index_full.html to dist
-        run: cp index_full.html dist/index_full.html
-      - name: copy public to dist
-        run: cp -r public dist/public
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4.0.0
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: dist
