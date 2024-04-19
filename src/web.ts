@@ -19,7 +19,7 @@ const createDefaultChatBot = () => {
         return localStorage.getItem(key);
     }
 
-    function getChatflowDefaultProps(chatflowId: string, apiHost: string) {
+    function getChatflowDefaultProps(chatflowId: string, apiHost: string, titleAvatarSrc: string, avatarSrc: string) {
         const customerEmail: string | null = getFromUrlParamOrLocal('customerEmail');
         const customerName: string | null = getFromUrlParamOrLocal('customerName');
 
@@ -63,12 +63,12 @@ const createDefaultChatBot = () => {
                     fontSize: 16,
                     poweredByTextColor: "#ffffff",
                     title: '@holidoit',
-                    titleAvatarSrc: "/public/avatars/holidoit.jpg",
+                    titleAvatarSrc: titleAvatarSrc,
                     titleColor: "#ffffff",
                     botMessage: {
                         backgroundColor: "#ffefca",
                         textColor: "#283E4D",
-                        avatarSrc: "/public/avatars/holidoit.jpg",
+                        avatarSrc: avatarSrc,
                         showAvatar: true,
                     },
                     userMessage: {
@@ -89,8 +89,8 @@ const createDefaultChatBot = () => {
     return {
         'init': chatbot.init,
         'initFull': chatbot.initFull,
-        'initWithDefaults': (chatflowId: string, apiHost: string) => chatbot.init(getChatflowDefaultProps(chatflowId, apiHost)),
-        'initFullWithDefaults': (chatflowId: string, apiHost: string) => chatbot.initFull(getChatflowDefaultProps(chatflowId, apiHost))
+        'initWithDefaults': (chatflowId: string, apiHost: string, titleAvatarSrc: string, avatarSrc: string) => chatbot.init(getChatflowDefaultProps(chatflowId, apiHost, titleAvatarSrc, avatarSrc)),
+        'initFullWithDefaults': (chatflowId: string, apiHost: string, titleAvatarSrc: string, avatarSrc: string) => chatbot.initFull(getChatflowDefaultProps(chatflowId, apiHost, titleAvatarSrc, avatarSrc))
     }
 }
 
