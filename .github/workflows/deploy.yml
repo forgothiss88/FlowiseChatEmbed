@@ -4,7 +4,7 @@ name: Deploy static content to Pages
 on:
   # Runs on pushes targeting the default branch
   push:
-    branches: ["main"]
+    branches: ['main']
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -18,12 +18,12 @@ permissions:
 # Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
 # However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
 concurrency:
-  group: "pages"
+  group: 'pages'
   cancel-in-progress: false
 
 jobs:
   # Single deploy job since we're just deploying
-  deploy:
+  publish-package:
     environment:
       name: prod
     runs-on: ubuntu-latest
@@ -33,8 +33,8 @@ jobs:
       - name: Setup node
         uses: actions/setup-node@v4
         with:
-          node-version: "18"
-          registry-url: "https://registry.npmjs.org"
+          node-version: '18'
+          registry-url: 'https://registry.npmjs.org'
       - name: Install with yarn
         run: yarn install
       - name: Build
@@ -43,3 +43,14 @@ jobs:
         run: yarn publish --access public --tag latest
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPMJS_TOKEN }}
+      - name: copy index.html to dist
+        run: cp index.html dist/index.html
+      - name: copy index_full.html to dist
+        run: cp index_full.html dist/index_full.html
+      - name: copy public to dist
+        run: cp -r public dist/public
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4.0.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: dist
