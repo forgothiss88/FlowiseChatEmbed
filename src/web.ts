@@ -19,9 +19,10 @@ const createDefaultChatBot = () => {
         return localStorage.getItem(key);
     }
 
-    function getChatflowDefaultProps(chatflowId: string, apiHost: string, titleAvatarSrc: string, avatarSrc: string) {
+    function getChatflowDefaultProps(chatflowId: string, apiHost: string | null, titleAvatarSrc: string, avatarSrc: string) {
         const customerEmail: string | null = getFromUrlParamOrLocal('customerEmail');
         const customerName: string | null = getFromUrlParamOrLocal('customerName');
+        const botUrl: string = apiHost ? apiHost : getFromUrlParamOrLocal('botUrl');
 
         let cfg, msg: JSX.Element;
 
@@ -38,7 +39,7 @@ const createDefaultChatBot = () => {
         }
         return {
             chatflowid: chatflowId,
-            apiHost: apiHost,
+            apiHost: botUrl,
             chatflowConfig: cfg,
             customerName: customerName,
             customerEmail: customerEmail,
@@ -66,13 +67,13 @@ const createDefaultChatBot = () => {
                     titleAvatarSrc: titleAvatarSrc,
                     titleColor: "#ffffff",
                     botMessage: {
-                        backgroundColor: "#ffefca",
+                        backgroundColor: "#ffffff",
                         textColor: "#283E4D",
                         avatarSrc: avatarSrc,
                         showAvatar: true,
                     },
                     userMessage: {
-                        backgroundColor: "#ffffff",
+                        backgroundColor: "#ffefca",
                         textColor: "#283E4D",
                         showAvatar: false,
                     },
