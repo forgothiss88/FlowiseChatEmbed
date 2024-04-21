@@ -56,9 +56,9 @@ const createDefaultChatBot = () => {
                 chatWindow: {
                     welcomeMessage: msg,
                     starterPrompts: [
-                        "Hello! Can you recommend an experience in Liguria?",
-                        "Hey, what nice things can I do in Milan?",
-                        "Where can I go on vacation in Italy?",
+                        "I love horses 🐎",
+                        "Hey, what nice things can I do on Garda Lake?",
+                        "Something crazy, like an helicopter tour?",
                     ],
                     backgroundColor: "#efedff",
                     fontSize: 16,
@@ -70,7 +70,7 @@ const createDefaultChatBot = () => {
                         backgroundColor: "#ffffff",
                         textColor: "#283E4D",
                         avatarSrc: avatarSrc,
-                        showAvatar: true,
+                        showAvatar: false,
                     },
                     userMessage: {
                         backgroundColor: "#ffefca",

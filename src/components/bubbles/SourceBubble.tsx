@@ -55,35 +55,38 @@ export const Slideshow = (props: ItemsProps) => {
   );
 };
 
-export const IGCarouselItem = (props: { item: InstagramMetadata }) => {
-  if (!props.item.media_url) return <></>;
+export const IGCarouselItem = (props: { metadata: InstagramMetadata }) => {
+  if (!props.metadata.media_url) return <></>;
   return (
     <div class="carousel-item w-full pl-4">
       <iframe
         class="rounded-xl"
         height={'800px'}
-        src={`${props.item.media_url}embed/captioned/?rd=https%3A%2F%2Fembedinstagramfeed.com`}
-        name={`ig-${props.item.pk}`}
+        src={`${props.metadata.media_url}embed/captioned/?rd=https%3A%2F%2Fembedinstagramfeed.com`}
+        name={`ig-${props.metadata.pk}`}
       ></iframe>
     </div>
   );
 };
 
-export const ProductCarouselItem = (props: { item: ProductMetadata; bg: string }) => {
+export const ProductCarouselItem = (props: { metadata: ProductMetadata; bg: string }) => {
   return (
     <div
       class="carousel-item ml-4 overflow-hidden w-full flex flex-col"
       style={{ background: props.bg }}
-      onclick={() => window.open(props.item.item_url, '_blank')}
+      onclick={() => window.open(props.metadata.item_url, '_blank')}
     >
       <img
         class="w-full object-contain bg-white"
-        src="https://cdn.holidoit.com/media/experiences/274/images/600/Cena_in_barca_e_tour_a_Finale_Ligure-9-21486.webp"
-        alt={props.item.name}
+        src={
+          props.metadata.thumbnail_url ||
+          'https://cdn.holidoit.com/media/experiences/274/images/600/Cena_in_barca_e_tour_a_Finale_Ligure-9-21486.webp'
+        }
+        alt={props.metadata.name}
       />
       <div class="px-6 py-4">
-        <div class="text-l mb-2">{props.item.name}</div>
-        <p class="text-gray-400 font-normal">Starting at {toNumber(props.item.price) | 0}€ per person</p>
+        <div class="text-l mb-2">{props.metadata.name}</div>
+        <p class="text-gray-400 font-normal">Starting at {toNumber(props.metadata.price) | 0}€ per person</p>
       </div>
       <div class="px-6 pt-4 pb-2 flex flex-col items-center w-full">
         <span class="bg-black rounded-full w-full text-center text-sm text-white mb-2 py-3 px-2">Prenota</span>
@@ -111,7 +114,7 @@ export const ProductSourcesBubble = (props: ItemsProps) => {
     <div class="carousel w-80 flex rounded-2xl host-container mt-5 ml-2" style={{ background: props.backgroundColor }}>
       <For each={props.sources}>
         {(source: SourceDocument) => {
-          return <ProductCarouselItem item={source.metadata} backgroundColor={props.backgroundColor} />;
+          return <ProductCarouselItem metadata={source.metadata} backgroundColor={props.backgroundColor} />;
         }}
       </For>
     </div>
@@ -132,7 +135,7 @@ export const InstagramSourcesBubble = (props: ItemsProps) => {
     <div class="carousel w-80 flex rounded-2xl host-container mt-5 ml-2 bg-white">
       <For each={props.sources}>
         {(source: SourceDocument) => {
-          return <IGCarouselItem item={source.metadata} backgroundColor={props.backgroundColor} />;
+          return <IGCarouselItem metadata={source.metadata} backgroundColor={props.backgroundColor} />;
         }}
       </For>
     </div>

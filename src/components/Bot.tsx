@@ -32,6 +32,7 @@ export type ProductMetadata = {
   name: string;
   price: string;
   item_url: string;
+  thumbnail_url: string;
 };
 
 export type SourceDocument = {
