@@ -4,6 +4,8 @@ import { Marked } from '@ts-stack/markdown';
 import { sendFileDownloadQuery } from '@/queries/sendMessageQuery';
 import { Product, products } from '../Products';
 import ProductInfo from '../ProductInfo';
+import { InstagramSourcesBubble, ProductSourcesBubble } from './SourceBubble';
+import { SourceDocument } from '../Bot';
 
 type Props = {
   message: string;
@@ -11,8 +13,10 @@ type Props = {
   fileAnnotations?: any;
   showAvatar?: boolean;
   avatarSrc?: string;
-  backgroundColor?: string;
+  backgroundColor: string;
   textColor?: string;
+  sourceProducts?: SourceDocument[];
+  sourceInstagramPosts?: SourceDocument[];
 };
 
 const defaultBackgroundColor = '#f7f8ff';
@@ -21,6 +25,43 @@ const defaultTextColor = '#303235';
 Marked.setOptions({ isNoP: true });
 
 type MessagePart = { text: string } | { sku: string; product: Product };
+
+export const TabComponent = (props: { backgroundColor: string; sourceProducts?: SourceDocument[]; sourceInstagramPosts?: SourceDocument[] }) => {
+  const [activeTab, setActiveTab] = createSignal('products');
+  return (
+    <div class="text-center text-gray-500 border-t border-gray-200 mt-4">
+      <ul class="flex flex-wrap -mb-px">
+        <li class="me-2">
+          <button
+            class={`inline-block p-4 border-b-2 rounded-t-lg ${
+              activeTab() === 'posts' ? 'text-blue-800 border-blue-800' : 'border-transparent hover:text-gray-600 hover:border-gray-300'
+            }`}
+            onClick={() => setActiveTab('posts')}
+          >
+            Social Content
+          </button>
+        </li>
+        <li class="me-2">
+          <button
+            class={`inline-block p-4 border-b-2 rounded-t-lg ${
+              activeTab() === 'products' ? 'text-blue-800 border-blue-800' : 'border-transparent hover:text-gray-600 hover:border-gray-300'
+            }`}
+            onClick={() => setActiveTab('products')}
+            aria-current={activeTab() === 'products' ? 'page' : undefined}
+          >
+            Experiences
+          </button>
+        </li>
+      </ul>
+      {props.sourceProducts && props.sourceProducts.length > 0 && activeTab() === 'products' && (
+        <ProductSourcesBubble sources={props.sourceProducts} backgroundColor={props.backgroundColor} />
+      )}
+      {props.sourceInstagramPosts && props.sourceInstagramPosts.length > 0 && activeTab() === 'posts' && (
+        <InstagramSourcesBubble sources={props.sourceInstagramPosts} backgroundColor={props.backgroundColor} />
+      )}
+    </div>
+  );
+};
 
 export const BotBubble = (props: Props) => {
   let botMessageEl: HTMLDivElement | undefined;
@@ -97,7 +138,7 @@ export const BotBubble = (props: Props) => {
   });
 
   return (
-    <div class="flex justify-start items-start host-container mr-12 mt-5">
+    <div class="flex justify-start items-start host-container mr-12 mt-5 mb-5">
       <Show when={props.showAvatar}>
         <Avatar initialAvatarSrc={props.avatarSrc} />
       </Show>
@@ -107,7 +148,6 @@ export const BotBubble = (props: Props) => {
         style={{
           'background-color': props.backgroundColor ?? defaultBackgroundColor,
           color: props.textColor ?? defaultTextColor,
-          'max-width': 'min(66vw, 75%)',
         }}
       >
         <For each={messageElements()}>
@@ -119,6 +159,13 @@ export const BotBubble = (props: Props) => {
             }
           }}
         </For>
+        <Show when={props.sourceInstagramPosts || props.sourceProducts}>
+          <TabComponent
+            backgroundColor={props.backgroundColor}
+            sourceInstagramPosts={props.sourceInstagramPosts}
+            sourceProducts={props.sourceProducts}
+          />
+        </Show>
       </span>
     </div>
   );

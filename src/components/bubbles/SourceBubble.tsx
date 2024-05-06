@@ -25,7 +25,7 @@ export const Slideshow = (props: ItemsProps) => {
   };
 
   return (
-    <div class="flex items-center justify-center" style={{ 'max-width': 'min(66vw, 75%)' }}>
+    <div class="flex items-center justify-center">
       <button class="p-4 bg-gray-200 hover:bg-gray-300" onClick={prevSlide}>
         ‹
       </button>
@@ -58,9 +58,8 @@ export const Slideshow = (props: ItemsProps) => {
 export const IGCarouselItem = (props: { metadata: InstagramMetadata }) => {
   if (!props.metadata.media_url) return <></>;
   return (
-    <div class="carousel-item w-full pl-4">
+    <div class="carousel-item w-full mr-4">
       <iframe
-        class="rounded-xl"
         height={'800px'}
         src={`${props.metadata.media_url}embed/captioned/?rd=https%3A%2F%2Fembedinstagramfeed.com`}
         name={`ig-${props.metadata.pk}`}
@@ -72,7 +71,7 @@ export const IGCarouselItem = (props: { metadata: InstagramMetadata }) => {
 export const ProductCarouselItem = (props: { metadata: ProductMetadata; bg: string }) => {
   return (
     <div
-      class="carousel-item ml-4 overflow-hidden w-full flex flex-col"
+      class="carousel-item mr-8 overflow-hidden w-3/5 flex flex-col rounded-2xl"
       style={{ background: props.bg }}
       onclick={() => window.open(props.metadata.item_url, '_blank')}
     >
@@ -88,7 +87,7 @@ export const ProductCarouselItem = (props: { metadata: ProductMetadata; bg: stri
         <div class="text-l mb-2">{props.metadata.name}</div>
         <p class="text-gray-400 font-normal">Starting at {toNumber(props.metadata.price) | 0}€ per person</p>
       </div>
-      <div class="px-6 pt-4 pb-2 flex flex-col items-center w-full">
+      <div class="px-6 pt-4 pb-2 flex flex-col w-full mt-auto">
         <span class="bg-black rounded-full w-full text-center text-sm text-white mb-2 py-3 px-2">Prenota</span>
       </div>
     </div>
@@ -111,10 +110,10 @@ export const ProductSourcesBubble = (props: ItemsProps) => {
     setCurrentSlide((prev: number) => (prev - 1 + props.sources.length) % props.sources.length);
   };
   return (
-    <div class="carousel w-80 flex rounded-2xl host-container mt-5 ml-2" style={{ background: props.backgroundColor }}>
+    <div class="carousel flex host-container mt-5 ml-2" hidden={!props.active} style={{ background: props.backgroundColor }}>
       <For each={props.sources}>
-        {(source: SourceDocument) => {
-          return <ProductCarouselItem metadata={source.metadata} backgroundColor={props.backgroundColor} />;
+        {(source: SourceDocument, index) => {
+          return <ProductCarouselItem metadata={source.metadata} backgroundColor={props.backgroundColor} active={index() === currentSlide()} />;
         }}
       </For>
     </div>
@@ -132,10 +131,15 @@ export const InstagramSourcesBubble = (props: ItemsProps) => {
     setCurrentSlide((prev: number) => (prev - 1 + props.sources.length) % props.sources.length);
   };
   return (
-    <div class="carousel w-80 flex rounded-2xl host-container mt-5 ml-2 bg-white">
+    <div
+      class="carousel flex host-container mt-5 bg-white"
+      style={{
+        width: 'min(100%, 300px)',
+      }}
+    >
       <For each={props.sources}>
         {(source: SourceDocument) => {
-          return <IGCarouselItem metadata={source.metadata} backgroundColor={props.backgroundColor} />;
+          return <IGCarouselItem metadata={source.metadata} backgroundColor={props.backgroundColor} hidden={!props.active} />;
         }}
       </For>
     </div>

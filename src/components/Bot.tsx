@@ -458,7 +458,7 @@ export const Bot = (props: BotProps & { class?: string } & UserProps) => {
         ref={botContainer}
         class={'relative flex w-full h-full text-base overflow-hidden bg-cover bg-center flex-col items-center chatbot-container ' + props.class}
       >
-        <div class="flex w-full h-full justify-center pb-16 pt-16">
+        <div class="flex w-full h-full justify-center pb-14 pt-16">
           <div
             ref={chatContainer}
             class="overflow-y-scroll min-w-full w-full min-h-full px-3 relative scrollable-container chatbot-chat-view scroll-smooth"
@@ -484,15 +484,11 @@ export const Bot = (props: BotProps & { class?: string } & UserProps) => {
                       textColor={props.botMessage?.textColor}
                       showAvatar={props.botMessage?.showAvatar}
                       avatarSrc={props.botMessage?.avatarSrc}
+                      sourceProducts={message.sourceProducts}
+                      sourceInstagramPosts={message.sourceInstagramPosts}
                     />
                   )}
                   {message.type === 'userMessage' && loading() && index() === messages().length - 1 && <LoadingBubble />}
-                  {message.sourceProducts && message.sourceProducts.length > 0 && (
-                    <ProductSourcesBubble sources={message.sourceProducts} backgroundColor={props.botMessage?.backgroundColor} />
-                  )}
-                  {message.sourceInstagramPosts && message.sourceInstagramPosts.length > 0 && (
-                    <InstagramSourcesBubble sources={message.sourceInstagramPosts} backgroundColor={props.botMessage?.backgroundColor} />
-                  )}
                 </>
               )}
             </For>
