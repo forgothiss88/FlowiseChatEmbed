@@ -1,6 +1,6 @@
 import { createSignal, createEffect, For, onMount, Show, createMemo } from 'solid-js';
 import { v4 as uuidv4 } from 'uuid';
-import { sendMessageQuery, isStreamAvailableQuery, IncomingInput, getChatbotConfig, MessageBE } from '@/queries/sendMessageQuery';
+import { sendMessageQuery, isStreamAvailableQuery, RunInput, getChatbotConfig, MessageBE } from '@/queries/sendMessageQuery';
 import { TextInput } from './inputs/textInput';
 import { GuestBubble } from './bubbles/GuestBubble';
 import { BotBubble } from './bubbles/BotBubble';
@@ -321,9 +321,9 @@ export const Bot = (props: BotProps & { class?: string } & UserProps) => {
     const messageList: MessageBE[] = messages().map((message) => {
       return { content: message.message, type: messageTypeFEtoBE(message.type) };
     });
-    const body: IncomingInput = {
+    const body: RunInput = {
       input: {
-        question: value,
+        input: value,
         chat_history: messageList,
       },
       config: {},

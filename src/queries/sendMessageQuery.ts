@@ -10,13 +10,13 @@ export type MessageBE = {
 }
 
 
-export type StreamBody = {
-  question: string;
+export type RunBody = {
+  input: string;
   chat_history: MessageBE[];
 };
 
-export type IncomingInput = {
-  input: StreamBody;
+export type RunInput = {
+  input: RunBody;
   config?: Record<string, unknown>;
   // overrideConfig?: Record<string, unknown>;
   // socketIOClientId?: string;
@@ -27,7 +27,7 @@ export type IncomingInput = {
 export type MessageRequest = {
   chatflowid?: string;
   apiHost?: string;
-  body?: IncomingInput;
+  body?: RunInput;
 };
 
 export const sendMessageQuery = ({ chatflowid, apiHost = 'http://localhost:3000', body }: MessageRequest) =>
