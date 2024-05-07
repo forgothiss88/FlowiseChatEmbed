@@ -19,7 +19,7 @@ const createDefaultChatBot = () => {
         return localStorage.getItem(key);
     }
 
-    function getChatflowDefaultProps(chatflowId: string, apiHost: string | null, titleAvatarSrc: string, avatarSrc: string) {
+    function getChatflowDefaultProps(chatflowId: string, apiHost: string | null, titleAvatarSrc: string, avatarSrc: string, starterPrompts?: string[]) {
         const customerEmail: string | null = getFromUrlParamOrLocal('customerEmail');
         const customerName: string | null = getFromUrlParamOrLocal('customerName');
         const botUrl: string = apiHost ? apiHost : getFromUrlParamOrLocal('botUrl');
@@ -55,11 +55,7 @@ const createDefaultChatBot = () => {
                 },
                 chatWindow: {
                     welcomeMessage: msg,
-                    starterPrompts: [
-                        "I love horses 🐎",
-                        "Hey, what nice things can I do on Garda Lake?",
-                        "Something crazy, like an helicopter tour?",
-                    ],
+                    starterPrompts: starterPrompts,
                     backgroundColor: "#efedff",
                     fontSize: 16,
                     poweredByTextColor: "#ffffff",
@@ -90,8 +86,8 @@ const createDefaultChatBot = () => {
     return {
         'init': chatbot.init,
         'initFull': chatbot.initFull,
-        'initWithDefaults': (chatflowId: string, apiHost: string, titleAvatarSrc: string, avatarSrc: string) => chatbot.init(getChatflowDefaultProps(chatflowId, apiHost, titleAvatarSrc, avatarSrc)),
-        'initFullWithDefaults': (chatflowId: string, apiHost: string, titleAvatarSrc: string, avatarSrc: string) => chatbot.initFull(getChatflowDefaultProps(chatflowId, apiHost, titleAvatarSrc, avatarSrc))
+        'initWithDefaults': (chatflowId: string, apiHost: string, titleAvatarSrc: string, avatarSrc: string, starterPrompts?: string[]) => chatbot.init(getChatflowDefaultProps(chatflowId, apiHost, titleAvatarSrc, avatarSrc, starterPrompts)),
+        'initFullWithDefaults': (chatflowId: string, apiHost: string, titleAvatarSrc: string, avatarSrc: string, starterPrompts?: string[]) => chatbot.initFull(getChatflowDefaultProps(chatflowId, apiHost, titleAvatarSrc, avatarSrc, starterPrompts))
     }
 }
 
