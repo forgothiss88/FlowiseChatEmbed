@@ -1,21 +1,16 @@
-import { createSignal, createEffect, For, onMount, Show, createMemo } from 'solid-js';
-import { v4 as uuidv4 } from 'uuid';
-import { sendMessageQuery, isStreamAvailableQuery, RunInput, getChatbotConfig, MessageBE } from '@/queries/sendMessageQuery';
-import { TextInput } from './inputs/textInput';
-import { GuestBubble } from './bubbles/GuestBubble';
-import { BotBubble } from './bubbles/BotBubble';
-import { LoadingBubble } from './bubbles/LoadingBubble';
-import { Slideshow, ProductSourcesBubble, InstagramSourcesBubble } from './bubbles/SourceBubble';
-import { StarterPromptBubble } from './bubbles/StarterPromptBubble';
-import { BotMessageTheme, TextInputTheme, UserMessageTheme } from '@/features/bubble/types';
-import socketIOClient from 'socket.io-client';
-import { Popup } from '@/features/popup';
 import { Avatar } from '@/components/avatars/Avatar';
-import { DeleteButton } from '@/components/SendButton';
+import { BotMessageTheme, TextInputTheme, UserMessageTheme } from '@/features/bubble/types';
+import { Popup } from '@/features/popup';
+import { MessageBE, RunInput } from '@/queries/sendMessageQuery';
+import { fetchEventSource } from '@microsoft/fetch-event-source';
+import { For, Show, createEffect, createSignal, onMount } from 'solid-js';
+import { v4 as uuidv4 } from 'uuid';
 import { products, setProducts, updateProducts } from './Products';
-import { EventStreamContentType, fetchEventSource } from '@microsoft/fetch-event-source';
-import { config } from 'process';
-import { create } from 'lodash';
+import { BotBubble } from './bubbles/BotBubble';
+import { GuestBubble } from './bubbles/GuestBubble';
+import { LoadingBubble } from './bubbles/LoadingBubble';
+import { StarterPromptBubble } from './bubbles/StarterPromptBubble';
+import { TextInput } from './inputs/textInput';
 
 type messageType = 'apiMessage' | 'userMessage' | 'usermessagewaiting';
 
@@ -89,8 +84,8 @@ export type BotProps = {
 
 const defaultWelcomeMessage = 'Hi there! How can I help?';
 
-class RetriableError extends Error {}
-class FatalError extends Error {}
+class RetriableError extends Error { }
+class FatalError extends Error { }
 
 /*const sourceDocuments = [
     {
@@ -458,7 +453,7 @@ export const Bot = (props: BotProps & { class?: string } & UserProps) => {
         ref={botContainer}
         class={'relative flex w-full h-full text-base overflow-hidden bg-cover bg-center flex-col items-center chatbot-container ' + props.class}
       >
-        <div class="flex w-full h-full justify-center pb-14 pt-16">
+        <div class="flex w-full h-full justify-center pb-14 pt-14">
           <div
             ref={chatContainer}
             class="overflow-y-scroll min-w-full w-full min-h-full px-3 relative scrollable-container chatbot-chat-view scroll-smooth"
