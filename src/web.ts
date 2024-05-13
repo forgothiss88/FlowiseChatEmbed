@@ -35,7 +35,7 @@ const createDefaultChatBot = () => {
             msg = `Ciao ${customerName} :) sono l'assistente virtuale di @holidoit! Come posso aiutarti oggi?`;
         } else {
             cfg = {};
-            msg = "🎉 Hello, digital explorer! 🌍 I'm Twini, the digital twin of <a href='https://instgram.com/holidoit'>@holidoit</a>, eager to unveil the secrets behind the most thrilling experiences and the latest in social media content! 📸✨\nAre you ready to embark on this adventure? Tell me what interests you and let’s set off! 🎈\nFor more insights, check out our website <a href='https://holidoit.com'>holidoit.com</a> and let yourself be inspired!";
+            msg = "🎉 Hi there, I'm Twini, your guide from <a href='https://instgram.com/holidoit'>@holidoit</a>! 🌍 Ready to explore? Share what excites you and let’s dive in! 🎈 Visit <a href='https://holidoit.com'>holidoit.com</a> for more inspiration!";
         }
         return {
             chatflowid: chatflowId,
