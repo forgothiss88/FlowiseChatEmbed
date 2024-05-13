@@ -26,7 +26,7 @@ const MoreContentIcon = () => {
 }
 
 
-const MessagePart = (props: { title: string, text: string, icon: JSXElement, userInput: string, setUserInput: (message: string) => void }) => {
+const MessagePart = (props: { title: string, subtitle: string, icon: JSXElement, userInput: string, setUserInput: (message: string) => void }) => {
     return (
         <div class="rounded-2xl flex flex-row p-4 mt-4" style={{
             'background-color': '#f1ebf8',
@@ -39,12 +39,12 @@ const MessagePart = (props: { title: string, text: string, icon: JSXElement, use
                     </div>
                 </div>
                 <p class="font-light text-sm text-gray-700">
-                    {props.text}
+                    {props.subtitle}
                 </p>
             </div>
             <div class="grow"></div>
             <div class="p-4 content-center">
-                <button onClick={() => props.setUserInput(props.text)}>
+                <button onClick={() => props.setUserInput(props.userInput)}>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3" />
                     </svg>
@@ -71,10 +71,10 @@ const FirstMessageBubble = (props: {
                 }}
             >
                 <span class="font-bold text-l py-2 pl-2">You can ask me to:</span>
-                <MessagePart title="Tell me about @holidoit" text="Learn more about the Holidoit platform."
+                <MessagePart title="Tell me about @holidoit" subtitle="Learn more about the Holidoit platform."
                     userInput="What is @holidoit?" icon={MoreContentIcon()} setUserInput={props.setUserInput} />
-                <MessagePart title="Explore my experiences" text="Ask me about any of my favorite experiences." userInput="What experience do you recommend in <insert location>?" icon={cartIcon()} setUserInput={props.setUserInput} />
-                <MessagePart title="Discover my discounts" text="Explore any of my discounts that might be available at the moment." userInput="Do you have any discount codes?" icon={DiscountIcon()} setUserInput={props.setUserInput} />
+                <MessagePart title="Explore my experiences" subtitle="Ask me about any of my favorite experiences." userInput="What experience do you recommend in <insert location>?" icon={cartIcon()} setUserInput={props.setUserInput} />
+                <MessagePart title="Discover my discounts" subtitle="Explore any of my discounts that might be available at the moment." userInput="Do you have any discount codes?" icon={DiscountIcon()} setUserInput={props.setUserInput} />
             </div>
         </div>
     );
