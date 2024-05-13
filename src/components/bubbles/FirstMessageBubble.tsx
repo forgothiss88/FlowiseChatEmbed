@@ -32,7 +32,7 @@ const MessagePart = (props: { title: string, subtitle: string, icon: JSXElement,
             'background-color': '#f1ebf8',
         }}>
             <div>
-                <div class="flex flex-row pb-2">
+                <div class="flex flex-row pb-2 items-center">
                     <p class="font-medium text-sm" >{props.title}</p>
                     <div class="px-1 content-center">
                         {props.icon}
@@ -71,10 +71,10 @@ const FirstMessageBubble = (props: {
                 }}
             >
                 <span class="font-bold text-l py-2 pl-2">You can ask me to:</span>
-                <MessagePart title="Tell me about @holidoit" subtitle="Learn more about the Holidoit platform."
+                <MessagePart title="Discover @Holidoit" subtitle="Learn more about the Holidoit platform."
                     userInput="What is @holidoit?" icon={MoreContentIcon()} setUserInput={props.setUserInput} />
-                <MessagePart title="Explore my experiences" subtitle="Ask me about any of my favorite experiences." userInput="What experience do you recommend in <insert location>?" icon={cartIcon()} setUserInput={props.setUserInput} />
-                <MessagePart title="Discover my discounts" subtitle="Explore any of my discounts that might be available at the moment." userInput="Do you have any discount codes?" icon={DiscountIcon()} setUserInput={props.setUserInput} />
+                <MessagePart title="Plan your adventure" subtitle="Let’s find your perfect experience together." userInput="What experience do you recommend in <insert location>?" icon={cartIcon()} setUserInput={props.setUserInput} />
+                <MessagePart title="Find exclusive discounts" subtitle="See current deals now!" userInput="Do you have any discount codes?" icon={DiscountIcon()} setUserInput={props.setUserInput} />
             </div>
         </div>
     );
