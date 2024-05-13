@@ -29,11 +29,11 @@ type MessagePart = { text: string } | { sku: string; product: Product };
 export const TabComponent = (props: { backgroundColor: string; sourceProducts?: SourceDocument[]; sourceInstagramPosts?: SourceDocument[] }) => {
   const [activeTab, setActiveTab] = createSignal('products');
   return (
-    <div class="text-center text-gray-500 border-t border-gray-200 mt-4">
-      <ul class="flex flex-wrap -mb-px">
-        <li class="me-2">
+    <div>
+      <ul class="flex flex-row flex-nowrap text-center text-gray-500 border-t border-gray-200 mt-4">
+        <li class="grow">
           <button
-            class={`inline-block p-4 border-b-2 rounded-t-lg ${activeTab() === 'products' ? 'text-blue-800 border-blue-800' : 'border-transparent hover:text-gray-600 hover:border-gray-300'
+            class={`text-jost p-4 border-b-2 rounded-t-lg ${activeTab() === 'products' ? 'text-black border-black font-light' : 'border-transparent hover:text-gray-600 hover:border-gray-300'
               }`}
             onClick={() => setActiveTab('products')}
             aria-current={activeTab() === 'products' ? 'page' : undefined}
@@ -41,9 +41,9 @@ export const TabComponent = (props: { backgroundColor: string; sourceProducts?: 
             Experiences
           </button>
         </li>
-        <li class="me-2">
+        <li class="grow">
           <button
-            class={`inline-block p-4 border-b-2 rounded-t-lg ${activeTab() === 'posts' ? 'text-blue-800 border-blue-800' : 'border-transparent hover:text-gray-600 hover:border-gray-300'
+            class={`text-jost p-4 border-b-2 rounded-t-lg ${activeTab() === 'posts' ? 'text-black border-black font-light' : 'border-transparent hover:text-gray-600 hover:border-gray-300'
               }`}
             onClick={() => setActiveTab('posts')}
           >
@@ -140,8 +140,8 @@ export const BotBubble = (props: Props) => {
       <Show when={props.showAvatar}>
         <Avatar initialAvatarSrc={props.avatarSrc} />
       </Show>
-      <span
-        class="p-5 ml-2 whitespace-pre-wrap max-w-full rounded-2xl chatbot-host-bubble text-base font-normal"
+      <div
+        class="px-4 py-2 ml-2 whitespace-pre-wrap max-w-full rounded-2xl chatbot-host-bubble text-base font-normal"
         data-testid="host-bubble"
         style={{
           'background-color': props.backgroundColor ?? defaultBackgroundColor,
@@ -164,7 +164,7 @@ export const BotBubble = (props: Props) => {
             sourceProducts={props.sourceProducts}
           />
         </Show>
-      </span>
+      </div>
     </div>
   );
 };

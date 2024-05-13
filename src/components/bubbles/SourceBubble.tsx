@@ -69,24 +69,26 @@ export const IGCarouselItem = (props: { metadata: InstagramMetadata }) => {
 export const ProductCarouselItem = (props: { metadata: ProductMetadata; bg: string }) => {
   return (
     <div
-      class="carousel-item mr-8 overflow-hidden w-3/5 flex flex-col rounded-2xl"
-      style={{ background: props.bg }}
+      class="carousel-item mr-6 overflow-hidden w-4/5 flex flex-col rounded-3xl"
+      style={{ background: "rgb(241, 235, 248)" }}
       onclick={() => window.open(props.metadata.item_url, '_blank')}
     >
-      <img
-        class="w-full object-contain bg-white"
-        src={
-          props.metadata.thumbnail_url ||
-          'https://cdn.holidoit.com/media/experiences/274/images/600/Cena_in_barca_e_tour_a_Finale_Ligure-9-21486.webp'
-        }
-        alt={props.metadata.name}
-      />
-      <div class="px-6 py-4">
-        <div class="text-l mb-2">{props.metadata.name}</div>
-        <p class="text-gray-400 font-normal">Starting at {toNumber(props.metadata.price) | 0}€ per person</p>
+      <div class="w-full aspect-square">
+        <img
+          class="w-full h-full overflow-clip bg-white"
+          src={
+            props.metadata.thumbnail_url ||
+            'https://cdn.holidoit.com/media/experiences/274/images/600/Cena_in_barca_e_tour_a_Finale_Ligure-9-21486.webp'
+          }
+          alt={props.metadata.name}
+        />
       </div>
-      <div class="px-6 pt-4 pb-2 flex flex-col w-full mt-auto">
-        <span class="rounded-full w-full text-center text-sm text-white mb-2 py-3 px-2" style={{ "background-color": "#202124" }}>Book here</span>
+      <div class="px-3 my-4 grow">
+        <p class="text-black text-center font-medium text-sm text-jost mb-2">{props.metadata.name}</p>
+        <p class="text-black text-center font-light text-sm text-jost">Starting at {toNumber(props.metadata.price) | 0}€ per person</p>
+      </div>
+      <div class="px-3 my-3 flex flex-col w-full mt-auto">
+        <span class="rounded-full w-full text-center text-sm text-jost text-white py-3 px-2" style={{ "background-color": "#202124" }}>Book here</span>
       </div>
     </div>
   );
