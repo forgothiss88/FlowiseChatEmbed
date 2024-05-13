@@ -1,8 +1,7 @@
+import { BotMessageTheme } from '@/features/bubble/types';
+import { toNumber } from 'lodash';
 import { For, createSignal } from 'solid-js';
 import { InstagramMetadata, ProductMetadata, SourceDocument } from '../Bot';
-import { BotMessageTheme } from '@/features/bubble/types';
-import ProductInfo from '../ProductInfo';
-import { toNumber } from 'lodash';
 
 type ItemsProps = {
   sources: SourceDocument[];
@@ -33,9 +32,8 @@ export const Slideshow = (props: ItemsProps) => {
         <For each={props.sources}>
           {(source, index) => (
             <div
-              class={`flex-none w-full transition-transform duration-300 ease-in-out ${
-                index() === currentSlide() ? 'transform translate-x-0' : 'transform translate-x-full'
-              }`}
+              class={`flex-none w-full transition-transform duration-300 ease-in-out ${index() === currentSlide() ? 'transform translate-x-0' : 'transform translate-x-full'
+                }`}
             >
               <CarouselItem source={source} backgroundColor={props.backgroundColor} />
               <a href="#slide4" class="btn btn-circle">
@@ -88,7 +86,7 @@ export const ProductCarouselItem = (props: { metadata: ProductMetadata; bg: stri
         <p class="text-gray-400 font-normal">Starting at {toNumber(props.metadata.price) | 0}€ per person</p>
       </div>
       <div class="px-6 pt-4 pb-2 flex flex-col w-full mt-auto">
-        <span class="bg-black rounded-full w-full text-center text-sm text-white mb-2 py-3 px-2">Prenota</span>
+        <span class="bg-black rounded-full w-full text-center text-sm text-white mb-2 py-3 px-2">Book here</span>
       </div>
     </div>
   );

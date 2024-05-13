@@ -1,11 +1,11 @@
-import { For, Show, createEffect, createSignal, onMount } from 'solid-js';
-import { Avatar } from '../avatars/Avatar';
-import { Marked } from '@ts-stack/markdown';
 import { sendFileDownloadQuery } from '@/queries/sendMessageQuery';
-import { Product, products } from '../Products';
-import ProductInfo from '../ProductInfo';
-import { InstagramSourcesBubble, ProductSourcesBubble } from './SourceBubble';
+import { Marked } from '@ts-stack/markdown';
+import { For, Show, createEffect, createSignal, onMount } from 'solid-js';
 import { SourceDocument } from '../Bot';
+import ProductInfo from '../ProductInfo';
+import { Product, products } from '../Products';
+import { Avatar } from '../avatars/Avatar';
+import { InstagramSourcesBubble, ProductSourcesBubble } from './SourceBubble';
 
 type Props = {
   message: string;
@@ -33,9 +33,8 @@ export const TabComponent = (props: { backgroundColor: string; sourceProducts?: 
       <ul class="flex flex-wrap -mb-px">
         <li class="me-2">
           <button
-            class={`inline-block p-4 border-b-2 rounded-t-lg ${
-              activeTab() === 'products' ? 'text-blue-800 border-blue-800' : 'border-transparent hover:text-gray-600 hover:border-gray-300'
-            }`}
+            class={`inline-block p-4 border-b-2 rounded-t-lg ${activeTab() === 'products' ? 'text-blue-800 border-blue-800' : 'border-transparent hover:text-gray-600 hover:border-gray-300'
+              }`}
             onClick={() => setActiveTab('products')}
             aria-current={activeTab() === 'products' ? 'page' : undefined}
           >
@@ -44,9 +43,8 @@ export const TabComponent = (props: { backgroundColor: string; sourceProducts?: 
         </li>
         <li class="me-2">
           <button
-            class={`inline-block p-4 border-b-2 rounded-t-lg ${
-              activeTab() === 'posts' ? 'text-blue-800 border-blue-800' : 'border-transparent hover:text-gray-600 hover:border-gray-300'
-            }`}
+            class={`inline-block p-4 border-b-2 rounded-t-lg ${activeTab() === 'posts' ? 'text-blue-800 border-blue-800' : 'border-transparent hover:text-gray-600 hover:border-gray-300'
+              }`}
             onClick={() => setActiveTab('posts')}
           >
             Social Content
@@ -138,12 +136,12 @@ export const BotBubble = (props: Props) => {
   });
 
   return (
-    <div class="flex justify-start items-start host-container mr-12 mt-5 mb-5">
+    <div class="flex justify-start items-start host-container mr-12 mt-5 mb-5  text-roboto">
       <Show when={props.showAvatar}>
         <Avatar initialAvatarSrc={props.avatarSrc} />
       </Show>
       <span
-        class="px-4 py-2 ml-2 whitespace-pre-wrap max-w-full rounded-xl chatbot-host-bubble"
+        class="p-5 ml-2 whitespace-pre-wrap max-w-full rounded-2xl chatbot-host-bubble text-sm font-normal"
         data-testid="host-bubble"
         style={{
           'background-color': props.backgroundColor ?? defaultBackgroundColor,

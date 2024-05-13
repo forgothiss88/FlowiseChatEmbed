@@ -7,7 +7,7 @@ export const StarterPromptBubble = (props: Props) => (
     <div
       data-modal-target="defaultModal"
       data-modal-toggle="defaultModal"
-      class="flex justify-start mb-2 ml-2 items-start animate-fade-in host-container hover:brightness-90 active:brightness-75 shadow-md rounded-2xl"
+      class="flex border border-black border-solid justify-start mb-2 ml-2 items-start animate-fade-in host-container hover:brightness-90 active:brightness-75 rounded-2xl"
       onClick={() => props.onPromptClick?.()}
     >
       <span

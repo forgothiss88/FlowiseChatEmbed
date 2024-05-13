@@ -1,7 +1,7 @@
-import { ShortTextInput } from './ShortTextInput';
-import { isMobile } from '@/utils/isMobileSignal';
-import { createSignal, createEffect, onMount } from 'solid-js';
 import { DeleteButton, SendButton } from '@/components/SendButton';
+import { isMobile } from '@/utils/isMobileSignal';
+import { createEffect, onMount } from 'solid-js';
+import { ShortTextInput } from './ShortTextInput';
 
 type Props = {
   placeholder?: string;
@@ -15,22 +15,24 @@ type Props = {
   isFullPage?: boolean;
   clearChat: () => void;
   isDeleteEnabled: boolean;
+  message?: string;
+  inputValue: () => string;
+  setInputValue: (value: string) => void;
 };
 
 const defaultBackgroundColor = '#ffffff';
 const defaultTextColor = '#303235';
 
 export const TextInput = (props: Props) => {
-  const [inputValue, setInputValue] = createSignal(props.defaultValue ?? '');
   let inputRef: HTMLInputElement | HTMLTextAreaElement | undefined;
 
-  const handleInput = (inputValue: string) => setInputValue(inputValue);
+  const handleInput = (inputValue: string) => props.setInputValue(inputValue);
 
-  const checkIfInputIsValid = () => inputValue() !== '' && inputRef?.reportValidity();
+  const checkIfInputIsValid = () => props.inputValue() !== '' && inputRef?.reportValidity();
 
   const submit = () => {
-    if (checkIfInputIsValid()) props.onSubmit(inputValue());
-    setInputValue('');
+    if (checkIfInputIsValid()) props.onSubmit(props.inputValue());
+    props.setInputValue('');
   };
 
   const submitWhenEnter = (e: KeyboardEvent) => {
@@ -49,7 +51,7 @@ export const TextInput = (props: Props) => {
 
   return (
     <div
-      class={(props.isFullPage? "" : "rounded-b-3xl") + ' flex items-end justify-between chatbot-input shadow-sm h-14'}
+      class={(props.isFullPage ? "" : "rounded-b-3xl") + ' flex items-end justify-between chatbot-input shadow-sm h-14'}
       data-testid="input"
       style={{
         'border-top': '1px solid #eeeeee',
@@ -67,7 +69,7 @@ export const TextInput = (props: Props) => {
       <ShortTextInput
         ref={inputRef as HTMLInputElement}
         onInput={handleInput}
-        value={inputValue()}
+        value={props.inputValue()}
         fontSize={props.fontSize}
         disabled={props.disabled}
         placeholder={props.placeholder ?? 'Type your question'}
@@ -75,7 +77,7 @@ export const TextInput = (props: Props) => {
       <SendButton
         sendButtonColor={props.sendButtonColor}
         type="button"
-        isDisabled={props.disabled || inputValue() === ''}
+        isDisabled={props.disabled || props.inputValue() === ''}
         class="my-2"
         on:click={submit}
       >
@@ -89,7 +91,7 @@ export const TextInput = (props: Props) => {
         on:click={props.clearChat}
       >
         <span style={{ 'font-family': 'Poppins, sans-serif' }}>Clear</span>
-      </DeleteButton> 
+      </DeleteButton>
     </div>
   );
 };

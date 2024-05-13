@@ -1,8 +1,8 @@
 import { createSignal, Show, splitProps } from 'solid-js';
 import styles from '../../../assets/index.css';
-import { BubbleButton } from './BubbleButton';
-import { BubbleParams } from '../types';
 import { Bot, BotProps, UserProps } from '../../../components/Bot';
+import { BubbleParams } from '../types';
+import { BubbleButton } from './BubbleButton';
 
 const defaultButtonColor = '#3B81F6';
 const defaultIconColor = 'white';
@@ -42,6 +42,7 @@ export const Bubble = (props: BubbleProps) => {
           'box-shadow': 'rgb(0 0 0 / 16%) 0px 5px 40px',
           'background-color': bubbleProps.theme?.chatWindow?.backgroundColor || '#ffffff',
           'z-index': 42424242,
+          'background': props.theme?.chatWindow?.backgroundColor || '#ffffff',
         }}
         class={
           'fixed sm:right-5 rounded-3xl w-full sm:w-[400px] max-h-[704px]' +

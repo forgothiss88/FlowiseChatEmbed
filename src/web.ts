@@ -1,6 +1,6 @@
 import { JSX } from 'solid-js';
 import { registerWebComponents } from './register';
-import { parseChatbot, injectChatbotInWindow } from './window';
+import { injectChatbotInWindow, parseChatbot } from './window';
 
 registerWebComponents();
 
@@ -51,12 +51,12 @@ const createDefaultChatBot = () => {
                     size: "medium",
                     iconColor: "white",
                     bubbleButtonColor: "#050a30",
-                    topbarColor: "#33365e",
+                    topbarColor: "rgba(65,5,132,1)",
                 },
                 chatWindow: {
                     welcomeMessage: msg,
                     starterPrompts: starterPrompts,
-                    backgroundColor: "#efedff",
+                    backgroundColor: "linear-gradient(180deg, rgba(65,5,132,1) 10%, rgba(245,245,245,1) 72%)",
                     fontSize: 16,
                     poweredByTextColor: "#ffffff",
                     title: '@holidoit',
@@ -66,7 +66,7 @@ const createDefaultChatBot = () => {
                         backgroundColor: "#ffffff",
                         textColor: "#283E4D",
                         avatarSrc: avatarSrc,
-                        showAvatar: false,
+                        showAvatar: true,
                     },
                     userMessage: {
                         backgroundColor: "#ffefca",
@@ -76,7 +76,7 @@ const createDefaultChatBot = () => {
                     textInput: {
                         backgroundColor: "#ffffff",
                         textColor: "#283E4D",
-                        placeholder: "Scrivi qui...",
+                        placeholder: "Write here...",
                         sendButtonColor: "#7f7970",
                     },
                 }

@@ -5,7 +5,7 @@
 :host {
   --chatbot-container-bg-image: none;
   --chatbot-container-bg-color: transparent;
-  --chatbot-container-font-family: 'Open Sans';
+  --chatbot-container-font-family: 'Roboto';
 
   --chatbot-button-bg-color: #0042da;
   --chatbot-button-color: #ffffff;
@@ -45,24 +45,34 @@ pre {
   margin: 5px;
   width: auto;
   overflow: auto;
-  white-space: pre-wrap; /* css-3 */
-  white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
-  white-space: -pre-wrap; /* Opera 4-6 */
-  white-space: -o-pre-wrap; /* Opera 7 */
-  word-wrap: break-word; /* Internet Explorer 5.5+ */
+  white-space: pre-wrap;
+  /* css-3 */
+  white-space: -moz-pre-wrap;
+  /* Mozilla, since 1999 */
+  white-space: -pre-wrap;
+  /* Opera 4-6 */
+  white-space: -o-pre-wrap;
+  /* Opera 7 */
+  word-wrap: break-word;
+  /* Internet Explorer 5.5+ */
 }
+
 .string {
   color: green;
 }
+
 .number {
   color: darkorange;
 }
+
 .boolean {
   color: blue;
 }
+
 .null {
   color: magenta;
 }
+
 .key {
   color: rgb(0, 43, 54);
 }
@@ -74,8 +84,10 @@ pre {
 
 /* Hide scrollbar for IE, Edge and Firefox */
 .scrollable-container {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
 }
 
 .text-fade-in {
@@ -113,9 +125,11 @@ pre {
   0% {
     transform: translateY(0);
   }
+
   50% {
     transform: translateY(-5px);
   }
+
   100% {
     transform: translateY(0);
   }
@@ -131,7 +145,7 @@ textarea {
   text-decoration: underline;
 }
 
-.slate-html-container > div {
+.slate-html-container>div {
   min-height: 24px;
 }
 
@@ -151,10 +165,12 @@ textarea {
   color: #9095a0 !important;
   opacity: 1 !important;
 }
+
 .text-input::-moz-placeholder {
   color: #9095a0 !important;
   opacity: 1 !important;
 }
+
 .text-input::placeholder {
   color: #9095a0 !important;
   opacity: 1 !important;
@@ -164,6 +180,7 @@ textarea {
   background-image: var(--chatbot-container-bg-image);
   background-color: var(--chatbot-container-bg-color);
   font-family:
+    'Roboto'
     'Open Sans',
     -apple-system,
     BlinkMacSystemFont,
@@ -202,10 +219,11 @@ textarea {
   background-color: #f7f8ff;
 }
 
-.chatbot-host-bubble > .bubble-typing {
+.chatbot-host-bubble>.bubble-typing {
   background-color: #f7f8ff;
   border: var(--chatbot-host-bubble-border);
-  padding: 10px; /* Add padding to create space around the text */
+  padding: 10px;
+  /* Add padding to create space around the text */
 }
 
 .chatbot-guest-bubble {
@@ -223,7 +241,7 @@ textarea {
   color: #303235;
 }
 
-.chatbot-button > .send-icon {
+.chatbot-button>.send-icon {
   fill: var(--chatbot-button-color);
 }
 
@@ -340,6 +358,7 @@ textarea {
   0% {
     background-position: -100% 0;
   }
+
   100% {
     background-position: 100% 0;
   }
@@ -354,6 +373,7 @@ textarea {
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -424,4 +444,12 @@ input {
   border: none;
   padding: 10px 10px;
   font-family: 'Poppins', sans-serif;
+}
+
+.text-jost {
+  font-family: "Jost";
+}
+
+.text-roboto {
+  font-family: "Roboto";
 }

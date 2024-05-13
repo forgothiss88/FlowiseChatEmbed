@@ -1,6 +1,6 @@
+import { Marked } from '@ts-stack/markdown';
 import { Show, onMount } from 'solid-js';
 import { Avatar } from '../avatars/Avatar';
-import { Marked } from '@ts-stack/markdown';
 
 type Props = {
   message: string;
@@ -25,7 +25,7 @@ export const GuestBubble = (props: Props) => {
   });
 
   return (
-    <div class="flex justify-end items-end guest-container ml-12 mt-5">
+    <div class="flex justify-end items-end guest-container ml-12 mt-5 text-roboto">
       <span
         ref={userMessageEl}
         class="px-4 py-2 rounded-xl mr-2 whitespace-pre-wrap max-w-full chatbot-guest-bubble"
