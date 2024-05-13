@@ -75,7 +75,7 @@ export const ProductCarouselItem = (props: { metadata: ProductMetadata; bg: stri
     >
       <div class="w-full aspect-square">
         <img
-          class="w-full h-full overflow-clip bg-white"
+          class="w-full h-full object-cover bg-white"
           src={
             props.metadata.thumbnail_url ||
             'https://cdn.holidoit.com/media/experiences/274/images/600/Cena_in_barca_e_tour_a_Finale_Ligure-9-21486.webp'
