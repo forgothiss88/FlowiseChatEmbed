@@ -69,8 +69,8 @@ const createDefaultChatBot = () => {
                         showAvatar: true,
                     },
                     userMessage: {
-                        backgroundColor: "#ffefca",
-                        textColor: "#283E4D",
+                        backgroundColor: "#202124",
+                        textColor: "#ffffff",
                         showAvatar: false,
                     },
                     textInput: {

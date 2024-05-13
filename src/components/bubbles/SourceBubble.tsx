@@ -86,7 +86,7 @@ export const ProductCarouselItem = (props: { metadata: ProductMetadata; bg: stri
         <p class="text-gray-400 font-normal">Starting at {toNumber(props.metadata.price) | 0}€ per person</p>
       </div>
       <div class="px-6 pt-4 pb-2 flex flex-col w-full mt-auto">
-        <span class="bg-black rounded-full w-full text-center text-sm text-white mb-2 py-3 px-2">Book here</span>
+        <span class="rounded-full w-full text-center text-sm text-white mb-2 py-3 px-2" style={{ "background-color": "#202124" }}>Book here</span>
       </div>
     </div>
   );
