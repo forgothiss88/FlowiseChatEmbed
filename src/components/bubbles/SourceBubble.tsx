@@ -32,8 +32,9 @@ export const Slideshow = (props: ItemsProps) => {
         <For each={props.sources}>
           {(source, index) => (
             <div
-              class={`flex-none w-full transition-transform duration-300 ease-in-out ${index() === currentSlide() ? 'transform translate-x-0' : 'transform translate-x-full'
-                }`}
+              class={`flex-none w-full transition-transform duration-300 ease-in-out ${
+                index() === currentSlide() ? 'transform translate-x-0' : 'transform translate-x-full'
+              }`}
             >
               <CarouselItem source={source} backgroundColor={props.backgroundColor} />
               <a href="#slide4" class="btn btn-circle">
@@ -70,12 +71,12 @@ export const ProductCarouselItem = (props: { metadata: ProductMetadata; bg: stri
   return (
     <div
       class="carousel-item mr-6 overflow-hidden w-4/5 flex flex-col rounded-3xl"
-      style={{ background: "rgb(241, 235, 248)" }}
+      style={{ background: 'rgb(241, 235, 248)' }}
       onclick={() => window.open(props.metadata.item_url, '_blank')}
     >
-      <div class="w-full aspect-square">
+      <div>
         <img
-          class="w-full h-full object-cover bg-white"
+          class="w-full h-full object-cover aspect-square bg-white"
           src={
             props.metadata.thumbnail_url ||
             'https://cdn.holidoit.com/media/experiences/274/images/600/Cena_in_barca_e_tour_a_Finale_Ligure-9-21486.webp'
@@ -88,7 +89,9 @@ export const ProductCarouselItem = (props: { metadata: ProductMetadata; bg: stri
         <p class="text-black text-center font-light text-sm text-jost">Starting at {toNumber(props.metadata.price) | 0}€ per person</p>
       </div>
       <div class="px-3 my-3 flex flex-col w-full mt-auto">
-        <span class="rounded-full w-full text-center text-sm text-jost text-white py-3 px-2" style={{ "background-color": "#202124" }}>Book here</span>
+        <span class="rounded-full w-full text-center text-sm text-jost text-white py-3 px-2" style={{ 'background-color': '#202124' }}>
+          Book here
+        </span>
       </div>
     </div>
   );
