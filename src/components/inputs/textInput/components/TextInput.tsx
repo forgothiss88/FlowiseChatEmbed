@@ -51,7 +51,7 @@ export const TextInput = (props: Props) => {
 
   return (
     <div
-      class={(props.isFullPage ? '' : 'rounded-b-3xl') + ' w-full flex flex-row chatbot-input shadow-sm absolute right-0 bottom-0'}
+      class={(props.isFullPage ? '' : 'rounded-b-3xl') + ' w-full flex flex-row chatbot-input shadow-sm fixed right-0 bottom-0'}
       data-testid="input"
       style={{
         'border-top': '1px solid #eeeeee',
