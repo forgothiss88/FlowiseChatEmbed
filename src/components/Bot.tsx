@@ -85,14 +85,13 @@ export type BotProps = {
 
 const defaultWelcomeMessage = 'Hi there! How can I help?';
 
-
 export const Bot = (props: BotProps & { class?: string } & UserProps) => {
   let chatContainer: HTMLDivElement | undefined;
   let bottomSpacer: HTMLDivElement | undefined;
   let botContainer: HTMLDivElement | undefined;
   console.log('props', props);
 
-  const [userInput, setUserInput] = createSignal("");
+  const [userInput, setUserInput] = createSignal('');
   const [loading, setLoading] = createSignal(false);
   const [sourcePopupOpen, setSourcePopupOpen] = createSignal(false);
   const [sourcePopupSrc, setSourcePopupSrc] = createSignal({});
@@ -380,7 +379,12 @@ export const Bot = (props: BotProps & { class?: string } & UserProps) => {
             class="overflow-y-scroll min-w-full w-full min-h-full px-3 relative scrollable-container chatbot-chat-view scroll-smooth"
           >
             <p class="m-5 text-2xl font-bold text-white text-jost">Welcome to my @Twini :)</p>
-            <FirstMessageBubble backgroundColor={props.botMessage?.backgroundColor} textColor={props.botMessage?.textColor} setUserInput={(message: string) => { scrollToBottom(); setUserInput(message); }} />
+            <FirstMessageBubble
+              backgroundColor={props.botMessage?.backgroundColor}
+              textColor={props.botMessage?.textColor}
+              scrollToBottom={scrollToBottom}
+              setUserInput={setUserInput}
+            />
             <For each={messages()}>
               {(message, index) => (
                 <>
