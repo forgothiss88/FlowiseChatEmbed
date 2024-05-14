@@ -81,7 +81,7 @@ const FirstMessageBubble = (props: {
   scrollToBottom: () => void;
 }) => {
   return (
-    <div class="flex justify-start items-start host-container my-5 text-jost">
+    <div class="my-5 text-jost">
       <div
         class="p-3 mx-2 whitespace-pre-wrap max-w-full rounded-3xl chatbot-host-bubble"
         data-testid="host-bubble"
