@@ -7,18 +7,18 @@ type ShortTextInputProps = {
   fontSize?: number;
   disabled?: boolean;
   isFullPage?: boolean;
-} & Omit<JSX.InputHTMLAttributes<HTMLInputElement>, 'onInput'>;
+} & Omit<JSX.InputHTMLAttributes<HTMLTextAreaElement>, 'onInput'>;
 
 export const ShortTextInput = (props: ShortTextInputProps) => {
   const [local, others] = splitProps(props, ['ref', 'onInput']);
 
   return (
-    <input
+    <textarea
+      name={props.name}
       ref={props.ref}
-      class={(props.isFullPage? "" : "" ) + "focus:outline-none bg-transparent px-6 py-4 flex-1 w-full text-input disabled:opacity-50 disabled:cursor-not-allowed disabled:brightness-100"}
-      type="text"
+      class="focus:outline-none bg-transparent flex-1 overflow-auto resize-y pl-6 py-4 w-full text-input text-base font-normal disabled:opacity-50 disabled:cursor-not-allowed disabled:brightness-100"
       disabled={props.disabled}
-      style={{ 'font-size': props.fontSize ? `${props.fontSize}px` : '16px' }}
+      style={{ 'font-size': props.fontSize ? `${props.fontSize}px` : '16px', 'min-height': '1lh', 'max-height': '6lh', 'field-sizing': 'content' }}
       onInput={(e) => local.onInput(e.currentTarget.value)}
       {...others}
     />

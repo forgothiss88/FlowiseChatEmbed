@@ -51,15 +51,10 @@ export const TextInput = (props: Props) => {
 
   return (
     <div
-      class={(props.isFullPage ? "" : "rounded-b-3xl") + ' flex items-end justify-between chatbot-input shadow-sm h-14'}
+      class={(props.isFullPage ? '' : 'rounded-b-3xl') + ' w-full flex flex-row chatbot-input shadow-sm absolute right-0 bottom-0'}
       data-testid="input"
       style={{
         'border-top': '1px solid #eeeeee',
-        position: 'absolute',
-        left: '0px',
-        right: '0px',
-        bottom: '0px',
-        margin: 'auto',
         'z-index': 1000,
         'background-color': props.backgroundColor ?? defaultBackgroundColor,
         color: props.textColor ?? defaultTextColor,
@@ -83,13 +78,7 @@ export const TextInput = (props: Props) => {
       >
         <span style={{ 'font-family': 'Poppins, sans-serif' }}>Send</span>
       </SendButton>
-      <DeleteButton
-        sendButtonColor={props.sendButtonColor}
-        type="button"
-        isDisabled={!props.isDeleteEnabled}
-        class="my-2"
-        on:click={props.clearChat}
-      >
+      <DeleteButton sendButtonColor={props.sendButtonColor} type="button" isDisabled={!props.isDeleteEnabled} class="my-2" on:click={props.clearChat}>
         <span style={{ 'font-family': 'Poppins, sans-serif' }}>Clear</span>
       </DeleteButton>
     </div>

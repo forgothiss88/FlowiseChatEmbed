@@ -59,10 +59,10 @@ const MessagePart = (props: {
     >
       <div>
         <div class="flex flex-row pb-2 items-center">
-          <p class="font-medium text-sm">{props.title}</p>
+          <p class="font-medium text-start text-sm">{props.title}</p>
           <div class="px-1 content-center">{props.icon}</div>
         </div>
-        <p class="font-light text-sm text-gray-700">{props.subtitle}</p>
+        <p class="font-light text-start text-sm text-gray-700">{props.subtitle}</p>
       </div>
       <div class="grow"></div>
       <div class="p-4 content-center">
