@@ -13,13 +13,14 @@ export const ShortTextInput = (props: ShortTextInputProps) => {
   const [local, others] = splitProps(props, ['ref', 'onInput']);
 
   return (
-    <textarea
+    <input
       name={props.name}
       ref={props.ref}
-      class="focus:outline-none bg-transparent flex-1 overflow-auto resize-y pl-6 py-4 w-full text-input text-base font-normal disabled:opacity-50 disabled:cursor-not-allowed disabled:brightness-100"
+      class="my-2 ml-2 bg-transparent flex-1 w-full h-9 align-middle text-base overflow-x-auto font-normal disabled:opacity-50 disabled:cursor-not-allowed disabled:brightness-100 focus:outline-none"
       disabled={props.disabled}
-      style={{ 'font-size': props.fontSize ? `${props.fontSize}px` : '16px', 'min-height': '24px', 'max-height': '128px', 'field-sizing': 'content' }}
       onInput={(e) => local.onInput(e.currentTarget.value)}
+      aria-placeholder={props.placeholder}
+      placeholder={props.placeholder}
       {...others}
     />
   );
