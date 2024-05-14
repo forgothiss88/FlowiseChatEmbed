@@ -59,7 +59,7 @@ const MessagePart = (props: {
     >
       <div>
         <div class="flex flex-row pb-2 items-center">
-          <p class="font-medium text-start text-sm">{props.title}</p>
+          <p class="font-medium text-start text-base">{props.title}</p>
           <div class="px-1 content-center">{props.icon}</div>
         </div>
         <p class="font-light text-start text-sm text-gray-700">{props.subtitle}</p>
@@ -90,7 +90,7 @@ const FirstMessageBubble = (props: {
           color: props.textColor,
         }}
       >
-        <span class="font-bold text-l py-2 pl-2">You can ask me to:</span>
+        <span class="font-bold text-lg py-2 pl-2">You can ask me to:</span>
         <MessagePart
           title="Discover @Holidoit"
           subtitle="Learn more about the Holidoit platform."

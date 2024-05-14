@@ -18,7 +18,7 @@ export const ShortTextInput = (props: ShortTextInputProps) => {
       ref={props.ref}
       class="focus:outline-none bg-transparent flex-1 overflow-auto resize-y pl-6 py-4 w-full text-input text-base font-normal disabled:opacity-50 disabled:cursor-not-allowed disabled:brightness-100"
       disabled={props.disabled}
-      style={{ 'font-size': props.fontSize ? `${props.fontSize}px` : '16px', 'min-height': '1lh', 'max-height': '6lh', 'field-sizing': 'content' }}
+      style={{ 'font-size': props.fontSize ? `${props.fontSize}px` : '16px', 'min-height': '24px', 'max-height': '128px', 'field-sizing': 'content' }}
       onInput={(e) => local.onInput(e.currentTarget.value)}
       {...others}
     />
