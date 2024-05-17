@@ -85,8 +85,8 @@ export const ProductCarouselItem = (props: { metadata: ProductMetadata; bg: stri
         />
       </div>
       <div class="px-3 my-4 grow">
-        <p class="text-black text-center font-medium text-sm text-jost mb-2">{props.metadata.name}</p>
-        <p class="text-black text-center font-light text-sm text-jost">Starting at {toNumber(props.metadata.price) | 0}€ per person</p>
+        <p class="text-black text-center text-jost font-medium text-sm text-jost mb-2">{props.metadata.name}</p>
+        <p class="text-black text-center text-jost font-light text-sm text-jost">Starting at {toNumber(props.metadata.price) | 0}€ per person</p>
       </div>
       <div class="px-3 my-3 flex flex-col w-full mt-auto">
         <span class="rounded-full w-full text-center text-sm text-jost text-white py-3 px-2" style={{ 'background-color': '#202124' }}>
