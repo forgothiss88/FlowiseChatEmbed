@@ -1,7 +1,7 @@
 import { DeleteButton, SendButton } from '@/components/SendButton';
 import { isMobile } from '@/utils/isMobileSignal';
 import { createEffect, onMount } from 'solid-js';
-import { ShortTextInput } from './ShortTextInput';
+import { AutoGrowTextArea } from './AutoGrowTextArea';
 
 type Props = {
   placeholder?: string;
@@ -24,9 +24,7 @@ const defaultBackgroundColor = '#ffffff';
 const defaultTextColor = '#303235';
 
 export const TextInput = (props: Props) => {
-  let inputRef: HTMLInputElement | HTMLTextAreaElement | undefined;
-
-  const handleInput = (inputValue: string) => props.setInputValue(inputValue);
+  let inputRef: HTMLTextAreaElement | undefined;
 
   const checkIfInputIsValid = () => props.inputValue() !== '' && inputRef?.reportValidity();
 
@@ -61,10 +59,10 @@ export const TextInput = (props: Props) => {
       }}
       onKeyDown={submitWhenEnter}
     >
-      <ShortTextInput
-        ref={inputRef as HTMLInputElement}
-        onInput={handleInput}
-        value={props.inputValue()}
+      <AutoGrowTextArea
+        ref={inputRef}
+        setValue={props.setInputValue}
+        valueGetter={props.inputValue}
         fontSize={props.fontSize}
         disabled={props.disabled}
         placeholder={props.placeholder ?? 'Type your question'}
@@ -73,14 +71,14 @@ export const TextInput = (props: Props) => {
         sendButtonColor={props.sendButtonColor}
         type="button"
         isDisabled={props.disabled || props.inputValue() === ''}
-        class="my-2"
-        on:click={submit}
-      >
-        <span style={{ 'font-family': 'Poppins, sans-serif' }}>Send</span>
-      </SendButton>
-      <DeleteButton sendButtonColor={props.sendButtonColor} type="button" isDisabled={!props.isDeleteEnabled} class="my-2" on:click={props.clearChat}>
-        <span style={{ 'font-family': 'Poppins, sans-serif' }}>Clear</span>
-      </DeleteButton>
+        onClick={submit}
+      ></SendButton>
+      <DeleteButton
+        sendButtonColor={props.sendButtonColor}
+        type="button"
+        isDisabled={!props.isDeleteEnabled}
+        onClick={props.clearChat}
+      ></DeleteButton>
     </div>
   );
 };
