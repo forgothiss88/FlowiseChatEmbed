@@ -15,7 +15,7 @@ export const AutoGrowTextArea = (props: ShortTextInputProps) => {
   const textarea: HTMLTextAreaElement = (
     <textarea
       ref={local.ref}
-      class="my-1 overflow-hidden resize-none bg-transparent w-full flex-1 text-base font-normal placeholder:italic placeholder:font-light disabled:opacity-50 disabled:cursor-not-allowed disabled:brightness-100 focus:outline-none"
+      class="align-bottom overflow-hidden resize-none bg-transparent w-full flex-1 text-base font-normal placeholder:italic placeholder:font-light disabled:opacity-50 disabled:cursor-not-allowed disabled:brightness-100 focus:outline-none"
       aria-placeholder={local.placeholder}
       placeholder={local.placeholder}
       rows="1"
