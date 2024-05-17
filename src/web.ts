@@ -76,7 +76,7 @@ const createDefaultChatBot = () => {
                     textInput: {
                         backgroundColor: "#ffffff",
                         textColor: "#283E4D",
-                        placeholder: "Write here...",
+                        placeholder: "Ask me (almost) anything...",
                         sendButtonColor: "#7f7970",
                     },
                 }
