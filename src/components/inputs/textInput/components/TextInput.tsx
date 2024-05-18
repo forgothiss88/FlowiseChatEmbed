@@ -1,6 +1,4 @@
 import { DeleteButton, SendButton } from '@/components/SendButton';
-import { isMobile } from '@/utils/isMobileSignal';
-import { createEffect, onMount } from 'solid-js';
 import { AutoGrowTextArea } from './AutoGrowTextArea';
 
 const defaultBackgroundColor = '#ffffff';
@@ -37,14 +35,6 @@ export const TextInput = (props: Props) => {
     const isIMEComposition = e.isComposing || e.keyCode === 229;
     if (e.key === 'Enter' && !isIMEComposition) submit();
   };
-
-  createEffect(() => {
-    if (!props.disabled && !isMobile() && inputRef) inputRef.focus();
-  });
-
-  onMount(() => {
-    if (!isMobile() && inputRef) inputRef.focus();
-  });
 
   return (
     <div
