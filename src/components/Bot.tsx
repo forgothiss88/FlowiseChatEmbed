@@ -410,33 +410,33 @@ export const Bot = (props: BotProps & { class?: string } & UserProps) => {
               )}
             </For>
           </div>
-          <Topbar
-            title={props.title}
-            titleColor={props.titleColor}
-            titleAvatarSrc={props.titleAvatarSrc}
-            bubbleTextColor={props.bubbleTextColor}
-            bubbleButtonColor={props.bubbleButtonColor}
-            topbarColor={props.topbarColor}
-            isFullPage={props.isFullPage}
-          />
-          <Bottombar
-            backgroundColor={props.textInput?.backgroundColor}
-            textColor={props.textInput?.textColor}
-            placeholder={props.textInput?.placeholder}
-            sendButtonColor={props.textInput?.sendButtonColor}
-            fontSize={props.fontSize}
-            disabled={loading()}
-            getInputValue={userInput}
-            setInputValue={setUserInput}
-            onSubmit={handleSubmit}
-            isFullPage={props.isFullPage}
-            clearChat={clearChat}
-            isDeleteEnabled={messages().length > 1}
-            showStarterPrompts={starterPrompts().length > 0 && messages().length <= 1}
-            starterPrompts={starterPrompts}
-            promptClick={handleSubmit}
-          />
         </div>
+        <Topbar
+          title={props.title}
+          titleColor={props.titleColor}
+          titleAvatarSrc={props.titleAvatarSrc}
+          bubbleTextColor={props.bubbleTextColor}
+          bubbleButtonColor={props.bubbleButtonColor}
+          topbarColor={props.topbarColor}
+          isFullPage={props.isFullPage}
+        />
+        <Bottombar
+          backgroundColor={props.textInput?.backgroundColor}
+          textColor={props.textInput?.textColor}
+          placeholder={props.textInput?.placeholder}
+          sendButtonColor={props.textInput?.sendButtonColor}
+          fontSize={props.fontSize}
+          disabled={loading()}
+          getInputValue={userInput}
+          setInputValue={setUserInput}
+          onSubmit={handleSubmit}
+          isFullPage={props.isFullPage}
+          clearChat={clearChat}
+          isDeleteEnabled={messages().length > 1}
+          showStarterPrompts={starterPrompts().length > 0 && messages().length <= 1}
+          starterPrompts={starterPrompts}
+          promptClick={handleSubmit}
+        />
       </div>
       {sourcePopupOpen() && <Popup isOpen={sourcePopupOpen()} value={sourcePopupSrc()} onClose={() => setSourcePopupOpen(false)} />}
     </>
