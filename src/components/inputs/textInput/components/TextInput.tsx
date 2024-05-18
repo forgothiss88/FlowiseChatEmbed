@@ -3,7 +3,10 @@ import { isMobile } from '@/utils/isMobileSignal';
 import { createEffect, onMount } from 'solid-js';
 import { AutoGrowTextArea } from './AutoGrowTextArea';
 
-type Props = {
+const defaultBackgroundColor = '#ffffff';
+const defaultTextColor = '#303235';
+
+export type Props = {
   placeholder?: string;
   backgroundColor?: string;
   textColor?: string;
@@ -11,25 +14,21 @@ type Props = {
   defaultValue?: string;
   fontSize?: number;
   disabled?: boolean;
-  onSubmit: (value: string) => void;
   isFullPage?: boolean;
-  clearChat: () => void;
   isDeleteEnabled: boolean;
-  message?: string;
-  inputValue: () => string;
+  onSubmit: (value: string) => void;
+  clearChat: () => void;
+  getInputValue: () => string;
   setInputValue: (value: string) => void;
 };
-
-const defaultBackgroundColor = '#ffffff';
-const defaultTextColor = '#303235';
 
 export const TextInput = (props: Props) => {
   let inputRef: HTMLTextAreaElement | undefined;
 
-  const checkIfInputIsValid = () => props.inputValue() !== '' && inputRef?.reportValidity();
+  const checkIfInputIsValid = () => props.getInputValue() !== '' && inputRef?.reportValidity();
 
   const submit = () => {
-    if (checkIfInputIsValid()) props.onSubmit(props.inputValue());
+    if (checkIfInputIsValid()) props.onSubmit(props.getInputValue());
     props.setInputValue('');
   };
 
@@ -49,11 +48,10 @@ export const TextInput = (props: Props) => {
 
   return (
     <div
-      class={(props.isFullPage ? '' : 'rounded-b-3xl') + ' w-full flex flex-row chatbot-input shadow-sm fixed right-0 bottom-0'}
+      class={(props.isFullPage ? '' : 'rounded-b-3xl') + ' w-full flex flex-row chatbot-input shadow-sm'}
       data-testid="input"
       style={{
         'border-top': '1px solid #eeeeee',
-        'z-index': 1000,
         'background-color': props.backgroundColor ?? defaultBackgroundColor,
         color: props.textColor ?? defaultTextColor,
       }}
@@ -61,8 +59,8 @@ export const TextInput = (props: Props) => {
     >
       <AutoGrowTextArea
         ref={inputRef}
-        setValue={props.setInputValue}
-        valueGetter={props.inputValue}
+        setInputValue={props.setInputValue}
+        getInputValue={props.getInputValue}
         fontSize={props.fontSize}
         disabled={props.disabled}
         placeholder={props.placeholder ?? 'Type your question'}
@@ -70,15 +68,10 @@ export const TextInput = (props: Props) => {
       <SendButton
         sendButtonColor={props.sendButtonColor}
         type="button"
-        isDisabled={props.disabled || props.inputValue() === ''}
+        isDisabled={props.disabled || props.getInputValue() === ''}
         onClick={submit}
-      ></SendButton>
-      <DeleteButton
-        sendButtonColor={props.sendButtonColor}
-        type="button"
-        isDisabled={!props.isDeleteEnabled}
-        onClick={props.clearChat}
-      ></DeleteButton>
+      />
+      <DeleteButton sendButtonColor={props.sendButtonColor} type="button" isDisabled={!props.isDeleteEnabled} onClick={props.clearChat} />
     </div>
   );
 };

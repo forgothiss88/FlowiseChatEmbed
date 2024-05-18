@@ -2,16 +2,15 @@ import { BotMessageTheme, TextInputTheme, UserMessageTheme } from '@/features/bu
 import { Popup } from '@/features/popup';
 import { MessageBE, RunInput } from '@/queries/sendMessageQuery';
 import { fetchEventSource } from '@microsoft/fetch-event-source';
-import { For, Show, createEffect, createSignal, onMount } from 'solid-js';
+import { For, createEffect, createSignal, onMount } from 'solid-js';
 import { v4 as uuidv4 } from 'uuid';
+import { Bottombar } from './Bottombar';
 import { products, setProducts, updateProducts } from './Products';
 import Topbar from './Topbar';
 import { BotBubble } from './bubbles/BotBubble';
 import FirstMessageBubble from './bubbles/FirstMessageBubble';
 import { GuestBubble } from './bubbles/GuestBubble';
 import { LoadingBubble } from './bubbles/LoadingBubble';
-import { StarterPromptBubble } from './bubbles/StarterPromptBubble';
-import { TextInput } from './inputs/textInput';
 
 type messageType = 'apiMessage' | 'userMessage' | 'usermessagewaiting';
 
@@ -196,10 +195,6 @@ export const Bot = (props: BotProps & { class?: string } & UserProps) => {
     setLoading(false);
     setUserInput('');
     scrollToBottom();
-  };
-
-  const promptClick = (prompt: string) => {
-    handleSubmit(prompt);
   };
 
   const messageTypeFEtoBE = (msg: messageType) => {
@@ -424,27 +419,24 @@ export const Bot = (props: BotProps & { class?: string } & UserProps) => {
             topbarColor={props.topbarColor}
             isFullPage={props.isFullPage}
           />
-          <TextInput
+          <Bottombar
             backgroundColor={props.textInput?.backgroundColor}
             textColor={props.textInput?.textColor}
             placeholder={props.textInput?.placeholder}
             sendButtonColor={props.textInput?.sendButtonColor}
             fontSize={props.fontSize}
             disabled={loading()}
-            inputValue={userInput}
+            getInputValue={userInput}
             setInputValue={setUserInput}
             onSubmit={handleSubmit}
             isFullPage={props.isFullPage}
             clearChat={clearChat}
             isDeleteEnabled={messages().length > 1}
+            showStarterPrompts={starterPrompts().length > 0 && messages().length <= 1}
+            starterPrompts={starterPrompts}
+            promptClick={handleSubmit}
           />
         </div>
-        <Show when={starterPrompts().length > 0 && messages().length <= 1}>
-          <div class="absolute bottom-14 left-0 z-50 flex flex-row p-2 w-full flex-nowrap overflow-scroll">
-            <For each={[...starterPrompts()]}>{(prompt) => <StarterPromptBubble prompt={prompt} onPromptClick={() => promptClick(prompt)} />}</For>
-          </div>
-        </Show>
-        <BottomSpacer ref={bottomSpacer} />
       </div>
       {sourcePopupOpen() && <Popup isOpen={sourcePopupOpen()} value={sourcePopupSrc()} onClose={() => setSourcePopupOpen(false)} />}
     </>

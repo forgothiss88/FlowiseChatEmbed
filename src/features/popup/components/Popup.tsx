@@ -1,6 +1,6 @@
-import styles from '../../../assets/index.css';
-import { createSignal, Show, splitProps, createEffect, onMount } from 'solid-js';
 import { isNotDefined } from '@/utils/index';
+import { Show, createEffect, createSignal, onMount, splitProps } from 'solid-js';
+import styles from '../../../assets/index.css';
 
 export type PopupProps = {
   value?: any;
