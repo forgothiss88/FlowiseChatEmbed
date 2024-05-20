@@ -23,6 +23,7 @@ export const AutoGrowTextArea = (props: Props) => {
       value={props.getInputValue()}
       onInput={(e) => props.setInputValue(e.target.value)}
       onFocusIn={props.onFocusIn}
+      disabled={props.disabled}
     />
   );
   const resizeTextarea = createEffect(() => {
