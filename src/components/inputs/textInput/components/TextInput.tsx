@@ -53,7 +53,7 @@ export const TextInput = (props: Props) => {
         setInputValue={props.setInputValue}
         getInputValue={props.getInputValue}
         fontSize={props.fontSize}
-        disabled={props.disabled ?? false}
+        disabled={props.disabled}
         placeholder={props.placeholder ?? 'Type your question'}
         onFocusIn={props.onFocusIn}
       />

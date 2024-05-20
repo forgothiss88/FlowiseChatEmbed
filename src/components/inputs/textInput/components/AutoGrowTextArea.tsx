@@ -22,12 +22,10 @@ export const AutoGrowTextArea = (props: Props) => {
       style={{ 'max-height': '4lh' }}
       value={props.getInputValue()}
       onInput={(e) => props.setInputValue(e.target.value)}
-      onFocusIn={props.onFocusIn}
       disabled={props.disabled}
     />
   );
   const resizeTextarea = createEffect(() => {
-    console.debug('resizeTextarea');
     if (props.getInputValue() === '') {
       textarea.style.height = '1lh';
       return;
@@ -37,6 +35,11 @@ export const AutoGrowTextArea = (props: Props) => {
     textarea.style.height = `${scrollHeight}px`;
     textarea.focus();
   });
+
+  textarea.onfocus = (event) => {
+    console.debug('input focused');
+    textarea.scrollIntoView({ behavior: 'smooth', block: 'end' });
+  };
 
   return (
     <div class="ml-3 my-2 w-full">
