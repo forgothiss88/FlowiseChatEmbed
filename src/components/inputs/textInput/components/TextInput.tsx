@@ -18,6 +18,7 @@ export type Props = {
   clearChat: () => void;
   getInputValue: () => string;
   setInputValue: (value: string) => void;
+  onFocusIn?: () => void;
 };
 
 export const TextInput = (props: Props) => {
@@ -52,8 +53,9 @@ export const TextInput = (props: Props) => {
         setInputValue={props.setInputValue}
         getInputValue={props.getInputValue}
         fontSize={props.fontSize}
-        disabled={props.disabled}
+        disabled={props.disabled ?? false}
         placeholder={props.placeholder ?? 'Type your question'}
+        onFocusIn={props.onFocusIn}
       />
       <SendButton
         sendButtonColor={props.sendButtonColor}

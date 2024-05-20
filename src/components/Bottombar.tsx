@@ -6,10 +6,11 @@ export type Props = StarterPromptProps & TextInputProps;
 
 export const Bottombar = (
   props: TextInputProps &
-    StarterPromptProps & {
+    Omit<StarterPromptProps, 'prompt'> & {
       starterPrompts: () => string[];
       showStarterPrompts: boolean;
       promptClick: (prompt: string) => void;
+      scrollToBottom: () => void;
     },
 ) => {
   console.log(props);
@@ -36,6 +37,7 @@ export const Bottombar = (
         backgroundColor={props.backgroundColor}
         textColor={props.textColor}
         sendButtonColor={props.sendButtonColor}
+        onFocusIn={props.scrollToBottom}
       />
     </div>
   );

@@ -436,6 +436,7 @@ export const Bot = (props: BotProps & { class?: string } & UserProps) => {
           showStarterPrompts={starterPrompts().length > 0 && messages().length <= 1}
           starterPrompts={starterPrompts}
           promptClick={handleSubmit}
+          scrollToBottom={scrollToBottom}
         />
       </div>
       {sourcePopupOpen() && <Popup isOpen={sourcePopupOpen()} value={sourcePopupSrc()} onClose={() => setSourcePopupOpen(false)} />}

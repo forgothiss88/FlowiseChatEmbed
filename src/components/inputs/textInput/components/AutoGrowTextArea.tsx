@@ -1,33 +1,33 @@
-import { createEffect, splitProps } from 'solid-js';
-import { JSX } from 'solid-js/jsx-runtime';
+import { createEffect } from 'solid-js';
 
 export type Props = {
   ref: HTMLTextAreaElement | undefined;
   fontSize?: number;
-  disabled?: boolean;
-  isFullPage?: boolean;
+  disabled: boolean;
+  isFullPage: boolean;
   getInputValue: () => string;
   setInputValue: (value: string) => void;
-} & Omit<JSX.InputHTMLAttributes<HTMLTextAreaElement>, 'onInput'>;
+  placeholder: string;
+  onFocusIn: () => void;
+};
 
 export const AutoGrowTextArea = (props: Props) => {
-  const [local, others] = splitProps(props, ['ref', 'placeholder', 'getInputValue', 'setInputValue']);
   const textarea: HTMLTextAreaElement = (
     <textarea
-      ref={local.ref}
+      ref={props.ref}
       class="align-bottom overflow-hidden resize-none bg-transparent w-full flex-1 text-base font-normal placeholder:italic placeholder:font-light disabled:opacity-50 disabled:cursor-not-allowed disabled:brightness-100 focus:outline-none focus:animate-fade-in"
-      aria-placeholder={local.placeholder}
-      placeholder={local.placeholder}
+      aria-placeholder={props.placeholder}
+      placeholder={props.placeholder}
       rows="1"
       style={{ 'max-height': '4lh' }}
-      value={local.getInputValue()}
-      onInput={(e) => local.setInputValue(e.target.value)}
-      {...others}
+      value={props.getInputValue()}
+      onInput={(e) => props.setInputValue(e.target.value)}
+      onFocusIn={props.onFocusIn}
     />
   );
   const resizeTextarea = createEffect(() => {
     console.debug('resizeTextarea');
-    if (local.getInputValue() === '') {
+    if (props.getInputValue() === '') {
       textarea.style.height = '1lh';
       return;
     }
@@ -36,8 +36,6 @@ export const AutoGrowTextArea = (props: Props) => {
     textarea.style.height = `${scrollHeight}px`;
     textarea.focus();
   });
-
-  textarea;
 
   return (
     <div class="ml-3 my-2 w-full">
