@@ -23,6 +23,7 @@ export const AutoGrowTextArea = (props: Props) => {
       // using visualViewport height to calculate the keyboard height
       if (!window.visualViewport) return;
       textareaBottomPosition = `${fullHeight - window.visualViewport.height}px`;
+      textarea.scrollIntoView({ behavior: 'smooth', block: 'end' });
     };
   }
   const handleFocusout = () => {
