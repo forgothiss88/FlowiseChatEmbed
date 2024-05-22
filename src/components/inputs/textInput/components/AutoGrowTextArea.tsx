@@ -1,3 +1,4 @@
+import { delay } from 'lodash';
 import { createEffect, onMount } from 'solid-js';
 
 export type Props = {
@@ -20,8 +21,10 @@ export const AutoGrowTextArea = (props: Props) => {
   const handleFocusin = () => {
     // adjust textarea bottom margin to prevent it from being hidden by the keyboard
     // using visualViewport height to calculate the keyboard height
-    if (!window.visualViewport) return;
-    textareaBottomPosition = `${fullHeight - window.visualViewport.height}px`;
+    delay(() => {
+      if (!window.visualViewport) return;
+      textareaBottomPosition = `${fullHeight - window.visualViewport.height}px`;
+    }, 500);
   };
   const handleFocusout = () => {
     textareaBottomPosition = '0px';
