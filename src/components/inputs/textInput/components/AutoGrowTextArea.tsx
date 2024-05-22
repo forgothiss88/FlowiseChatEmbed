@@ -1,4 +1,3 @@
-import { delay } from 'lodash';
 import { createEffect, onMount } from 'solid-js';
 
 export type Props = {
@@ -25,7 +24,7 @@ export const AutoGrowTextArea = (props: Props) => {
         if (!window.visualViewport) return;
         textareaBottomPosition = `${fullHeight - window.visualViewport.height}px`;
         // scroll all the way down
-        delay(() => props.scrollToBottom(), 500);
+        props.scrollToBottom();
       };
     }
   });
