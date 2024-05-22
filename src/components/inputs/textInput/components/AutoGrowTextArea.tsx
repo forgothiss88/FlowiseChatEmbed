@@ -18,7 +18,7 @@ export const AutoGrowTextArea = (props: Props) => {
   onMount(() => {
     fullHeight = window.innerHeight;
   });
-  const handleFocusin = () => {
+  window.visualViewport?.onresize = () => {
     // adjust textarea bottom margin to prevent it from being hidden by the keyboard
     // using visualViewport height to calculate the keyboard height
     delay(() => {
