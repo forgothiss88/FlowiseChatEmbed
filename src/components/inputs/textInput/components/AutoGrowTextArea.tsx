@@ -6,9 +6,10 @@ export type Props = {
   fontSize?: number;
   disabled: boolean;
   isFullPage: boolean;
+  placeholder: string;
   getInputValue: () => string;
   setInputValue: (value: string) => void;
-  placeholder: string;
+  scrollToBottom: () => void;
 };
 
 export const AutoGrowTextArea = (props: Props) => {
@@ -16,19 +17,18 @@ export const AutoGrowTextArea = (props: Props) => {
   let textareaBottomPosition = '0px';
   onMount(() => {
     fullHeight = window.innerHeight;
+    if (window.visualViewport) {
+      window.visualViewport.onresize = () => {
+        // adjust textarea bottom margin to prevent it from being hidden by the keyboard
+        // using visualViewport height to calculate the keyboard height
+        if (!window.visualViewport) return;
+        textareaBottomPosition = `${fullHeight - window.visualViewport.height}px`;
+        // scroll all the way down
+        props.scrollToBottom();
+      };
+    }
   });
-  if (window.visualViewport) {
-    window.visualViewport.onresize = () => {
-      // adjust textarea bottom margin to prevent it from being hidden by the keyboard
-      // using visualViewport height to calculate the keyboard height
-      if (!window.visualViewport) return;
-      textareaBottomPosition = `${fullHeight - window.visualViewport.height}px`;
-      textarea.scrollIntoView({ behavior: 'smooth', block: 'end' });
-    };
-  }
-  const handleFocusout = () => {
-    textareaBottomPosition = '0px';
-  };
+
   const resizeTextarea = createEffect(() => {
     if (props.getInputValue() === '') {
       textarea.style.height = '1lh';
@@ -51,6 +51,8 @@ export const AutoGrowTextArea = (props: Props) => {
       style={{ 'max-height': '4lh' }}
       value={props.getInputValue()}
       onInput={(e) => props.setInputValue(e.target.value)}
+      onFocusOut={() => (textareaBottomPosition = '0px')}
+      onFocusIn={props.scrollToBottom}
       disabled={props.disabled}
     />
   );

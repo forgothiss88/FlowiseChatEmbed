@@ -38,6 +38,7 @@ export const Bottombar = (
         textColor={props.textColor}
         sendButtonColor={props.sendButtonColor}
         onFocusIn={props.scrollToBottom}
+        scrollToBottom={props.scrollToBottom}
       />
     </div>
   );

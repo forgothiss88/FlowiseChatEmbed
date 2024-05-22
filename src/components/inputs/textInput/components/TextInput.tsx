@@ -19,6 +19,7 @@ export type Props = {
   getInputValue: () => string;
   setInputValue: (value: string) => void;
   onFocusIn?: () => void;
+  scrollToBottom: () => void;
 };
 
 export const TextInput = (props: Props) => {
@@ -55,7 +56,7 @@ export const TextInput = (props: Props) => {
         fontSize={props.fontSize}
         disabled={props.disabled}
         placeholder={props.placeholder ?? 'Type your question'}
-        onFocusIn={props.onFocusIn}
+        scrollToBottom={props.scrollToBottom}
       />
       <SendButton
         sendButtonColor={props.sendButtonColor}
