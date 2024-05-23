@@ -13,17 +13,6 @@ export type Props = {
 };
 
 export const AutoGrowTextArea = (props: Props) => {
-  const resizeTextarea = createEffect(() => {
-    if (props.getInputValue() === '') {
-      textarea.style.height = '1lh';
-      return;
-    }
-    textarea.style.height = 'auto';
-    const { scrollHeight } = textarea;
-    textarea.style.height = `${scrollHeight}px`;
-    textarea.focus();
-  });
-
   const textarea: HTMLTextAreaElement = (
     <textarea
       ref={props.ref}
