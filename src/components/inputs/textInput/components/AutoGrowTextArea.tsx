@@ -29,8 +29,6 @@ export const AutoGrowTextArea = (props: Props) => {
   );
 
   return (
-    <div class="fixed ml-3 my-2 w-full" style={{ bottom: "0px" }}>
-      <div class="pl-3 pr-2 py-2 rounded-xl bg-gray-200">{textarea}</div>
-    </div>
+      <div class="fixed bottom-0 w-full ml-3 my-2 w-fullpl-3 pr-2 py-2 rounded-xl bg-gray-200">{textarea}</div>
   );
 };
