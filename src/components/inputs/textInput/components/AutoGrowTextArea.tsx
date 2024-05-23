@@ -35,7 +35,6 @@ export const AutoGrowTextArea = (props: Props) => {
       style={{ 'max-height': '4lh' }}
       value={props.getInputValue()}
       onInput={(e) => props.setInputValue(e.target.value)}
-      onFocusIn={props.scrollToBottom}
       disabled={props.disabled}
     />
   );
