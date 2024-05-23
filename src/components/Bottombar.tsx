@@ -16,13 +16,6 @@ export const Bottombar = (
   console.log(props);
   return (
     <div class="fixed w-full z-50" style={{ bottom: '0' }}>
-      <Show when={props.starterPrompts().length > 0 && props.showStarterPrompts}>
-        <div class="flex-1 flex flex-row w-full flex-nowrap overflow-x-scroll ml-2">
-          <For each={[...props.starterPrompts()]}>
-            {(prompt) => <StarterPromptBubble prompt={prompt} onPromptClick={() => props.promptClick(prompt)} />}
-          </For>
-        </div>
-      </Show>
       <TextInput
         ref={props.ref}
         fontSize={props.fontSize}
