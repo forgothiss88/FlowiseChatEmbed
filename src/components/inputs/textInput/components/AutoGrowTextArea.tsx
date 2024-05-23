@@ -1,4 +1,5 @@
 import { createEffect, onMount } from 'solid-js';
+import { text } from 'stream/consumers';
 
 export type Props = {
   ref: HTMLTextAreaElement | undefined;
@@ -17,7 +18,7 @@ export const AutoGrowTextArea = (props: Props) => {
     <textarea
       ref={props.ref}
       id={props.id}
-      class="align-bottom overflow-hidden resize-none bg-transparent w-full flex-1 text-base font-normal placeholder:italic placeholder:font-light disabled:opacity-50 disabled:cursor-not-allowed disabled:brightness-100 focus:outline-none focus:animate-fade-in"
+      class="fixed bottom-0 w-full ml-3 my-2 w-fullpl-3 pr-2 py-2 rounded-xl bg-gray-200 align-bottom overflow-hidden resize-none bg-transparent w-full flex-1 text-base font-normal placeholder:italic placeholder:font-light disabled:opacity-50 disabled:cursor-not-allowed disabled:brightness-100 focus:outline-none focus:animate-fade-in"
       aria-placeholder={props.placeholder}
       placeholder={props.placeholder}
       rows="1"
@@ -28,7 +29,5 @@ export const AutoGrowTextArea = (props: Props) => {
     />
   );
 
-  return (
-      <div class="fixed bottom-0 w-full ml-3 my-2 w-fullpl-3 pr-2 py-2 rounded-xl bg-gray-200">{textarea}</div>
-  );
+  return textarea;
 };
