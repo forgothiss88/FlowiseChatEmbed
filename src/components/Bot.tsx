@@ -11,6 +11,7 @@ import { BotBubble } from './bubbles/BotBubble';
 import FirstMessageBubble from './bubbles/FirstMessageBubble';
 import { GuestBubble } from './bubbles/GuestBubble';
 import { LoadingBubble } from './bubbles/LoadingBubble';
+import { AutoGrowTextArea } from './inputs/textInput/components/AutoGrowTextArea';
 
 type messageType = 'apiMessage' | 'userMessage' | 'usermessagewaiting';
 
@@ -421,7 +422,7 @@ export const Bot = (props: BotProps & { class?: string } & UserProps) => {
           isFullPage={props.isFullPage}
         />
       </div>
-      <Bottombar
+      <AutoGrowTextArea
         backgroundColor={props.textInput?.backgroundColor}
         textColor={props.textInput?.textColor}
         placeholder={props.textInput?.placeholder}

@@ -13,22 +13,6 @@ export type Props = {
 };
 
 export const AutoGrowTextArea = (props: Props) => {
-  let fullHeight: number;
-  let textareaBottomPosition = '0px';
-  onMount(() => {
-    fullHeight = window.innerHeight;
-    if (window.visualViewport) {
-      window.visualViewport.onresize = () => {
-        // adjust textarea bottom margin to prevent it from being hidden by the keyboard
-        // using visualViewport height to calculate the keyboard height
-        if (!window.visualViewport) return;
-        textareaBottomPosition = `${fullHeight - window.visualViewport.height}px`;
-        // scroll all the way down
-        props.scrollToBottom();
-      };
-    }
-  });
-
   const resizeTextarea = createEffect(() => {
     if (props.getInputValue() === '') {
       textarea.style.height = '1lh';
@@ -51,14 +35,13 @@ export const AutoGrowTextArea = (props: Props) => {
       style={{ 'max-height': '4lh' }}
       value={props.getInputValue()}
       onInput={(e) => props.setInputValue(e.target.value)}
-      onFocusOut={() => (textareaBottomPosition = '0px')}
       onFocusIn={props.scrollToBottom}
       disabled={props.disabled}
     />
   );
 
   return (
-    <div class="ml-3 my-2 w-full" style={{ bottom: textareaBottomPosition }}>
+    <div class="fixed ml-3 my-2 w-full" style={{ bottom: "0px" }}>
       <div class="pl-3 pr-2 py-2 rounded-xl bg-gray-200">{textarea}</div>
     </div>
   );
