@@ -18,9 +18,10 @@ export const Bottombar = (
 ) => {
   console.log(props);
   const bb: HTMLDivElement = (
-    <div class="fixed bottom-0 left-0 right-0 z-50">
+    <div class="fixed flex flex-col bottom-0 left-0 right-0 z-50 h-40">
+      <div class="grow" />
       <Show when={props.starterPrompts().length > 0 && props.showStarterPrompts}>
-        <div class="flex-1 flex flex-row w-full flex-nowrap overflow-x-scroll ml-2">
+        <div class="flex flex-row w-full flex-nowrap overflow-x-scroll ml-2">
           <For each={[...props.starterPrompts()]}>
             {(prompt) => <StarterPromptBubble prompt={prompt} onPromptClick={() => props.promptClick(prompt)} />}
           </For>
@@ -45,13 +46,10 @@ export const Bottombar = (
   );
   const vv = window.visualViewport;
   const fixPosition = () => {
-    bb.style.top = `${vv.height - bb.clientHeight}px`;
+    const rect = bb.getBoundingClientRect();
+    console.log(rect);
+    bb.style.top = `${vv.height - rect.height}px`;
   };
   vv.addEventListener('resize', fixPosition);
-  onMount(() => {
-    setTimeout(() => {
-      fixPosition();
-    }, 50);
-  });
   return bb;
 };
