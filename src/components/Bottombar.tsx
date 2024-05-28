@@ -2,6 +2,10 @@ import { For, Show, onMount } from 'solid-js';
 import { StarterPromptBubble, Props as StarterPromptProps } from './bubbles/StarterPromptBubble';
 import { TextInput, Props as TextInputProps } from './inputs/textInput';
 
+const isIOS = () => {
+  return /iPad|iPhone|iPod/.test(navigator.userAgent);
+};
+
 export type Props = StarterPromptProps & TextInputProps;
 
 export const Bottombar = (
@@ -38,10 +42,6 @@ export const Bottombar = (
       />
     </div>
   );
-  // check if is ios device
-  const isIOS = () => {
-    return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-  };
   if (!window.visualViewport || !isIOS()) {
     return bb;
   }
@@ -53,4 +53,5 @@ export const Bottombar = (
   onMount(() => {
     fixPosition();
   });
+  return bb;
 };
