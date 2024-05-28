@@ -14,7 +14,7 @@ export const Bottombar = (
 ) => {
   console.log(props);
   return (
-    <div class="fixed bottom-0 left-0 right-0 z-50">
+    <div class="bottom-0 left-0 right-0 z-50">
       <Show when={props.starterPrompts().length > 0 && props.showStarterPrompts}>
         <div class="flex-1 flex flex-row w-full flex-nowrap overflow-x-scroll ml-2">
           <For each={[...props.starterPrompts()]}>

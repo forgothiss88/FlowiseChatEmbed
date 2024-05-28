@@ -366,12 +366,21 @@ export const Bot = (props: BotProps & { class?: string } & UserProps) => {
     <>
       <div
         ref={botContainer}
-        class={'relative flex w-full h-full text-base overflow-hidden bg-cover bg-center flex-col items-center chatbot-container ' + props.class}
+        class={'relative flex flex-col w-full h-full text-base overflow-hidden bg-cover bg-center items-center chatbot-container ' + props.class}
       >
-        <div class="flex w-full h-full justify-center pb-14 pt-14">
+        <Topbar
+          title={props.title}
+          titleColor={props.titleColor}
+          titleAvatarSrc={props.titleAvatarSrc}
+          bubbleTextColor={props.bubbleTextColor}
+          bubbleButtonColor={props.bubbleButtonColor}
+          topbarColor={props.topbarColor}
+          isFullPage={props.isFullPage}
+        />
+        <div class="h-full w-full flex-1 overflow-hidden flex flex-col">
           <div
             ref={chatContainer}
-            class="overflow-y-scroll min-w-full w-full min-h-full px-3 relative scrollable-container chatbot-chat-view scroll-smooth"
+            class="relative flex flex-col flex-1 w-full min-h-max overflow-auto pb-2 px-3 scrollable-container scroll-smooth"
           >
             <p class="m-5 text-2xl font-bold text-white text-jost">Welcome to my @Twini :)</p>
             <FirstMessageBubble
@@ -410,33 +419,24 @@ export const Bot = (props: BotProps & { class?: string } & UserProps) => {
               )}
             </For>
           </div>
+          <Bottombar
+            backgroundColor={props.textInput?.backgroundColor}
+            textColor={props.textInput?.textColor}
+            placeholder={props.textInput?.placeholder}
+            sendButtonColor={props.textInput?.sendButtonColor}
+            fontSize={props.fontSize}
+            disabled={loading()}
+            getInputValue={userInput}
+            setInputValue={setUserInput}
+            onSubmit={handleSubmit}
+            isFullPage={props.isFullPage}
+            clearChat={clearChat}
+            isDeleteEnabled={messages().length > 1}
+            showStarterPrompts={starterPrompts().length > 0 && messages().length <= 1}
+            starterPrompts={starterPrompts}
+            promptClick={handleSubmit}
+          />
         </div>
-        <Topbar
-          title={props.title}
-          titleColor={props.titleColor}
-          titleAvatarSrc={props.titleAvatarSrc}
-          bubbleTextColor={props.bubbleTextColor}
-          bubbleButtonColor={props.bubbleButtonColor}
-          topbarColor={props.topbarColor}
-          isFullPage={props.isFullPage}
-        />
-        <Bottombar
-          backgroundColor={props.textInput?.backgroundColor}
-          textColor={props.textInput?.textColor}
-          placeholder={props.textInput?.placeholder}
-          sendButtonColor={props.textInput?.sendButtonColor}
-          fontSize={props.fontSize}
-          disabled={loading()}
-          getInputValue={userInput}
-          setInputValue={setUserInput}
-          onSubmit={handleSubmit}
-          isFullPage={props.isFullPage}
-          clearChat={clearChat}
-          isDeleteEnabled={messages().length > 1}
-          showStarterPrompts={starterPrompts().length > 0 && messages().length <= 1}
-          starterPrompts={starterPrompts}
-          promptClick={handleSubmit}
-        />
       </div>
       {sourcePopupOpen() && <Popup isOpen={sourcePopupOpen()} value={sourcePopupSrc()} onClose={() => setSourcePopupOpen(false)} />}
     </>
