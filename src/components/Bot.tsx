@@ -107,19 +107,17 @@ export const Bot = (props: BotProps & { class?: string } & UserProps) => {
 
   const [chatId, setChatId] = createSignal(props.customerEmail);
   const [starterPrompts, setStarterPrompts] = createSignal<string[]>(props.starterPrompts || [], { equals: false });
-
-  onMount(() => {
-    if (!bottomSpacer) return;
-    setTimeout(() => {
-      chatContainer?.scrollTo(0, chatContainer.scrollHeight);
-    }, 50);
-  });
-
   const scrollToBottom = () => {
     setTimeout(() => {
       chatContainer?.scrollTo(0, chatContainer.scrollHeight);
     }, 50);
   };
+
+  onMount(() => {
+    if (!bottomSpacer) return;
+    scrollToBottom();
+  });
+
 
   /**
    * Add each chat message into localStorage
@@ -437,6 +435,7 @@ export const Bot = (props: BotProps & { class?: string } & UserProps) => {
             promptClick={handleSubmit}
           />
         </div>
+        <BottomSpacer ref={bottomSpacer} />
       </div>
       {sourcePopupOpen() && <Popup isOpen={sourcePopupOpen()} value={sourcePopupSrc()} onClose={() => setSourcePopupOpen(false)} />}
     </>
@@ -447,5 +446,17 @@ type BottomSpacerProps = {
   ref: HTMLDivElement | undefined;
 };
 const BottomSpacer = (props: BottomSpacerProps) => {
-  return <div ref={props.ref} class="w-full h-16" />;
+  const spacer: HTMLDivElement = <div ref={props.ref} class="fixed w-full h-2 bg-black" style={{ "z-index": 100 }}/>;
+  if (!window.visualViewport) {
+    return spacer;
+  }
+  const vv = window.visualViewport;
+  const fixPosition = () => {
+    spacer.style.top = `${vv.height - spacer.clientHeight}px`;
+  }
+  vv.addEventListener('resize', fixPosition);
+  onMount(() => {
+    fixPosition();
+  });
+  return spacer;
 };
