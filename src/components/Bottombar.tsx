@@ -1,4 +1,4 @@
-import { For, Show } from 'solid-js';
+import { For, Show, onMount } from 'solid-js';
 import { StarterPromptBubble, Props as StarterPromptProps } from './bubbles/StarterPromptBubble';
 import { TextInput, Props as TextInputProps } from './inputs/textInput';
 
@@ -13,8 +13,7 @@ export const Bottombar = (
     },
 ) => {
   console.log(props);
-  return (
-    <div class="bottom-0 left-0 right-0 z-50">
+  const bb: HTMLDivElement = (<div class="fixed bottom-0 left-0 right-0 z-50">
       <Show when={props.starterPrompts().length > 0 && props.showStarterPrompts}>
         <div class="flex-1 flex flex-row w-full flex-nowrap overflow-x-scroll ml-2">
           <For each={[...props.starterPrompts()]}>
@@ -39,4 +38,19 @@ export const Bottombar = (
       />
     </div>
   );
+  // check if is ios device
+  const isIOS = () => {
+    return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+  };
+  if (!window.visualViewport || !isIOS()) {
+    return bb;
+  }
+  const vv = window.visualViewport;
+  const fixPosition = () => {
+    bb.style.top = `${vv.height - bb.clientHeight}px`;
+  }
+  vv.addEventListener('resize', fixPosition);
+  onMount(() => {
+    fixPosition();
+  });
 };
