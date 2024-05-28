@@ -11,7 +11,6 @@ import { BotBubble } from './bubbles/BotBubble';
 import FirstMessageBubble from './bubbles/FirstMessageBubble';
 import { GuestBubble } from './bubbles/GuestBubble';
 import { LoadingBubble } from './bubbles/LoadingBubble';
-import { AutoGrowTextArea } from './inputs/textInput/components/AutoGrowTextArea';
 
 type messageType = 'apiMessage' | 'userMessage' | 'usermessagewaiting';
 
@@ -421,25 +420,24 @@ export const Bot = (props: BotProps & { class?: string } & UserProps) => {
           topbarColor={props.topbarColor}
           isFullPage={props.isFullPage}
         />
+        <Bottombar
+          backgroundColor={props.textInput?.backgroundColor}
+          textColor={props.textInput?.textColor}
+          placeholder={props.textInput?.placeholder}
+          sendButtonColor={props.textInput?.sendButtonColor}
+          fontSize={props.fontSize}
+          disabled={loading()}
+          getInputValue={userInput}
+          setInputValue={setUserInput}
+          onSubmit={handleSubmit}
+          isFullPage={props.isFullPage}
+          clearChat={clearChat}
+          isDeleteEnabled={messages().length > 1}
+          showStarterPrompts={starterPrompts().length > 0 && messages().length <= 1}
+          starterPrompts={starterPrompts}
+          promptClick={handleSubmit}
+        />
       </div>
-      <AutoGrowTextArea
-        backgroundColor={props.textInput?.backgroundColor}
-        textColor={props.textInput?.textColor}
-        placeholder={props.textInput?.placeholder}
-        sendButtonColor={props.textInput?.sendButtonColor}
-        fontSize={props.fontSize}
-        disabled={loading()}
-        getInputValue={userInput}
-        setInputValue={setUserInput}
-        onSubmit={handleSubmit}
-        isFullPage={props.isFullPage}
-        clearChat={clearChat}
-        isDeleteEnabled={messages().length > 1}
-        showStarterPrompts={starterPrompts().length > 0 && messages().length <= 1}
-        starterPrompts={starterPrompts}
-        promptClick={handleSubmit}
-        scrollToBottom={scrollToBottom}
-      />
       {sourcePopupOpen() && <Popup isOpen={sourcePopupOpen()} value={sourcePopupSrc()} onClose={() => setSourcePopupOpen(false)} />}
     </>
   );

@@ -1,33 +1,47 @@
-import { createEffect, onMount } from 'solid-js';
-import { text } from 'stream/consumers';
+import { createEffect, splitProps } from 'solid-js';
+import { JSX } from 'solid-js/jsx-runtime';
 
 export type Props = {
   ref: HTMLTextAreaElement | undefined;
-  id: string;
   fontSize?: number;
-  disabled: boolean;
-  isFullPage: boolean;
-  placeholder: string;
+  disabled?: boolean;
+  isFullPage?: boolean;
   getInputValue: () => string;
   setInputValue: (value: string) => void;
-  scrollToBottom: () => void;
-};
+} & Omit<JSX.InputHTMLAttributes<HTMLTextAreaElement>, 'onInput'>;
 
 export const AutoGrowTextArea = (props: Props) => {
+  const [local, others] = splitProps(props, ['ref', 'placeholder', 'getInputValue', 'setInputValue']);
   const textarea: HTMLTextAreaElement = (
     <textarea
-      ref={props.ref}
-      id={props.id}
-      class="fixed bottom-0 w-full ml-3 my-2 w-fullpl-3 pr-2 py-2 rounded-xl bg-gray-200 align-bottom overflow-hidden resize-none bg-transparent w-full flex-1 text-base font-normal placeholder:italic placeholder:font-light disabled:opacity-50 disabled:cursor-not-allowed disabled:brightness-100 focus:outline-none focus:animate-fade-in"
-      aria-placeholder={props.placeholder}
-      placeholder={props.placeholder}
+      ref={local.ref}
+      class="align-bottom overflow-hidden resize-none bg-transparent w-full flex-1 text-base font-normal placeholder:italic placeholder:font-light disabled:opacity-50 disabled:cursor-not-allowed disabled:brightness-100 focus:outline-none focus:animate-fade-in"
+      aria-placeholder={local.placeholder}
+      placeholder={local.placeholder}
       rows="1"
       style={{ 'max-height': '4lh' }}
-      value={props.getInputValue()}
-      onInput={(e) => props.setInputValue(e.target.value)}
-      disabled={props.disabled}
+      value={local.getInputValue()}
+      onInput={(e) => local.setInputValue(e.target.value)}
+      {...others}
     />
   );
+  const resizeTextarea = createEffect(() => {
+    console.debug('resizeTextarea');
+    if (local.getInputValue() === '') {
+      textarea.style.height = '1lh';
+      return;
+    }
+    textarea.style.height = 'auto';
+    const { scrollHeight } = textarea;
+    textarea.style.height = `${scrollHeight}px`;
+    textarea.focus();
+  });
 
-  return textarea;
+  textarea;
+
+  return (
+    <div class="ml-3 my-2 w-full">
+      <div class="pl-3 pr-2 py-2 rounded-xl bg-gray-200">{textarea}</div>
+    </div>
+  );
 };

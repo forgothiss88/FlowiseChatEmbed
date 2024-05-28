@@ -33,9 +33,8 @@ export const TabComponent = (props: { backgroundColor: string; sourceProducts?: 
       <ul class="flex flex-row flex-nowrap text-center text-gray-500 border-t border-gray-200 mt-4">
         <li class="grow">
           <button
-            class={`text-jost p-4 border-b-2 rounded-t-lg ${
-              activeTab() === 'products' ? 'text-black border-black font-light' : 'border-transparent hover:text-gray-600 hover:border-gray-300'
-            }`}
+            class={`text-jost p-4 border-b-2 rounded-t-lg ${activeTab() === 'products' ? 'text-black border-black font-light' : 'border-transparent hover:text-gray-600 hover:border-gray-300'
+              }`}
             onClick={() => setActiveTab('products')}
             aria-current={activeTab() === 'products' ? 'page' : undefined}
           >
@@ -44,9 +43,8 @@ export const TabComponent = (props: { backgroundColor: string; sourceProducts?: 
         </li>
         <li class="grow">
           <button
-            class={`text-jost p-4 border-b-2 rounded-t-lg ${
-              activeTab() === 'posts' ? 'text-black border-black font-light' : 'border-transparent hover:text-gray-600 hover:border-gray-300'
-            }`}
+            class={`text-jost p-4 border-b-2 rounded-t-lg ${activeTab() === 'posts' ? 'text-black border-black font-light' : 'border-transparent hover:text-gray-600 hover:border-gray-300'
+              }`}
             onClick={() => setActiveTab('posts')}
           >
             Social Content
@@ -138,7 +136,7 @@ export const BotBubble = (props: Props) => {
   });
 
   return (
-    <div class="flex justify-start items-start host-container mr-12 my-5 mb-5  text-roboto">
+    <div class="flex justify-start items-start host-container mr-12 mt-5 mb-5  text-roboto">
       <Show when={props.showAvatar}>
         <Avatar initialAvatarSrc={props.avatarSrc} />
       </Show>
