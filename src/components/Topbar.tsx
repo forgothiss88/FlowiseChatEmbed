@@ -61,7 +61,7 @@ const Topbar = (props: {
         </Show>
         <div class="grow"></div>
         <div class="grow-0 order-last mr-4">
-            <a href="https://twinitest.bubbleapps.io/version-test/sign_up" target="_blank" class="px-4 py-2 whitespace-pre-wrap font-semibold text-sm max-w-full bg-white rounded-full text-black text-jost">
+            <a href="https://www.twini.ai" target="_blank" class="px-4 py-2 whitespace-pre-wrap font-semibold text-sm max-w-full bg-white rounded-full text-black text-jost">
                 Create your @Twini
             </a>
         </div>
