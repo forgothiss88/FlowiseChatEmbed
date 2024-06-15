@@ -75,14 +75,7 @@ export const ProductCarouselItem = (props: { metadata: ProductMetadata; bg: stri
       onclick={() => window.open(props.metadata.item_url, '_blank')}
     >
       <div>
-        <img
-          class="w-full h-full object-cover aspect-square bg-white"
-          src={
-            props.metadata.thumbnail_url ||
-            'https://cdn.holidoit.com/media/experiences/274/images/600/Cena_in_barca_e_tour_a_Finale_Ligure-9-21486.webp'
-          }
-          alt={props.metadata.name}
-        />
+        <img class="w-full h-full object-cover aspect-square bg-white" src={props.metadata.thumbnail_url} alt={props.metadata.name} />
       </div>
       <div class="px-3 my-4 grow">
         <p class="text-black text-center text-jost font-medium text-sm text-jost mb-2">{props.metadata.name}</p>

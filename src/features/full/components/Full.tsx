@@ -1,4 +1,4 @@
-import { Bot, BotProps, UserProps } from '@/components/Bot';
+import { Bot, BotProps } from '@/components/Bot';
 import { BubbleParams } from '@/features/bubble/types';
 import { Show, createSignal, onCleanup, onMount } from 'solid-js';
 import styles from '../../../assets/index.css';
@@ -6,7 +6,7 @@ import styles from '../../../assets/index.css';
 const defaultButtonColor = '#3B81F6';
 const defaultIconColor = 'white';
 
-export type FullProps = BotProps & BubbleParams & UserProps;
+export type FullProps = BotProps & BubbleParams;
 
 export const Full = (props: FullProps, { element }: { element: HTMLElement }) => {
   const [isBotDisplayed, setIsBotDisplayed] = createSignal(false);
@@ -33,7 +33,7 @@ export const Full = (props: FullProps, { element }: { element: HTMLElement }) =>
       <Show when={isBotDisplayed()}>
         <div
           style={{
-            'background': props.theme?.chatWindow?.backgroundColor || '#ffffff',
+            background: props.theme?.chatWindow?.backgroundColor || '#ffffff',
             height: props.theme?.chatWindow?.height ? `${props.theme?.chatWindow?.height.toString()}px` : '100vh',
             width: props.theme?.chatWindow?.width ? `${props.theme?.chatWindow?.width.toString()}px` : '100%',
             margin: '0px',
@@ -55,11 +55,10 @@ export const Full = (props: FullProps, { element }: { element: HTMLElement }) =>
             fontSize={props.theme?.chatWindow?.fontSize}
             chatflowid={props.chatflowid}
             chatflowConfig={props.chatflowConfig}
-            apiHost={props.apiHost}
+            apiUrl={props.apiUrl}
             isFullPage={true}
-            customerEmail={props.customerEmail}
-            customerName={props.customerName}
-            starterPrompts={props.theme?.chatWindow?.starterPrompts}
+            starterPrompts={props.starterPrompts || []}
+            creatorName={props.creatorName}
           />
         </div>
       </Show>

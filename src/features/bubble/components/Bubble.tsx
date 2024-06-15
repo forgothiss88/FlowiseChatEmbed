@@ -1,13 +1,13 @@
 import { createSignal, Show, splitProps } from 'solid-js';
 import styles from '../../../assets/index.css';
-import { Bot, BotProps, UserProps } from '../../../components/Bot';
+import { Bot, BotProps } from '../../../components/Bot';
 import { BubbleParams } from '../types';
 import { BubbleButton } from './BubbleButton';
 
 const defaultButtonColor = '#3B81F6';
 const defaultIconColor = 'white';
 
-export type BubbleProps = BotProps & BubbleParams & UserProps;
+export type BubbleProps = BotProps & BubbleParams;
 
 export const Bubble = (props: BubbleProps) => {
   const [bubbleProps] = splitProps(props, ['theme']);
@@ -42,7 +42,7 @@ export const Bubble = (props: BubbleProps) => {
           'box-shadow': 'rgb(0 0 0 / 16%) 0px 5px 40px',
           'background-color': bubbleProps.theme?.chatWindow?.backgroundColor || '#ffffff',
           'z-index': 42424242,
-          'background': props.theme?.chatWindow?.backgroundColor || '#ffffff',
+          background: props.theme?.chatWindow?.backgroundColor || '#ffffff',
         }}
         class={
           'fixed sm:right-5 rounded-3xl w-full sm:w-[400px] max-h-[704px]' +
@@ -67,10 +67,9 @@ export const Bubble = (props: BubbleProps) => {
             fontSize={bubbleProps.theme?.chatWindow?.fontSize}
             chatflowid={props.chatflowid}
             chatflowConfig={props.chatflowConfig}
-            apiHost={props.apiHost}
-            customerEmail={props.customerEmail}
-            customerName={props.customerName}
-            starterPrompts={props.theme?.chatWindow?.starterPrompts}
+            apiUrl={props.apiUrl}
+            starterPrompts={props.starterPrompts || []}
+            creatorName={props.creatorName}
           />
         </Show>
       </div>

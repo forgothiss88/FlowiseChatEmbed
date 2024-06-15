@@ -9,7 +9,7 @@ import { InstagramSourcesBubble, ProductSourcesBubble } from './SourceBubble';
 
 type Props = {
   message: string;
-  apiHost?: string;
+  apiUrl?: string;
   fileAnnotations?: any;
   showAvatar?: boolean;
   avatarSrc?: string;
@@ -33,8 +33,9 @@ export const TabComponent = (props: { backgroundColor: string; sourceProducts?: 
       <ul class="flex flex-row flex-nowrap text-center text-gray-500 border-t border-gray-200 mt-4">
         <li class="grow">
           <button
-            class={`text-jost p-4 border-b-2 rounded-t-lg ${activeTab() === 'products' ? 'text-black border-black font-light' : 'border-transparent hover:text-gray-600 hover:border-gray-300'
-              }`}
+            class={`text-jost p-4 border-b-2 rounded-t-lg ${
+              activeTab() === 'products' ? 'text-black border-black font-light' : 'border-transparent hover:text-gray-600 hover:border-gray-300'
+            }`}
             onClick={() => setActiveTab('products')}
             aria-current={activeTab() === 'products' ? 'page' : undefined}
           >
@@ -43,8 +44,9 @@ export const TabComponent = (props: { backgroundColor: string; sourceProducts?: 
         </li>
         <li class="grow">
           <button
-            class={`text-jost p-4 border-b-2 rounded-t-lg ${activeTab() === 'posts' ? 'text-black border-black font-light' : 'border-transparent hover:text-gray-600 hover:border-gray-300'
-              }`}
+            class={`text-jost p-4 border-b-2 rounded-t-lg ${
+              activeTab() === 'posts' ? 'text-black border-black font-light' : 'border-transparent hover:text-gray-600 hover:border-gray-300'
+            }`}
             onClick={() => setActiveTab('posts')}
           >
             Social Content
@@ -68,7 +70,7 @@ export const BotBubble = (props: Props) => {
   const downloadFile = async (fileAnnotation: any) => {
     try {
       const response = await sendFileDownloadQuery({
-        apiHost: props.apiHost,
+        apiUrl: props.apiUrl,
         body: { input: { input: '', chat_history: [] }, fileName: fileAnnotation.fileName },
       });
       const blob = new Blob([response.data]);

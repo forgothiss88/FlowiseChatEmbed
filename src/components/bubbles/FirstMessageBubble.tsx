@@ -91,6 +91,7 @@ const FirstMessageBubble = (props: {
         }}
       >
         <span class="font-bold text-lg py-2 pl-2">You can ask me to:</span>
+        // TODO: add content at config time
         <MessagePart
           title="Discover @Holidoit"
           subtitle="Learn more about the Holidoit platform."

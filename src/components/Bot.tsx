@@ -56,16 +56,12 @@ export type MessageType = {
   fileAnnotations?: any;
 };
 
-export type UserProps = {
-  customerEmail: string;
-  customerName: string;
-};
-
 export type BotProps = {
+  creatorName: string;
   chatflowid: string;
-  apiHost: string;
+  apiUrl: string;
   chatflowConfig?: Record<string, unknown>;
-  starterPrompts?: string[];
+  starterPrompts: string[];
   welcomeMessage?: string;
   botMessage?: BotMessageTheme;
   userMessage?: UserMessageTheme;
@@ -84,11 +80,10 @@ export type BotProps = {
 
 const defaultWelcomeMessage = 'Hi there! How can I help?';
 
-export const Bot = (props: BotProps & { class?: string } & UserProps) => {
+export const Bot = (props: BotProps & { class?: string }) => {
   let chatContainer: HTMLDivElement | undefined;
   let bottomSpacer: HTMLDivElement | undefined;
   let botContainer: HTMLDivElement | undefined;
-  console.log('props', props);
 
   const [userInput, setUserInput] = createSignal('');
   const [loading, setLoading] = createSignal(false);
@@ -105,8 +100,7 @@ export const Bot = (props: BotProps & { class?: string } & UserProps) => {
   );
   const [isChatFlowAvailableToStream, setIsChatFlowAvailableToStream] = createSignal(false);
 
-  const [chatId, setChatId] = createSignal(props.customerEmail);
-  const [starterPrompts, setStarterPrompts] = createSignal<string[]>(props.starterPrompts || [], { equals: false });
+  const [chatId, setChatId] = createSignal(props.chatflowid);
   const scrollToBottom = () => {
     setTimeout(() => {
       chatContainer?.scrollTo(0, chatContainer.scrollHeight);
@@ -117,7 +111,6 @@ export const Bot = (props: BotProps & { class?: string } & UserProps) => {
     if (!bottomSpacer) return;
     scrollToBottom();
   });
-
 
   /**
    * Add each chat message into localStorage
@@ -236,6 +229,7 @@ export const Bot = (props: BotProps & { class?: string } & UserProps) => {
         chat_history: messageList,
       },
       config: {},
+      user: props.creatorName,
     };
 
     setIsChatFlowAvailableToStream(false);
@@ -245,7 +239,7 @@ export const Bot = (props: BotProps & { class?: string } & UserProps) => {
     let sourceProducts: SourceDocument[] = [];
     let sourceInstagramPosts: SourceDocument[] = [];
 
-    await fetchEventSource(`${props.apiHost}/${props.chatflowid}/stream`, {
+    await fetchEventSource(`${props.apiUrl}/stream`, {
       signal: abortCtrl.signal,
       method: 'POST',
       body: JSON.stringify(body),
@@ -376,10 +370,7 @@ export const Bot = (props: BotProps & { class?: string } & UserProps) => {
           isFullPage={props.isFullPage}
         />
         <div class="h-full w-full flex-1 overflow-hidden flex flex-col">
-          <div
-            ref={chatContainer}
-            class="relative flex flex-col flex-1 w-full min-h-max overflow-auto pb-2 px-3 scrollable-container scroll-smooth"
-          >
+          <div ref={chatContainer} class="relative flex flex-col flex-1 w-full min-h-max overflow-auto pb-2 px-3 scrollable-container scroll-smooth">
             <p class="m-5 text-2xl font-bold text-white text-jost">Welcome to my @Twini :)</p>
             <FirstMessageBubble
               backgroundColor={props.botMessage?.backgroundColor}
@@ -403,7 +394,7 @@ export const Bot = (props: BotProps & { class?: string } & UserProps) => {
                     <BotBubble
                       message={message.message}
                       fileAnnotations={message.fileAnnotations}
-                      apiHost={props.apiHost}
+                      apiUrl={props.apiUrl}
                       backgroundColor={props.botMessage?.backgroundColor}
                       textColor={props.botMessage?.textColor}
                       showAvatar={props.botMessage?.showAvatar}
@@ -430,8 +421,8 @@ export const Bot = (props: BotProps & { class?: string } & UserProps) => {
             isFullPage={props.isFullPage}
             clearChat={clearChat}
             isDeleteEnabled={messages().length > 1}
-            showStarterPrompts={starterPrompts().length > 0 && messages().length <= 1}
-            starterPrompts={starterPrompts}
+            showStarterPrompts={props.starterPrompts.length > 0 && messages().length <= 1}
+            starterPrompts={props.starterPrompts}
             promptClick={handleSubmit}
           />
         </div>
@@ -446,17 +437,17 @@ type BottomSpacerProps = {
   ref: HTMLDivElement | undefined;
 };
 const BottomSpacer = (props: BottomSpacerProps) => {
-  const spacer: HTMLDivElement = <div ref={props.ref} class="fixed w-full h-2 bg-black" style={{ "z-index": 100 }}/>;
-  if (!window.visualViewport) {
-    return spacer;
-  }
-  const vv = window.visualViewport;
-  const fixPosition = () => {
-    spacer.style.top = `${vv.height - spacer.clientHeight}px`;
-  }
-  vv.addEventListener('resize', fixPosition);
-  onMount(() => {
-    fixPosition();
-  });
+  const spacer: HTMLDivElement = <div ref={props.ref} class="w-full h-16" style={{ 'z-index': 0 }} />;
+  // if (!window.visualViewport) {
+  //   return spacer;
+  // }
+  // const vv = window.visualViewport;
+  // const fixPosition = () => {
+  //   spacer.style.top = `${vv.height - spacer.clientHeight}px`;
+  // }
+  // vv.addEventListener('resize', fixPosition);
+  // onMount(() => {
+  //   fixPosition();
+  // });
   return spacer;
 };

@@ -1,7 +1,7 @@
-import { BotProps } from "./components/Bot";
+import { BotProps } from './components/Bot';
+import { FullProps } from './features/full';
 
-
-export const initFull = (props: BotProps & { id?: string }) => {
+export const initFull = (props: FullProps & { id?: string }) => {
   const fullElement = props.id ? document.getElementById(props.id) : document.querySelector('flowise-fullchatbot');
   if (!fullElement) throw new Error('<flowise-fullchatbot> element not found.');
   Object.assign(fullElement, props);
@@ -20,8 +20,8 @@ export type Chatbot = {
 
 declare const window:
   | {
-    Chatbot: Chatbot | undefined;
-  }
+      Chatbot: Chatbot | undefined;
+    }
   | undefined;
 
 export const parseChatbot = () => ({

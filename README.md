@@ -33,7 +33,7 @@ yarn build
   import Chatbot from 'https://cdn.jsdelivr.net/npm/flowise-embed/dist/web.js';
   Chatbot.init({
     chatflowid: '<chatflowid>',
-    apiHost: 'http://localhost:3000',
+    apiUrl: 'http://localhost:3000',
   });
 </script>
 ```
@@ -45,7 +45,7 @@ yarn build
   import Chatbot from './web.js';
   Chatbot.initFull({
     chatflowid: '<chatflowid>',
-    apiHost: 'http://localhost:3000',
+    apiUrl: 'http://localhost:3000',
   });
 </script>
 <flowise-fullchatbot></flowise-fullchatbot>
@@ -59,7 +59,7 @@ To enable full screen, add `margin: 0` to <code>body</code> style, and confirm y
     import Chatbot from './web.js';
     Chatbot.initFull({
       chatflowid: '<chatflowid>',
-      apiHost: 'http://localhost:3000',
+      apiUrl: 'http://localhost:3000',
       theme: {
         chatWindow: {
           // height: 700, don't set height
@@ -80,7 +80,7 @@ You can also customize chatbot with different configuration
   import Chatbot from 'https://cdn.jsdelivr.net/npm/flowise-embed/dist/web.js';
   Chatbot.init({
     chatflowid: '91e9c803-5169-4db9-8207-3c0915d71c5f',
-    apiHost: 'http://localhost:3000',
+    apiUrl: 'http://localhost:3000',
     chatflowConfig: {
       // topK: 2
     },

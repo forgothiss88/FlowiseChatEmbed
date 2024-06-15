@@ -9,20 +9,19 @@ const isIOS = () => {
 export type Props = StarterPromptProps & TextInputProps;
 
 export const Bottombar = (
-  props: TextInputProps &
-    StarterPromptProps & {
-      starterPrompts: () => string[];
-      showStarterPrompts: boolean;
-      promptClick: (prompt: string) => void;
-    },
+  props: TextInputProps & {
+    starterPrompts: string[];
+    showStarterPrompts: boolean;
+    promptClick: (prompt: string) => void;
+  },
 ) => {
   console.log(props);
   const bb: HTMLDivElement = (
     <div class="fixed flex flex-col bottom-0 left-0 right-0 z-50 h-40">
       <div class="grow" />
-      <Show when={props.starterPrompts().length > 0 && props.showStarterPrompts}>
+      <Show when={props.starterPrompts.length > 0 && props.showStarterPrompts}>
         <div class="flex flex-row w-full flex-nowrap overflow-x-scroll ml-2">
-          <For each={[...props.starterPrompts()]}>
+          <For each={[...props.starterPrompts]}>
             {(prompt) => <StarterPromptBubble prompt={prompt} onPromptClick={() => props.promptClick(prompt)} />}
           </For>
         </div>
