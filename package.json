@@ -1,6 +1,6 @@
 {
   "name": "@glowi/glowi-chatbot",
-  "version": "0.0.71",
+  "version": "0.0.72",
   "description": "Javascript library to display glowi-customized flowise chatbot on your website",
   "type": "module",
   "main": "dist/web.js",
