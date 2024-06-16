@@ -408,25 +408,24 @@ export const Bot = (props: BotProps & { class?: string }) => {
               )}
             </For>
           </div>
-          <Bottombar
-            backgroundColor={props.textInput?.backgroundColor}
-            textColor={props.textInput?.textColor}
-            placeholder={props.textInput?.placeholder}
-            sendButtonColor={props.textInput?.sendButtonColor}
-            fontSize={props.fontSize}
-            disabled={loading()}
-            getInputValue={userInput}
-            setInputValue={setUserInput}
-            onSubmit={handleSubmit}
-            isFullPage={props.isFullPage}
-            clearChat={clearChat}
-            isDeleteEnabled={messages().length > 1}
-            showStarterPrompts={props.starterPrompts.length > 0 && messages().length <= 1}
-            starterPrompts={props.starterPrompts}
-            promptClick={handleSubmit}
-          />
         </div>
-        <BottomSpacer ref={bottomSpacer} />
+        <Bottombar
+          backgroundColor={props.textInput?.backgroundColor}
+          textColor={props.textInput?.textColor}
+          placeholder={props.textInput?.placeholder}
+          sendButtonColor={props.textInput?.sendButtonColor}
+          fontSize={props.fontSize}
+          disabled={loading()}
+          getInputValue={userInput}
+          setInputValue={setUserInput}
+          onSubmit={handleSubmit}
+          isFullPage={props.isFullPage}
+          clearChat={clearChat}
+          isDeleteEnabled={messages().length > 1}
+          showStarterPrompts={props.starterPrompts.length > 0 && messages().length <= 1}
+          starterPrompts={props.starterPrompts}
+          promptClick={handleSubmit}
+        />
       </div>
       {sourcePopupOpen() && <Popup isOpen={sourcePopupOpen()} value={sourcePopupSrc()} onClose={() => setSourcePopupOpen(false)} />}
     </>

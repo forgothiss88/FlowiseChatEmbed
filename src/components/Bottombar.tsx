@@ -15,10 +15,8 @@ export const Bottombar = (
     promptClick: (prompt: string) => void;
   },
 ) => {
-  console.log(props);
   const bb: HTMLDivElement = (
-    <div class="fixed flex flex-col bottom-0 left-0 right-0 z-50 h-40">
-      <div class="grow" />
+    <div class="fixed flex flex-col left-0 right-0 z-50" style={{ bottom: 0 }}>
       <Show when={props.starterPrompts.length > 0 && props.showStarterPrompts}>
         <div class="flex flex-row w-full flex-nowrap overflow-x-scroll ml-2">
           <For each={[...props.starterPrompts]}>
@@ -43,12 +41,13 @@ export const Bottombar = (
       />
     </div>
   );
-  const vv = window.visualViewport;
   const fixPosition = () => {
-    const rect = bb.getBoundingClientRect();
-    console.log(rect);
-    bb.style.top = `${vv.height - rect.height}px`;
+    bb.style.bottom = `${window.innerHeight - window.visualViewport?.height - 1 || 0}px`;
   };
-  vv.addEventListener('resize', fixPosition);
+  window.visualViewport?.addEventListener('resize', fixPosition);
+  onMount(() => {
+    fixPosition();
+  });
+
   return bb;
 };
