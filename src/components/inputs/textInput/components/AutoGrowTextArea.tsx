@@ -37,7 +37,6 @@ export const AutoGrowTextArea = (props: Props) => {
     const { scrollHeight } = textarea;
     textarea.style.height = `${scrollHeight}px`;
     props.setHeight(scrollHeight);
-    textarea.focus();
   });
 
   textarea;
