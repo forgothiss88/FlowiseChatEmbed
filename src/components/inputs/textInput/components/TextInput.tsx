@@ -7,6 +7,7 @@ const defaultBackgroundColor = '#ffffff';
 const defaultTextColor = '#303235';
 
 export type Props = {
+  ref: HTMLTextAreaElement | undefined;
   placeholder?: string;
   backgroundColor?: string;
   textColor?: string;

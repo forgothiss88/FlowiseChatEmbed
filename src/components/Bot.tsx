@@ -368,7 +368,11 @@ export const Bot = (props: BotProps & { class?: string }) => {
           topbarColor={props.topbarColor}
           isFullPage={props.isFullPage}
         />
-        <div ref={chatContainer} class="relative flex flex-col flex-1 w-full h-full overflow-y-scroll pb-2 px-3 scrollable-container scroll-smooth">
+        <div
+          ref={chatContainer}
+          class="relative flex flex-col flex-1 w-full h-full overflow-y-scroll pb-2 px-3 scrollable-container scroll-smooth"
+          style={{ 'padding-bottom': bottomSpacerHeight() + 'px' }}
+        >
           <p class="m-5 text-2xl font-bold text-white text-jost">Welcome to my @Twini :)</p>
           <FirstMessageBubble
             backgroundColor={props.botMessage?.backgroundColor}
@@ -406,7 +410,6 @@ export const Bot = (props: BotProps & { class?: string }) => {
             )}
           </For>
         </div>
-        <BottomSpacer ref={bottomSpacer} height={bottomSpacerHeight} />
         <Bottombar
           backgroundColor={props.textInput?.backgroundColor}
           textColor={props.textInput?.textColor}
@@ -433,10 +436,10 @@ export const Bot = (props: BotProps & { class?: string }) => {
 
 type BottomSpacerProps = {
   ref: HTMLDivElement | undefined;
-  height: () => number;
+  height: number;
 };
 const BottomSpacer = (props: BottomSpacerProps) => {
-  const spacer: HTMLDivElement = <div ref={props.ref} class="w-full" style={{ 'z-index': 0, height: props.height() + 'px' }} />;
+  const spacer: HTMLDivElement = <p ref={props.ref} class="w-full" style={{ height: props.height + 'px' }} />;
   // if (!window.visualViewport) {
   //   return spacer;
   // }

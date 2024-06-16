@@ -8,6 +8,7 @@ export type Props = {
   isFullPage?: boolean;
   getInputValue: () => string;
   setInputValue: (value: string) => void;
+  setHeight: (height: number) => void;
 } & Omit<JSX.InputHTMLAttributes<HTMLTextAreaElement>, 'onInput'>;
 
 export const AutoGrowTextArea = (props: Props) => {
@@ -29,11 +30,13 @@ export const AutoGrowTextArea = (props: Props) => {
     console.debug('resizeTextarea');
     if (local.getInputValue() === '') {
       textarea.style.height = '1lh';
+      props.setHeight(textarea.clientHeight);
       return;
     }
     textarea.style.height = 'auto';
     const { scrollHeight } = textarea;
     textarea.style.height = `${scrollHeight}px`;
+    props.setHeight(scrollHeight);
     textarea.focus();
   });
 
