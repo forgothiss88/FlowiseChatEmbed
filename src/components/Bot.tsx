@@ -356,10 +356,7 @@ export const Bot = (props: BotProps & { class?: string }) => {
 
   return (
     <>
-      <div
-        ref={botContainer}
-        class={'relative flex flex-col w-full h-full text-base overflow-hidden bg-cover bg-center items-center chatbot-container ' + props.class}
-      >
+      <div ref={botContainer} class={'w-full h-full text-base overflow-hidden bg-cover bg-center items-center chatbot-container ' + props.class}>
         <Topbar
           title={props.title}
           titleColor={props.titleColor}
@@ -369,45 +366,43 @@ export const Bot = (props: BotProps & { class?: string }) => {
           topbarColor={props.topbarColor}
           isFullPage={props.isFullPage}
         />
-        <div class="h-full w-full flex-1 overflow-hidden flex flex-col">
-          <div ref={chatContainer} class="relative flex flex-col flex-1 w-full min-h-max overflow-auto pb-2 px-3 scrollable-container scroll-smooth">
-            <p class="m-5 text-2xl font-bold text-white text-jost">Welcome to my @Twini :)</p>
-            <FirstMessageBubble
-              backgroundColor={props.botMessage?.backgroundColor}
-              textColor={props.botMessage?.textColor}
-              scrollToBottom={scrollToBottom}
-              setUserInput={setUserInput}
-            />
-            <For each={messages()}>
-              {(message, index) => (
-                <>
-                  {message.type === 'userMessage' && (
-                    <GuestBubble
-                      message={message.message}
-                      backgroundColor={props.userMessage?.backgroundColor}
-                      textColor={props.userMessage?.textColor}
-                      showAvatar={props.userMessage?.showAvatar}
-                      avatarSrc={props.userMessage?.avatarSrc}
-                    />
-                  )}
-                  {message.type === 'apiMessage' && (
-                    <BotBubble
-                      message={message.message}
-                      fileAnnotations={message.fileAnnotations}
-                      apiUrl={props.apiUrl}
-                      backgroundColor={props.botMessage?.backgroundColor}
-                      textColor={props.botMessage?.textColor}
-                      showAvatar={props.botMessage?.showAvatar}
-                      avatarSrc={props.botMessage?.avatarSrc}
-                      sourceProducts={message.sourceProducts}
-                      sourceInstagramPosts={message.sourceInstagramPosts}
-                    />
-                  )}
-                  {message.type === 'userMessage' && loading() && index() === messages().length - 1 && <LoadingBubble />}
-                </>
-              )}
-            </For>
-          </div>
+        <div ref={chatContainer} class="relative flex flex-col flex-1 w-full h-full overflow-y-scroll pb-2 px-3 scrollable-container scroll-smooth">
+          <p class="m-5 text-2xl font-bold text-white text-jost">Welcome to my @Twini :)</p>
+          <FirstMessageBubble
+            backgroundColor={props.botMessage?.backgroundColor}
+            textColor={props.botMessage?.textColor}
+            scrollToBottom={scrollToBottom}
+            setUserInput={setUserInput}
+          />
+          <For each={messages()}>
+            {(message, index) => (
+              <>
+                {message.type === 'userMessage' && (
+                  <GuestBubble
+                    message={message.message}
+                    backgroundColor={props.userMessage?.backgroundColor}
+                    textColor={props.userMessage?.textColor}
+                    showAvatar={props.userMessage?.showAvatar}
+                    avatarSrc={props.userMessage?.avatarSrc}
+                  />
+                )}
+                {message.type === 'apiMessage' && (
+                  <BotBubble
+                    message={message.message}
+                    fileAnnotations={message.fileAnnotations}
+                    apiUrl={props.apiUrl}
+                    backgroundColor={props.botMessage?.backgroundColor}
+                    textColor={props.botMessage?.textColor}
+                    showAvatar={props.botMessage?.showAvatar}
+                    avatarSrc={props.botMessage?.avatarSrc}
+                    sourceProducts={message.sourceProducts}
+                    sourceInstagramPosts={message.sourceInstagramPosts}
+                  />
+                )}
+                {message.type === 'userMessage' && loading() && index() === messages().length - 1 && <LoadingBubble />}
+              </>
+            )}
+          </For>
         </div>
         <Bottombar
           backgroundColor={props.textInput?.backgroundColor}
