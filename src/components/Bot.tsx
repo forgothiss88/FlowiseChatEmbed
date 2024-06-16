@@ -354,6 +354,8 @@ export const Bot = (props: BotProps & { class?: string }) => {
     }
   };
 
+  const [bottomSpacerHeight, setBottomSpacerHeight] = createSignal(0);
+
   return (
     <>
       <div ref={botContainer} class={'w-full h-full text-base overflow-hidden bg-cover bg-center items-center chatbot-container ' + props.class}>
@@ -404,6 +406,7 @@ export const Bot = (props: BotProps & { class?: string }) => {
             )}
           </For>
         </div>
+        <BottomSpacer ref={bottomSpacer} height={bottomSpacerHeight} />
         <Bottombar
           backgroundColor={props.textInput?.backgroundColor}
           textColor={props.textInput?.textColor}
@@ -420,6 +423,7 @@ export const Bot = (props: BotProps & { class?: string }) => {
           showStarterPrompts={props.starterPrompts.length > 0 && messages().length <= 1}
           starterPrompts={props.starterPrompts}
           promptClick={handleSubmit}
+          setBottomSpacerHeight={setBottomSpacerHeight}
         />
       </div>
       {sourcePopupOpen() && <Popup isOpen={sourcePopupOpen()} value={sourcePopupSrc()} onClose={() => setSourcePopupOpen(false)} />}
@@ -429,9 +433,10 @@ export const Bot = (props: BotProps & { class?: string }) => {
 
 type BottomSpacerProps = {
   ref: HTMLDivElement | undefined;
+  height: () => number;
 };
 const BottomSpacer = (props: BottomSpacerProps) => {
-  const spacer: HTMLDivElement = <div ref={props.ref} class="w-full h-16" style={{ 'z-index': 0 }} />;
+  const spacer: HTMLDivElement = <div ref={props.ref} class="w-full" style={{ 'z-index': 0, height: props.height() + 'px' }} />;
   // if (!window.visualViewport) {
   //   return spacer;
   // }

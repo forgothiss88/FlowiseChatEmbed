@@ -13,6 +13,7 @@ export const Bottombar = (
     starterPrompts: string[];
     showStarterPrompts: boolean;
     promptClick: (prompt: string) => void;
+    setBottomSpacerHeight: (height: number) => void;
   },
 ) => {
   const bb: HTMLDivElement = (
@@ -42,7 +43,9 @@ export const Bottombar = (
     </div>
   );
   const fixPosition = () => {
-    bb.style.bottom = `${window.innerHeight - window.visualViewport?.height - 1 || 0}px`;
+    const bottom = window.innerHeight - window.visualViewport?.height || 0;
+    bb.style.bottom = `${bottom}px`;
+    props.setBottomSpacerHeight(bottom);
   };
   window.visualViewport?.addEventListener('resize', fixPosition);
   onMount(() => {
