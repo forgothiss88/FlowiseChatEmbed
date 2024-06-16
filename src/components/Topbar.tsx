@@ -46,7 +46,7 @@ const Topbar = (props: {
         color: props.bubbleTextColor,
         'border-bottom-color': props.bubbleButtonColor,
       }}
-      class={(props.isFullPage ? 'sticky' : 'absolute rounded-t-3xl') + ' flex flex-row items-center top-0 left-0 w-full z-50 h-16'}
+      class={(props.isFullPage ? 'fixed' : 'absolute rounded-t-3xl') + ' flex flex-row items-center top-0 left-0 w-full z-50 h-16'}
     >
       <div class="w-2" />
 

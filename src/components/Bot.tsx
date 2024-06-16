@@ -370,7 +370,7 @@ export const Bot = (props: BotProps & { class?: string }) => {
         />
         <div
           ref={chatContainer}
-          class="relative flex flex-col flex-1 w-full h-full overflow-y-scroll pb-2 px-3 scrollable-container scroll-smooth"
+          class="static flex flex-col flex-1 w-full h-full overflow-y-scroll pt-16 pb-2 px-3 scrollable-container scroll-smooth"
           style={{ 'padding-bottom': bottomSpacerHeight() + 'px' }}
         >
           <p class="m-5 text-2xl font-bold text-white text-jost">Welcome to my @Twini :)</p>
