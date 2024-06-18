@@ -44,10 +44,12 @@ const MessagePart = (props: {
   userInput: string;
   setUserInput: (message: string) => void;
   scrollToBottom: () => void;
+  focusOnInput: () => void;
 }) => {
   const scrollAndSetUserInput = () => {
     props.setUserInput(props.userInput);
     props.scrollToBottom();
+    props.focusOnInput();
   };
   return (
     <button
@@ -79,6 +81,7 @@ const FirstMessageBubble = (props: {
   textColor: string;
   setUserInput: (message: string) => void;
   scrollToBottom: () => void;
+  focusOnInput: () => void;
 }) => {
   // TODO: add content at config time
   return (
@@ -99,6 +102,7 @@ const FirstMessageBubble = (props: {
           icon={MoreContentIcon()}
           setUserInput={props.setUserInput}
           scrollToBottom={props.scrollToBottom}
+          focusOnInput={props.focusOnInput}
         />
         <MessagePart
           title="Plan your adventure"
@@ -107,6 +111,7 @@ const FirstMessageBubble = (props: {
           icon={cartIcon()}
           setUserInput={props.setUserInput}
           scrollToBottom={props.scrollToBottom}
+          focusOnInput={props.focusOnInput}
         />
         <MessagePart
           title="Find exclusive discounts"
@@ -115,6 +120,7 @@ const FirstMessageBubble = (props: {
           icon={DiscountIcon()}
           setUserInput={props.setUserInput}
           scrollToBottom={props.scrollToBottom}
+          focusOnInput={props.focusOnInput}
         />
       </div>
     </div>

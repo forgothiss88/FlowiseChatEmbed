@@ -39,17 +39,9 @@ export const TextInput = (props: Props) => {
     if (e.key === 'Enter' && !isIMEComposition) submit();
   };
 
-  createEffect(() => {
-    if (!props.disabled && !isMobile() && inputRef) inputRef.focus();
-  });
-
-  onMount(() => {
-    if (!isMobile() && inputRef) inputRef.focus();
-  });
-
   return (
     <div
-      class={(props.isFullPage ? '' : 'rounded-b-3xl') + ' w-full flex flex-row chatbot-input shadow-sm'}
+      class={(props.isFullPage ? '' : 'rounded-b-3xl') + ' w-full flex flex-row shadow-sm'}
       data-testid="input"
       style={{
         'border-top': '1px solid #eeeeee',

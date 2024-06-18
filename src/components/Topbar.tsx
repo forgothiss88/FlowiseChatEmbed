@@ -10,35 +10,6 @@ const Topbar = (props: {
   topbarColor?: string;
   isFullPage?: boolean;
 }) => {
-  const [isVisible, setIsVisible] = createSignal(true);
-
-  // Function to handle scroll event
-  const handleScroll = () => {
-    const scrolledTop = window.scrollY || document.documentElement.scrollTop;
-    setIsVisible(scrolledTop <= 0 || scrolledTop < lastScrollTop());
-  };
-
-  // Function to get last scroll position
-  const lastScrollTop = (() => {
-    let st = window.scrollY || document.documentElement.scrollTop;
-    return () => {
-      const scroll = window.scrollY || document.documentElement.scrollTop;
-      const scrollDelta = Math.abs(scroll - st);
-      st = scroll;
-      return scrollDelta;
-    };
-  })();
-
-  // Add scroll event listener on mount
-  onMount(() => {
-    window.addEventListener('scroll', handleScroll);
-  });
-
-  // Remove scroll event listener on component cleanup
-  onCleanup(() => {
-    window.removeEventListener('scroll', handleScroll);
-  });
-
   return (
     <div
       style={{
@@ -46,7 +17,7 @@ const Topbar = (props: {
         color: props.bubbleTextColor,
         'border-bottom-color': props.bubbleButtonColor,
       }}
-      class={(props.isFullPage ? 'fixed' : 'absolute rounded-t-3xl') + ' flex flex-row items-center top-0 left-0 w-full z-50 h-16'}
+      class={(props.isFullPage ? 'fixed' : 'absolute rounded-t-3xl') + ' flex flex-row items-center top-0 w-full z-50 h-16'}
     >
       <div class="w-2" />
 

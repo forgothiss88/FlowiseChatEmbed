@@ -11,7 +11,7 @@ export const StarterPromptBubble = (props: Props) => (
       onClick={() => props.onPromptClick?.()}
     >
       <span
-        class="py-1 pr-2 pl-3 whitespace-pre-wrap max-w-full chatbot-host-bubble text-base font-normal rounded-full w-max cursor-pointer"
+        class="py-1 pr-2 pl-3 whitespace-pre-wrap max-w-full chatbot-host-bubble text-jost text-base font-normal rounded-full w-max cursor-pointer"
         data-testid="host-bubble"
       >
         {props.prompt}

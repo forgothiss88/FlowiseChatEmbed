@@ -82,8 +82,8 @@ const defaultWelcomeMessage = 'Hi there! How can I help?';
 
 export const Bot = (props: BotProps & { class?: string }) => {
   let chatContainer: HTMLDivElement | undefined;
-  let bottomSpacer: HTMLDivElement | undefined;
   let botContainer: HTMLDivElement | undefined;
+  let textareaRef: HTMLTextAreaElement | undefined;
 
   const [userInput, setUserInput] = createSignal('');
   const [loading, setLoading] = createSignal(false);
@@ -102,15 +102,14 @@ export const Bot = (props: BotProps & { class?: string }) => {
 
   const [chatId, setChatId] = createSignal(props.chatflowid);
   const scrollToBottom = () => {
+    console.debug('scrollToBottom');
+    console.debug('chatContainer.scrollHeight', chatContainer?.scrollHeight, 'chatContainer.clientHeight', chatContainer?.clientHeight);
+    console.debug('document.body.scrollHeight', document.body.scrollHeight, 'window.innerHeight', window.innerHeight);
     setTimeout(() => {
       chatContainer?.scrollTo(0, chatContainer.scrollHeight);
+      if (props.isFullPage) window.scrollTo(0, document.body.scrollHeight);
     }, 50);
   };
-
-  onMount(() => {
-    if (!bottomSpacer) return;
-    scrollToBottom();
-  });
 
   /**
    * Add each chat message into localStorage
@@ -310,15 +309,6 @@ export const Bot = (props: BotProps & { class?: string }) => {
     }
   };
 
-  // Auto scroll chat to bottom
-  createEffect(() => {
-    if (messages()) scrollToBottom();
-  });
-
-  createEffect(() => {
-    if (props.fontSize && botContainer) botContainer.style.fontSize = `${props.fontSize}px`;
-  });
-
   createEffect(async () => {
     const localChatsData = localStorage.getItem(`${props.chatflowid}_EXTERNAL`);
     if (localChatsData) {
@@ -355,10 +345,13 @@ export const Bot = (props: BotProps & { class?: string }) => {
   };
 
   const [bottomSpacerHeight, setBottomSpacerHeight] = createSignal(0);
+  const focusOnTextarea = () => {
+    textareaRef?.focus();
+  };
 
   return (
-    <>
-      <div ref={botContainer} class={'w-full h-full text-base overflow-hidden bg-cover bg-center items-center chatbot-container ' + props.class}>
+    <div ref={botContainer} class="relative flex flex-col z-0 h-full w-full overflow-hidden">
+      <div class="relative flex max-h-full flex-1 flex-col overflow-hidden">
         <Topbar
           title={props.title}
           titleColor={props.titleColor}
@@ -368,88 +361,79 @@ export const Bot = (props: BotProps & { class?: string }) => {
           topbarColor={props.topbarColor}
           isFullPage={props.isFullPage}
         />
-        <div
-          ref={chatContainer}
-          class="static flex flex-col flex-1 w-full h-full overflow-y-scroll pt-16 pb-2 px-3 scrollable-container scroll-smooth"
-          style={{ 'padding-bottom': bottomSpacerHeight() + 'px' }}
-        >
-          <p class="m-5 text-2xl font-bold text-white text-jost">Welcome to my @Twini :)</p>
-          <FirstMessageBubble
-            backgroundColor={props.botMessage?.backgroundColor}
-            textColor={props.botMessage?.textColor}
-            scrollToBottom={scrollToBottom}
-            setUserInput={setUserInput}
-          />
-          <For each={messages()}>
-            {(message, index) => (
-              <>
-                {message.type === 'userMessage' && (
-                  <GuestBubble
-                    message={message.message}
-                    backgroundColor={props.userMessage?.backgroundColor}
-                    textColor={props.userMessage?.textColor}
-                    showAvatar={props.userMessage?.showAvatar}
-                    avatarSrc={props.userMessage?.avatarSrc}
-                  />
-                )}
-                {message.type === 'apiMessage' && (
-                  <BotBubble
-                    message={message.message}
-                    fileAnnotations={message.fileAnnotations}
-                    apiUrl={props.apiUrl}
+        <div class="flex w-full items-center justify-center bg-token-main-surface-primary overflow-hidden"></div>
+        <main class={'relative h-full w-full flex-1 overflow-hidden transition-width'}>
+          <div role="presentation" tabindex="0" class="flex h-full flex-col focus-visible:outline-0 overflow-hidden">
+            <div ref={chatContainer} class="flex-1 overflow-y-auto scroll-smooth no-scrollbar-container overflow-x-hidden">
+              <div class="w-full h-16"></div>
+              <div class="overflow-hidden">
+                <div class="w-full">
+                  <p class="m-5 text-2xl font-bold text-white text-jost">Welcome to my @Twini :)</p>
+                </div>
+                <div class="w-full">
+                  <FirstMessageBubble
                     backgroundColor={props.botMessage?.backgroundColor}
                     textColor={props.botMessage?.textColor}
-                    showAvatar={props.botMessage?.showAvatar}
-                    avatarSrc={props.botMessage?.avatarSrc}
-                    sourceProducts={message.sourceProducts}
-                    sourceInstagramPosts={message.sourceInstagramPosts}
+                    scrollToBottom={scrollToBottom}
+                    setUserInput={setUserInput}
+                    focusOnInput={focusOnTextarea}
                   />
-                )}
-                {message.type === 'userMessage' && loading() && index() === messages().length - 1 && <LoadingBubble />}
-              </>
-            )}
-          </For>
-        </div>
-        <Bottombar
-          backgroundColor={props.textInput?.backgroundColor}
-          textColor={props.textInput?.textColor}
-          placeholder={props.textInput?.placeholder}
-          sendButtonColor={props.textInput?.sendButtonColor}
-          fontSize={props.fontSize}
-          disabled={loading()}
-          getInputValue={userInput}
-          setInputValue={setUserInput}
-          onSubmit={handleSubmit}
-          isFullPage={props.isFullPage}
-          clearChat={clearChat}
-          isDeleteEnabled={messages().length > 1}
-          showStarterPrompts={props.starterPrompts.length > 0 && messages().length <= 1}
-          starterPrompts={props.starterPrompts}
-          promptClick={handleSubmit}
-          setBottomSpacerHeight={setBottomSpacerHeight}
-        />
+                </div>
+                <For each={messages()}>
+                  {(message, index) => (
+                    <div class="w-full">
+                      {message.type === 'userMessage' && (
+                        <GuestBubble
+                          message={message.message}
+                          backgroundColor={props.userMessage?.backgroundColor}
+                          textColor={props.userMessage?.textColor}
+                          showAvatar={props.userMessage?.showAvatar}
+                          avatarSrc={props.userMessage?.avatarSrc}
+                        />
+                      )}
+                      {message.type === 'apiMessage' && (
+                        <BotBubble
+                          message={message.message}
+                          fileAnnotations={message.fileAnnotations}
+                          apiUrl={props.apiUrl}
+                          backgroundColor={props.botMessage?.backgroundColor}
+                          textColor={props.botMessage?.textColor}
+                          showAvatar={props.botMessage?.showAvatar}
+                          avatarSrc={props.botMessage?.avatarSrc}
+                          sourceProducts={message.sourceProducts}
+                          sourceInstagramPosts={message.sourceInstagramPosts}
+                        />
+                      )}
+                      {message.type === 'userMessage' && loading() && index() === messages().length - 1 && <LoadingBubble />}
+                    </div>
+                  )}
+                </For>
+              </div>
+              <div class="w-full" style={{ height: bottomSpacerHeight() + 'px' }}></div>
+            </div>
+          </div>
+          <Bottombar
+            ref={textareaRef}
+            backgroundColor={props.textInput?.backgroundColor}
+            textColor={props.textInput?.textColor}
+            placeholder={props.textInput?.placeholder}
+            sendButtonColor={props.textInput?.sendButtonColor}
+            fontSize={props.fontSize}
+            disabled={loading()}
+            getInputValue={userInput}
+            setInputValue={setUserInput}
+            onSubmit={handleSubmit}
+            isFullPage={props.isFullPage}
+            clearChat={clearChat}
+            isDeleteEnabled={messages().length > 1}
+            showStarterPrompts={props.starterPrompts.length > 0 && messages().length <= 1}
+            starterPrompts={props.starterPrompts}
+            setBottomSpacerHeight={setBottomSpacerHeight}
+            scrollToBottom={scrollToBottom}
+          />
+        </main>
+        {sourcePopupOpen() && <Popup isOpen={sourcePopupOpen()} value={sourcePopupSrc()} onClose={() => setSourcePopupOpen(false)} />}
       </div>
-      {sourcePopupOpen() && <Popup isOpen={sourcePopupOpen()} value={sourcePopupSrc()} onClose={() => setSourcePopupOpen(false)} />}
-    </>
+    </div>
   );
-};
-
-type BottomSpacerProps = {
-  ref: HTMLDivElement | undefined;
-  height: number;
-};
-const BottomSpacer = (props: BottomSpacerProps) => {
-  const spacer: HTMLDivElement = <p ref={props.ref} class="w-full" style={{ height: props.height + 'px' }} />;
-  // if (!window.visualViewport) {
-  //   return spacer;
-  // }
-  // const vv = window.visualViewport;
-  // const fixPosition = () => {
-  //   spacer.style.top = `${vv.height - spacer.clientHeight}px`;
-  // }
-  // vv.addEventListener('resize', fixPosition);
-  // onMount(() => {
-  //   fixPosition();
-  // });
-  return spacer;
 };
