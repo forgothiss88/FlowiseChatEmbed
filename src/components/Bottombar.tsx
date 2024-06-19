@@ -53,7 +53,7 @@ export const Bottombar = (props: {
 
   const [textareaHeight, setTextareaHeight] = createSignal(0);
 
-  const checkIfInputIsValid = () => props.getInputValue() !== '' && props.ref?.reportValidity();
+  const checkIfInputIsValid = () => props.getInputValue() !== '';
 
   const submit = () => {
     if (checkIfInputIsValid()) props.onSubmit(props.getInputValue());
@@ -95,8 +95,8 @@ export const Bottombar = (props: {
               placeholder={props.placeholder ?? 'Type your question'}
               setHeight={setTextareaHeight}
               scrollToBottom={props.scrollToBottom}
-              submit={submit}
-              sendButtonColor={props.sendButtonColor}
+              onSubmit={submit}
+              sendButtonColor={props.sendButtonColor || 'black'}
             />
           </div>
         </div>

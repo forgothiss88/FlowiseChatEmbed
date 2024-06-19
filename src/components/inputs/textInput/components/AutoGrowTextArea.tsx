@@ -11,7 +11,7 @@ export type Props = {
   setInputValue: (value: string) => void;
   setHeight: (height: number) => void;
   scrollToBottom: () => void;
-  submit: () => void;
+  onSubmit: () => void;
   sendButtonColor: string;
 } & Omit<JSX.InputHTMLAttributes<HTMLTextAreaElement>, 'onInput'>;
 
@@ -55,7 +55,7 @@ export const AutoGrowTextArea = (props: Props) => {
           sendButtonColor={props.sendButtonColor}
           type="button"
           isDisabled={props.disabled || props.getInputValue() === ''}
-          onClick={props.submit}
+          onClick={props.onSubmit}
         />
       </div>
     </div>
