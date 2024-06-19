@@ -34,8 +34,7 @@ export const Full = (props: FullProps, { element }: { element: HTMLElement }) =>
         <div
           class="overflow-hidden"
           style={{
-            background: props.theme?.chatWindow?.backgroundColor,
-            'background-attachment': 'fixed',
+            background: props.theme?.chatWindow?.backgroundColor + ' fixed',
             height: props.theme?.chatWindow?.height ? `${props.theme?.chatWindow?.height.toString()}px` : '100%',
             width: props.theme?.chatWindow?.width ? `${props.theme?.chatWindow?.width.toString()}px` : '100%',
             margin: '0px',
