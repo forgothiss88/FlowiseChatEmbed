@@ -77,30 +77,28 @@ export const Bottombar = (props: {
       </Show>
       <div class="shadow-sm" style={{ 'background-color': props.backgroundColor ?? defaultBackgroundColor, 'border-top': '1px solid #eeeeee' }}>
         <div
-          class={(props.isFullPage ? '' : 'rounded-b-3xl') + ' w-full flex flex-row pt-2'}
+          class={(props.isFullPage ? '' : 'rounded-b-3xl') + ' w-full flex flex-row pt-2 px-2'}
           data-testid="input"
           style={{
             color: props.textColor ?? defaultTextColor,
           }}
           onKeyDown={submitWhenEnter}
         >
-          <AutoGrowTextArea
-            ref={props.ref}
-            setInputValue={props.setInputValue}
-            getInputValue={props.getInputValue}
-            fontSize={props.fontSize}
-            disabled={props.disabled}
-            placeholder={props.placeholder ?? 'Type your question'}
-            setHeight={setTextareaHeight}
-            scrollToBottom={props.scrollToBottom}
-          />
-          <SendButton
-            sendButtonColor={props.sendButtonColor}
-            type="button"
-            isDisabled={props.disabled || props.getInputValue() === ''}
-            onClick={submit}
-          />
           <DeleteButton sendButtonColor={props.sendButtonColor} type="button" isDisabled={!props.isDeleteEnabled} onClick={props.clearChat} />
+          <div class="mr-2 w-full">
+            <AutoGrowTextArea
+              ref={props.ref}
+              setInputValue={props.setInputValue}
+              getInputValue={props.getInputValue}
+              fontSize={props.fontSize}
+              disabled={props.disabled}
+              placeholder={props.placeholder ?? 'Type your question'}
+              setHeight={setTextareaHeight}
+              scrollToBottom={props.scrollToBottom}
+              submit={submit}
+              sendButtonColor={props.sendButtonColor}
+            />
+          </div>
         </div>
         <div class="w-full text-center py-1">
           <Badge poweredByTextColor={props.poweredByTextColor}></Badge>

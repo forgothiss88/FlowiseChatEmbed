@@ -1,3 +1,4 @@
+import { SendButton } from '@/components/SendButton';
 import { createEffect, onMount, splitProps } from 'solid-js';
 import { JSX } from 'solid-js/jsx-runtime';
 
@@ -10,6 +11,8 @@ export type Props = {
   setInputValue: (value: string) => void;
   setHeight: (height: number) => void;
   scrollToBottom: () => void;
+  submit: () => void;
+  sendButtonColor: string;
 } & Omit<JSX.InputHTMLAttributes<HTMLTextAreaElement>, 'onInput'>;
 
 export const AutoGrowTextArea = (props: Props) => {
@@ -17,7 +20,7 @@ export const AutoGrowTextArea = (props: Props) => {
   const textarea: HTMLTextAreaElement = (
     <textarea
       ref={local.ref}
-      class="align-bottom overflow-hidden resize-none bg-transparent w-full flex-1 text-roboto text-base font-normal placeholder:italic placeholder:font-light disabled:opacity-50 disabled:cursor-not-allowed disabled:brightness-100 focus:outline-none focus:animate-fade-in"
+      class="overflow-hidden resize-none bg-transparent w-full my-auto text-roboto text-base font-normal placeholder:italic placeholder:font-light disabled:opacity-50 disabled:cursor-not-allowed disabled:brightness-100 focus:outline-none focus:animate-fade-in"
       aria-placeholder={local.placeholder}
       placeholder={local.placeholder}
       rows="1"
@@ -45,8 +48,16 @@ export const AutoGrowTextArea = (props: Props) => {
   createEffect(resizeTextarea);
 
   return (
-    <div class="ml-3 w-full">
-      <div class="pl-3 pr-2 py-2 rounded-xl bg-gray-200">{textarea}</div>
+    <div class="flex flex-row pl-3 py-1 rounded-2xl bg-gray-200">
+      {textarea}
+      <div class="my-auto">
+        <SendButton
+          sendButtonColor={props.sendButtonColor}
+          type="button"
+          isDisabled={props.disabled || props.getInputValue() === ''}
+          onClick={props.submit}
+        />
+      </div>
     </div>
   );
 };
