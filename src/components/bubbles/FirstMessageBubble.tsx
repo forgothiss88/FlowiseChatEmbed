@@ -87,7 +87,7 @@ const FirstMessageBubble = (props: {
   return (
     <div class="my-5 text-jost">
       <div
-        class="p-3 mx-2 whitespace-pre-wrap max-w-full rounded-3xl chatbot-host-bubble"
+        class="p-3 whitespace-pre-wrap max-w-full rounded-3xl chatbot-host-bubble"
         data-testid="host-bubble"
         style={{
           'background-color': props.backgroundColor,

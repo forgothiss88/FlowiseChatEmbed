@@ -366,7 +366,7 @@ export const Bot = (props: BotProps & { class?: string }) => {
           <div role="presentation" tabindex="0" class="flex h-full flex-col focus-visible:outline-0 overflow-hidden">
             <div ref={chatContainer} class="flex-1 overflow-y-auto scroll-smooth no-scrollbar-container overflow-x-hidden">
               <div class="w-full h-16"></div>
-              <div class="overflow-hidden">
+              <div class="overflow-hidden mx-2">
                 <div class="w-full">
                   <p class="m-5 text-2xl font-bold text-white text-jost">Welcome to my @Twini :)</p>
                 </div>
