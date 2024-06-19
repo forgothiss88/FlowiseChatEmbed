@@ -52,7 +52,7 @@ const createDefaultChatBot = () => {
           welcomeMessage: msg,
           backgroundColor: 'linear-gradient(180deg, rgba(65,5,132,1) 10%, rgba(245,245,245,1) 72%)',
           fontSize: 16,
-          poweredByTextColor: '#ffffff',
+          poweredByTextColor: '#283E4D',
           title: '@holidoit',
           titleAvatarSrc: props.titleAvatarSrc,
           titleColor: '#ffffff',

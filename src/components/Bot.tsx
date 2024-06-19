@@ -430,6 +430,7 @@ export const Bot = (props: BotProps & { class?: string }) => {
             starterPrompts={props.starterPrompts}
             setBottomSpacerHeight={setBottomSpacerHeight}
             scrollToBottom={scrollToBottom}
+            poweredByTextColor={props.poweredByTextColor || 'black'}
           />
         </main>
         {sourcePopupOpen() && <Popup isOpen={sourcePopupOpen()} value={sourcePopupSrc()} onClose={() => setSourcePopupOpen(false)} />}
