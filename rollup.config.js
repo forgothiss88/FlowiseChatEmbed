@@ -39,16 +39,16 @@ const indexConfig = {
     typescriptPaths({ preserveExtensions: true }),
     terser({ output: { comments: false } }),
     // If you want to see the live app
-    serve({
-      open: true,
-      verbose: true,
-      openPage: '/index_full.html',
-      contentBase: '',
-      host: '0.0.0.0',
-      // host: 'localhost',
-      port: 5678,
-    }),
-    livereload('dist'),
+    // serve({
+    //   open: true,
+    //   verbose: true,
+    //   openPage: '/index_full.html',
+    //   contentBase: '',
+    //   host: '0.0.0.0',
+    //   // host: 'localhost',
+    //   port: 5678,
+    // }),
+    // livereload('dist'),
   ],
 };
 
