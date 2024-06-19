@@ -17,7 +17,7 @@ export const AutoGrowTextArea = (props: Props) => {
   const textarea: HTMLTextAreaElement = (
     <textarea
       ref={local.ref}
-      class="align-bottom overflow-hidden resize-none bg-transparent w-full flex-1 text-robot text-base font-normal placeholder:italic placeholder:font-light disabled:opacity-50 disabled:cursor-not-allowed disabled:brightness-100 focus:outline-none focus:animate-fade-in"
+      class="align-bottom overflow-hidden resize-none bg-transparent w-full flex-1 text-roboto text-base font-normal placeholder:italic placeholder:font-light disabled:opacity-50 disabled:cursor-not-allowed disabled:brightness-100 focus:outline-none focus:animate-fade-in"
       aria-placeholder={local.placeholder}
       placeholder={local.placeholder}
       rows="1"
@@ -45,7 +45,7 @@ export const AutoGrowTextArea = (props: Props) => {
   createEffect(resizeTextarea);
 
   return (
-    <div class="ml-3 my-2 w-full">
+    <div class="ml-3 w-full">
       <div class="pl-3 pr-2 py-2 rounded-xl bg-gray-200">{textarea}</div>
     </div>
   );

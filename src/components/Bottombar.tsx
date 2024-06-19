@@ -2,6 +2,7 @@ import { For, Show, createEffect, createSignal, onMount } from 'solid-js';
 import { StarterPromptBubble, Props as StarterPromptProps } from './bubbles/StarterPromptBubble';
 import { AutoGrowTextArea } from './inputs/textInput/components/AutoGrowTextArea';
 import { DeleteButton, SendButton } from './SendButton';
+import { Badge } from './Badge';
 
 const isIOS = () => {
   return /iPad|iPhone|iPod/.test(navigator.userAgent);
@@ -33,6 +34,7 @@ export const Bottombar = (props: {
   backgroundColor?: string;
   textColor?: string;
   sendButtonColor?: string;
+  poweredByTextColor: string;
   defaultValue?: string;
   fontSize?: number;
   disabled?: boolean;
@@ -73,33 +75,36 @@ export const Bottombar = (props: {
           </For>
         </div>
       </Show>
-      <div
-        class={(props.isFullPage ? '' : 'rounded-b-3xl') + ' w-full flex flex-row shadow-sm'}
-        data-testid="input"
-        style={{
-          'border-top': '1px solid #eeeeee',
-          'background-color': props.backgroundColor ?? defaultBackgroundColor,
-          color: props.textColor ?? defaultTextColor,
-        }}
-        onKeyDown={submitWhenEnter}
-      >
-        <AutoGrowTextArea
-          ref={props.ref}
-          setInputValue={props.setInputValue}
-          getInputValue={props.getInputValue}
-          fontSize={props.fontSize}
-          disabled={props.disabled}
-          placeholder={props.placeholder ?? 'Type your question'}
-          setHeight={setTextareaHeight}
-          scrollToBottom={props.scrollToBottom}
-        />
-        <SendButton
-          sendButtonColor={props.sendButtonColor}
-          type="button"
-          isDisabled={props.disabled || props.getInputValue() === ''}
-          onClick={submit}
-        />
-        <DeleteButton sendButtonColor={props.sendButtonColor} type="button" isDisabled={!props.isDeleteEnabled} onClick={props.clearChat} />
+      <div class="shadow-sm" style={{ 'background-color': props.backgroundColor ?? defaultBackgroundColor, 'border-top': '1px solid #eeeeee' }}>
+        <div
+          class={(props.isFullPage ? '' : 'rounded-b-3xl') + ' w-full flex flex-row pt-2'}
+          data-testid="input"
+          style={{
+            color: props.textColor ?? defaultTextColor,
+          }}
+          onKeyDown={submitWhenEnter}
+        >
+          <AutoGrowTextArea
+            ref={props.ref}
+            setInputValue={props.setInputValue}
+            getInputValue={props.getInputValue}
+            fontSize={props.fontSize}
+            disabled={props.disabled}
+            placeholder={props.placeholder ?? 'Type your question'}
+            setHeight={setTextareaHeight}
+            scrollToBottom={props.scrollToBottom}
+          />
+          <SendButton
+            sendButtonColor={props.sendButtonColor}
+            type="button"
+            isDisabled={props.disabled || props.getInputValue() === ''}
+            onClick={submit}
+          />
+          <DeleteButton sendButtonColor={props.sendButtonColor} type="button" isDisabled={!props.isDeleteEnabled} onClick={props.clearChat} />
+        </div>
+        <div class="w-full text-center py-1">
+          <Badge poweredByTextColor={props.poweredByTextColor}></Badge>
+        </div>
       </div>
     </div>
   );
