@@ -106,7 +106,8 @@ export const Bot = (props: BotProps & { class?: string }) => {
 
   const scrollToBottom = (timeout?: number) => {
     setTimeout(() => {
-      window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+      if (props.isFullPage) window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+      else chatContainer?.scrollTo({ top: chatContainer.scrollHeight, behavior: 'smooth' });
     }, timeout || 50);
   };
 
