@@ -38,7 +38,7 @@ jobs:
       - name: Install with npm
         run: npm install
       - name: Build
-        run: npm build
+        run: npm run build
       - name: Publish to npmjs.org
         run: npm publish --access public --tag latest
         continue-on-error: true
