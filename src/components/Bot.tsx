@@ -104,11 +104,21 @@ export const Bot = (props: BotProps & { class?: string }) => {
 
   const [chatId, setChatId] = createSignal(props.chatflowid);
 
-  const scrollToBottom = () => {
+  const scrollToBottom = (timeout?: number) => {
     setTimeout(() => {
-      chatContainer?.scrollTo(0, chatContainer?.scrollHeight);
-    }, 50);
+      window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    }, timeout || 50);
   };
+
+  const scrollToTop = (timeout?: number) => {
+    setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, timeout || 50);
+  };
+
+  onMount(() => {
+    messages().length > 1 ? scrollToBottom(100): scrollToTop(100);
+  });
 
   /**
    * Add each chat message into localStorage
