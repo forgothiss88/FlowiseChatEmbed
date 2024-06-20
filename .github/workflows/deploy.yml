@@ -35,12 +35,12 @@ jobs:
         with:
           node-version: '18'
           registry-url: 'https://registry.npmjs.org'
-      - name: Install with yarn
-        run: yarn install
+      - name: Install with npm
+        run: npm install
       - name: Build
-        run: yarn build
+        run: npm build
       - name: Publish to npmjs.org
-        run: yarn publish --access public --tag latest
+        run: npm publish --access public --tag latest
         continue-on-error: true
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPMJS_TOKEN }}

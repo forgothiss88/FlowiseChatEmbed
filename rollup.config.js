@@ -32,6 +32,8 @@ const servePlugins = [
   livereload('dist'),
 ];
 
+console.log('serveFiles', serveFiles);
+
 const indexConfig = {
   plugins: [
     resolve({ extensions, browser: true }),
