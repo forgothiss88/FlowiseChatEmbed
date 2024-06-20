@@ -15,7 +15,7 @@ const extensions = ['.ts', '.tsx'];
 
 const serveFiles = process.env.ROLLUP_SERVE === 1;
 
-const servePlugins = [
+const servePlugins = () => [
   serve({
     open: true,
     verbose: true,
@@ -57,7 +57,7 @@ const indexConfig = {
     typescriptPaths({ preserveExtensions: true }),
     terser({ output: { comments: false } }),
     // If you want to see the live app
-    ...(serveFiles ? servePlugins : []),
+    ...(serveFiles ? servePlugins() : []),
   ],
 };
 
