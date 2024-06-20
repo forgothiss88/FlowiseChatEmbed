@@ -28,7 +28,7 @@ export const BubbleButton = (props: Props) => {
         bottom: props.bottom ? `${props.bottom.toString()}px` : `${defaultBottom}px`,
       }}
     >
-      <Show when={isNotDefined(props.customIconSrc)} keyed>
+      <Show when={!props.customIconSrc}>
         <svg
           viewBox="0 0 24 24"
           style={{

@@ -2,7 +2,7 @@ import { JSX } from 'solid-js';
 import { registerWebComponents } from './register';
 import { injectChatbotInWindow, parseChatbot } from './window';
 import { BotProps } from './components/Bot';
-import { BubbleParams } from './features/bubble/types';
+import { BubbleParams, BubbleTheme } from './features/bubble/types';
 
 registerWebComponents();
 
@@ -14,6 +14,7 @@ type DefaultBotProps = {
   titleAvatarSrc: string;
   avatarSrc: string;
   starterPrompts: string[];
+  theme: BubbleTheme;
 };
 
 const createDefaultChatBot = () => {
@@ -41,38 +42,39 @@ const createDefaultChatBot = () => {
       chatflowConfig: {},
       theme: {
         button: {
-          right: 20,
-          bottom: 20,
-          size: 'medium',
-          iconColor: 'white',
-          bubbleButtonColor: '#050a30',
-          topbarColor: 'rgba(65,5,132,1)',
+          right: props.theme?.button?.right || 20,
+          bottom: props.theme?.button?.bottom || 20,
+          size: props.theme?.button?.size || 'medium',
+          iconColor: props.theme?.button?.iconColor || 'white',
+          bubbleButtonColor: props.theme?.button?.bubbleButtonColor || '#050a30',
+          topbarColor: props.theme?.button?.topbarColor,
+          customIconSrc: props.theme?.button?.customIconSrc || '',
         },
         chatWindow: {
-          welcomeMessage: msg,
-          backgroundColor: 'linear-gradient(180deg, rgba(65,5,132,1) 10%, rgba(245,245,245,1) 72%)',
-          fontSize: 16,
-          poweredByTextColor: '#283E4D',
-          title: '@holidoit',
-          titleAvatarSrc: props.titleAvatarSrc,
-          titleColor: '#ffffff',
+          welcomeMessage: props.theme?.chatWindow?.welcomeMessage || msg,
+          backgroundColor: props.theme?.chatWindow?.backgroundColor,
+          fontSize: props.theme?.chatWindow?.fontSize || 16,
+          poweredByTextColor: props.theme?.chatWindow?.poweredByTextColor || '#283E4D',
+          title: props.theme?.chatWindow?.title || '@holidoit',
+          titleAvatarSrc: props.theme?.chatWindow?.titleAvatarSrc || props.titleAvatarSrc,
+          titleColor: props.theme?.chatWindow?.titleColor || '#ffffff',
           botMessage: {
-            backgroundColor: '#ffffff',
-            textColor: '#283E4D',
-            avatarSrc: props.avatarSrc,
-            showAvatar: true,
+            backgroundColor: props.theme?.chatWindow?.botMessage?.backgroundColor || '#ffffff',
+            textColor: props.theme?.chatWindow?.botMessage?.textColor || '#283E4D',
+            avatarSrc: props.theme?.chatWindow?.botMessage?.avatarSrc || props.avatarSrc,
+            showAvatar: props.theme?.chatWindow?.botMessage?.showAvatar || true,
           },
           userMessage: {
-            backgroundColor: '#202124',
-            textColor: '#ffffff',
-            showAvatar: false,
+            backgroundColor: props.theme?.chatWindow?.userMessage?.backgroundColor || '#202124',
+            textColor: props.theme?.chatWindow?.userMessage?.textColor || '#ffffff',
           },
           textInput: {
-            backgroundColor: '#ffffff',
-            textColor: '#283E4D',
-            placeholder: 'Ask me (almost) anything...',
-            sendButtonColor: '#7f7970',
+            backgroundColor: props.theme?.chatWindow?.textInput?.backgroundColor || '#ffffff',
+            textColor: props.theme?.chatWindow?.textInput?.textColor || '#283E4D',
+            placeholder: props.theme?.chatWindow?.textInput?.placeholder || 'Ask me (almost) anything...',
+            sendButtonColor: props.theme?.chatWindow?.textInput?.sendButtonColor || '#7f7970',
           },
+          firstMessage: props.theme?.chatWindow?.firstMessage || {},
         },
       },
     };

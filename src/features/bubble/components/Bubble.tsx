@@ -9,7 +9,7 @@ const defaultIconColor = 'white';
 
 export type BubbleProps = BotProps & BubbleParams;
 
-export const Bubble = (props: BubbleProps) => {
+export const BubbleBot = (props: BubbleProps) => {
   const [bubbleProps] = splitProps(props, ['theme']);
 
   const [isBotOpened, setIsBotOpened] = createSignal(false);
@@ -69,6 +69,7 @@ export const Bubble = (props: BubbleProps) => {
             apiUrl={props.apiUrl}
             starterPrompts={props.starterPrompts || []}
             creatorName={props.creatorName}
+            firstMessage={bubbleProps.theme?.chatWindow?.firstMessage}
           />
         </Show>
       </div>

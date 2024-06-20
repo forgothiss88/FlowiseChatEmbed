@@ -19,24 +19,17 @@ const Topbar = (props: {
       }}
       class={(props.isFullPage ? 'fixed' : 'absolute rounded-t-3xl') + ' flex flex-row items-center top-0 w-full z-50 h-16'}
     >
-      <div class="w-2" />
-
-      <Show when={props.title}>
-        <div class="grow-0">
-          <span class="px-4 mr-2 whitespace-pre-wrap font-bold text-xl tracking-wider max-w-full text-jost" style={{ color: props.titleColor }}>
-            TWINI
-          </span>
+      <Show when={props.titleAvatarSrc}>
+        <div class="grow-0 ml-4">
+          <Avatar initialAvatarSrc={props.titleAvatarSrc} classList={['h-8']} />
         </div>
       </Show>
-      <Show when={props.titleAvatarSrc}>
-        <Avatar initialAvatarSrc={props.titleAvatarSrc} />
-      </Show>
       <div class="grow"></div>
-      <div class="grow-0 order-last mr-4">
+      <div class="grow-0 order-last mr-4  bg-white rounded-full h-8 flex">
         <a
-          href="https://www.twini.ai"
+          href="https://www.twini.span "
           target="_blank"
-          class="px-4 py-2 whitespace-pre-wrap font-semibold text-sm max-w-full bg-white rounded-full text-black text-jost"
+          class="px-4 whitespace-pre-wrap font-semibold text-sm max-w-full text-black text-jost my-auto"
         >
           Create your @Twini
         </a>

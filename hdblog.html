@@ -1,0 +1,79 @@
+<!doctype html>
+<html class="overflow-hidden" lang="en">
+  <head>
+    <title>@Twini</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content" />
+    <meta charset="UTF-8" />
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+      @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+    </style>
+  </head>
+
+  <script type="module">
+    import bot from '/dist/web.js';
+    bot.initFullWithDefaults({
+      apiUrl: 'http://localhost:8000/twini-stream/hdblog',
+      creatorName: 'hdblog',
+      avatarSrc: '/public/avatars/hdblog_small.svg',
+      titleAvatarSrc: '/public/avatars/hdblog_large.svg',
+      starterPrompts: ['Il migliore smartphone sotto i 200€?', 'Iphone 15 vs Galaxy S22?', 'Top pc per un grafico?'],
+      theme: {
+        button: {
+          topbarColor: 'rgba(78,184,222,1)',
+        },
+        chatWindow: {
+          title: 'Ciao! Sono il tuo assistente AI 😊',
+          welcomeMessage: 'Qui puoi chiedermi tutto sui miei contenuti e prodotti. Ti aiuterò a trovare ciò che cerchi in un lampo! ⚡',
+          backgroundColor: 'linear-gradient(180deg, rgba(78,184,222,1) 0%, rgba(78,184,222,1) 25%, rgba(245,245,245,1) 57%)',
+          poweredByTextColor: 'black',
+          titleAvatarSrc: '/public/avatars/hdblog_large.svg',
+          titleColor: 'black',
+          firstMessage: {
+            text: 'Puoi chiedermi di:',
+            background: 'white',
+            actionsBackground: 'rgb(228 248 255)',
+            actions: [
+              {
+                title: 'Esplorare il nostro sito',
+                subtitle: 'Trova velocemente l’articolo che vuoi leggere.',
+                prompt: 'Vorrei sapere qualocosa di piú su <argomento>?',
+                icon: 'web',
+              },
+              {
+                title: 'Scoprire le nostre recensioni',
+                subtitle: 'Esplora le ultime recensioni publiccate sul nostro canale YouTube e sul nostro blog.',
+                prompt: 'Recensione di <telefono/pc/laptop>',
+                icon: 'ciak',
+              },
+              {
+                title: 'Scegliere lo smartphone ideale',
+                subtitle: 'Trova il prodotto migliore per le tue esigenze. Raccontami cosa stai cercando e ti guiderò nella scelta.',
+                prompt: 'Mi serve uno smartphone per <inserisci le tue esigenze>',
+                icon: 'shopping-bag',
+              },
+            ],
+          },
+          textInput: {
+            placeholder: 'Scrivi qui...',
+          },
+          botMessage: {
+            backgroundColor: 'white',
+            textColor: 'black',
+            avatarSrc: '/public/avatars/hdblog_small.svg',
+            showAvatar: true,
+          },
+          userMessage: {
+            backgroundColor: 'black',
+            textColor: 'white',
+            showAvatar: false,
+          },
+        },
+      },
+    });
+  </script>
+
+  <body class="overflow-hidden" style="margin: 0px">
+    <flowise-fullchatbot></flowise-fullchatbot>
+  </body>
+</html>

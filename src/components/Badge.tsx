@@ -1,7 +1,5 @@
-import { onCleanup, onMount } from 'solid-js';
-
 type Props = {
-  poweredByTextColor?: string;
+  poweredByTextColor: string;
 };
 
 export const Badge = (props: Props) => {

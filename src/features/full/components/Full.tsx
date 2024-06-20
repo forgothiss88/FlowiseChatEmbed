@@ -8,7 +8,7 @@ const defaultIconColor = 'white';
 
 export type FullProps = BotProps & BubbleParams;
 
-export const Full = (props: FullProps, { element }: { element: HTMLElement }) => {
+export const FullBot = (props: FullProps, { element }: { element: HTMLElement }) => {
   const [isBotDisplayed, setIsBotDisplayed] = createSignal(false);
 
   const launchBot = () => {
@@ -32,12 +32,9 @@ export const Full = (props: FullProps, { element }: { element: HTMLElement }) =>
       <style>{styles}</style>
       <Show when={isBotDisplayed()}>
         <div
-          class="overflow-hidden"
+          class="fixed m-0 b-0 l-0 w-full h-full"
           style={{
             background: props.theme?.chatWindow?.backgroundColor + ' fixed',
-            height: props.theme?.chatWindow?.height ? `${props.theme?.chatWindow?.height.toString()}px` : '100%',
-            width: props.theme?.chatWindow?.width ? `${props.theme?.chatWindow?.width.toString()}px` : '100%',
-            margin: '0px',
           }}
         >
           <Bot
@@ -60,6 +57,7 @@ export const Full = (props: FullProps, { element }: { element: HTMLElement }) =>
             isFullPage={true}
             starterPrompts={props.starterPrompts || []}
             creatorName={props.creatorName}
+            firstMessage={props.theme?.chatWindow?.firstMessage}
           />
         </div>
       </Show>

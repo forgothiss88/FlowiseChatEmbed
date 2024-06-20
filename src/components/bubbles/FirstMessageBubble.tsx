@@ -1,4 +1,4 @@
-import { JSXElement } from 'solid-js';
+import { For, JSXElement } from 'solid-js';
 
 const cartIcon = () => {
   return (
@@ -40,33 +40,34 @@ const MoreContentIcon = () => {
 const MessagePart = (props: {
   title: string;
   subtitle: string;
-  icon: JSXElement;
+  getIcon: () => JSXElement;
+  background: string;
   userInput: string;
   setUserInput: (message: string) => void;
-  scrollToBottom: () => void;
   focusOnInput: () => void;
 }) => {
   const scrollAndSetUserInput = () => {
     props.setUserInput(props.userInput);
-    props.scrollToBottom();
     props.focusOnInput();
   };
   return (
     <button
-      class="rounded-2xl flex flex-row p-4 mt-4 w-full"
+      class="rounded-2xl flex flex-row p-4 mt-3 w-full"
       onClick={scrollAndSetUserInput}
       style={{
-        'background-color': '#f1ebf8',
+        background: props.background,
       }}
     >
       <div>
         <div class="flex flex-row pb-2 items-center">
-          <p class="font-medium text-start text-base">{props.title}</p>
-          <div class="px-1 content-center">{props.icon}</div>
+          <div class="flex items-center flex-wrap space-x-1">
+            <p class="font-medium text-start text-base break-words">{props.title}</p>
+            <div>{props.getIcon() || ''}</div>
+          </div>
         </div>
         <p class="font-light text-start text-sm text-gray-700">{props.subtitle}</p>
       </div>
-      <div class="grow"></div>
+      <div class="flex-grow" />
       <div class="p-4 content-center">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
           <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3" />
@@ -76,52 +77,60 @@ const MessagePart = (props: {
   );
 };
 
-const FirstMessageBubble = (props: {
-  backgroundColor: string;
-  textColor: string;
-  setUserInput: (message: string) => void;
-  scrollToBottom: () => void;
-  focusOnInput: () => void;
-}) => {
-  // TODO: add content at config time
+const iconsMap = {
+  cart: cartIcon,
+  discount: DiscountIcon,
+  'more-content': MoreContentIcon,
+  web: () => <span>🌐</span>,
+  ciak: () => <span>🎬</span>,
+  'shopping-bag': () => <span>🛍️</span>,
+};
+
+export type FirstMessageConfig = {
+  text: string;
+  background: string;
+  actionsBackground: string;
+  actions: {
+    title: string;
+    subtitle: string;
+    prompt: string;
+    icon: keyof typeof iconsMap;
+  }[];
+};
+
+const FirstMessageBubble = (
+  props: FirstMessageConfig & {
+    textColor: string;
+    setUserInput: (message: string) => void;
+    focusOnInput: () => void;
+  },
+) => {
   return (
     <div class="my-5 text-jost">
       <div
         class="p-3 whitespace-pre-wrap max-w-full rounded-3xl chatbot-host-bubble"
         data-testid="host-bubble"
         style={{
-          'background-color': props.backgroundColor,
+          background: props.background,
           color: props.textColor,
         }}
       >
-        <span class="font-bold text-lg py-2 pl-2">You can ask me to:</span>
-        <MessagePart
-          title="Discover @Holidoit"
-          subtitle="Learn more about the Holidoit platform."
-          userInput="What is @holidoit?"
-          icon={MoreContentIcon()}
-          setUserInput={props.setUserInput}
-          scrollToBottom={props.scrollToBottom}
-          focusOnInput={props.focusOnInput}
-        />
-        <MessagePart
-          title="Plan your adventure"
-          subtitle="Let’s find your perfect experience together."
-          userInput="What experience do you recommend in <insert location>?"
-          icon={cartIcon()}
-          setUserInput={props.setUserInput}
-          scrollToBottom={props.scrollToBottom}
-          focusOnInput={props.focusOnInput}
-        />
-        <MessagePart
-          title="Find exclusive discounts"
-          subtitle="See current deals now!"
-          userInput="Do you have any discount codes?"
-          icon={DiscountIcon()}
-          setUserInput={props.setUserInput}
-          scrollToBottom={props.scrollToBottom}
-          focusOnInput={props.focusOnInput}
-        />
+        <span class="font-bold text-lg pl-2">{props.text}</span>
+        <div class="">
+          <For each={props.actions}>
+            {(action, index) => (
+              <MessagePart
+                title={action.title}
+                subtitle={action.subtitle}
+                userInput={action.prompt}
+                getIcon={iconsMap[action.icon]}
+                setUserInput={props.setUserInput}
+                focusOnInput={props.focusOnInput}
+                background={props.actionsBackground}
+              />
+            )}
+          </For>
+        </div>
       </div>
     </div>
   );

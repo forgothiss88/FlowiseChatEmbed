@@ -12,6 +12,7 @@
   ],
   "scripts": {
     "dev": "rollup --watch --config rollup.config.js",
+    "live": "ROLLUP_SERVE=1 rollup --watch --config rollup.config.js",
     "build": "rollup --config rollup.config.js",
     "lint": "eslint \"src/**/*.ts*\"",
     "lint-fix": "eslint --fix \"src/**/*.ts*\"",

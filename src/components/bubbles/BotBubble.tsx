@@ -138,9 +138,9 @@ export const BotBubble = (props: Props) => {
   });
 
   return (
-    <div class="flex justify-start items-start host-container mr-12 mt-5 mb-5  text-roboto">
+    <div class="flex justify-start items-start host-container mr-12 mt-5 mb-5 text-roboto">
       <Show when={props.showAvatar}>
-        <Avatar initialAvatarSrc={props.avatarSrc} />
+        <Avatar initialAvatarSrc={props.avatarSrc} classList={['h-8']} />
       </Show>
       <div
         class="px-4 py-2 ml-2 whitespace-pre-wrap max-w-full rounded-2xl chatbot-host-bubble text-base font-normal"

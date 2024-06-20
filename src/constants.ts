@@ -2,10 +2,11 @@ import type { BubbleProps } from './features/bubble';
 
 export const initialBotProps: BubbleProps = {
   chatflowConfig: undefined,
-  theme: undefined,
-  chatflowid: 'default',
+  chatflowid: undefined,
   apiUrl: undefined,
   starterPrompts: [],
-  creatorName: 'default',
+  creatorName: undefined,
   titleAvatarSrc: undefined,
+  firstMessage: undefined,
+  theme: undefined,
 };

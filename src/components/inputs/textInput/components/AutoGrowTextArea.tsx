@@ -28,12 +28,10 @@ export const AutoGrowTextArea = (props: Props) => {
       value={local.getInputValue()}
       onInput={(e) => local.setInputValue(e.target.value)}
       onFocus={(e) => local.scrollToBottom()}
-      onFocusIn={(e) => local.scrollToBottom()}
       {...others}
     />
   );
   const resizeTextarea = () => {
-    console.debug('resizeTextarea');
     if (local.getInputValue() === '') {
       textarea.style.height = '1lh';
       props.setHeight(textarea.clientHeight);

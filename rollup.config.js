@@ -14,6 +14,24 @@ import livereload from 'rollup-plugin-livereload';
 
 const extensions = ['.ts', '.tsx'];
 
+const serveFiles = process.env.ROLLUP_SERVE === 1;
+
+const servePlugins = [
+  serve({
+    open: true,
+    verbose: true,
+    openPage: '/index_full.html',
+    contentBase: '',
+    host: '0.0.0.0',
+    // host: 'localhost',
+    port: 5678,
+    headers: {
+      'Content-Type': 'text/html; charset=utf-8',
+    },
+  }),
+  livereload('dist'),
+];
+
 const indexConfig = {
   plugins: [
     resolve({ extensions, browser: true }),
@@ -39,16 +57,7 @@ const indexConfig = {
     typescriptPaths({ preserveExtensions: true }),
     terser({ output: { comments: false } }),
     // If you want to see the live app
-    // serve({
-    //   open: true,
-    //   verbose: true,
-    //   openPage: '/index_full.html',
-    //   contentBase: '',
-    //   host: '0.0.0.0',
-    //   // host: 'localhost',
-    //   port: 5678,
-    // }),
-    // livereload('dist'),
+    ...(serveFiles ? servePlugins : []),
   ],
 };
 

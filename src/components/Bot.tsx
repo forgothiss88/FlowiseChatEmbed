@@ -8,9 +8,10 @@ import { Bottombar } from './Bottombar';
 import { products, setProducts, updateProducts } from './Products';
 import Topbar from './Topbar';
 import { BotBubble } from './bubbles/BotBubble';
-import FirstMessageBubble from './bubbles/FirstMessageBubble';
+import FirstMessageBubble, { FirstMessageConfig } from './bubbles/FirstMessageBubble';
 import { GuestBubble } from './bubbles/GuestBubble';
 import { LoadingBubble } from './bubbles/LoadingBubble';
+import bot from '@/web';
 
 type messageType = 'apiMessage' | 'userMessage' | 'usermessagewaiting';
 
@@ -65,6 +66,7 @@ export type BotProps = {
   welcomeMessage?: string;
   botMessage?: BotMessageTheme;
   userMessage?: UserMessageTheme;
+  firstMessage?: FirstMessageConfig;
   textInput?: TextInputTheme;
   poweredByTextColor?: string;
   badgeBackgroundColor?: string;
@@ -76,13 +78,13 @@ export type BotProps = {
   titleAvatarSrc?: string;
   fontSize?: number;
   isFullPage?: boolean;
+  ref: HTMLElement;
 };
 
 const defaultWelcomeMessage = 'Hi there! How can I help?';
 
 export const Bot = (props: BotProps & { class?: string }) => {
   let chatContainer: HTMLDivElement | undefined;
-  let botContainer: HTMLDivElement | undefined;
   let textareaRef: HTMLTextAreaElement | undefined;
 
   const [userInput, setUserInput] = createSignal('');
@@ -101,13 +103,10 @@ export const Bot = (props: BotProps & { class?: string }) => {
   const [isChatFlowAvailableToStream, setIsChatFlowAvailableToStream] = createSignal(false);
 
   const [chatId, setChatId] = createSignal(props.chatflowid);
+
   const scrollToBottom = () => {
-    console.debug('scrollToBottom');
-    console.debug('chatContainer.scrollHeight', chatContainer?.scrollHeight, 'chatContainer.clientHeight', chatContainer?.clientHeight);
-    console.debug('document.body.scrollHeight', document.body.scrollHeight, 'window.innerHeight', window.innerHeight);
     setTimeout(() => {
-      chatContainer?.scrollTo(0, chatContainer.scrollHeight);
-      if (props.isFullPage) window.scrollTo(0, document.body.scrollHeight);
+      chatContainer?.scrollTo(0, chatContainer?.scrollHeight);
     }, 50);
   };
 
@@ -350,7 +349,7 @@ export const Bot = (props: BotProps & { class?: string }) => {
   };
 
   return (
-    <div ref={botContainer} class="relative flex flex-col z-0 h-full w-full overflow-hidden">
+    <div class="relative flex flex-col z-0 h-full w-full overflow-hidden">
       <div class="relative flex max-h-full flex-1 flex-col overflow-hidden">
         <Topbar
           title={props.title}
@@ -364,17 +363,19 @@ export const Bot = (props: BotProps & { class?: string }) => {
         <div class="flex w-full items-center justify-center bg-token-main-surface-primary overflow-hidden"></div>
         <main class={'relative h-full w-full flex-1 overflow-hidden transition-width'}>
           <div role="presentation" tabindex="0" class="flex h-full flex-col focus-visible:outline-0 overflow-hidden">
-            <div ref={chatContainer} class="flex-1 overflow-y-auto scroll-smooth no-scrollbar-container overflow-x-hidden">
+            <div ref={chatContainer} class="flex-1 overflow-auto scroll-smooth no-scrollbar-container">
               <div class="w-full h-16"></div>
-              <div class="overflow-hidden mx-2">
+              <div class="overflow-hidden mx-3">
                 <div class="w-full">
-                  <p class="m-5 text-2xl font-bold text-white text-jost">Welcome to my @Twini :)</p>
+                  <p class="m-5 text-xl font-bold text-white text-jost">{props.title}</p>
                 </div>
                 <div class="w-full">
                   <FirstMessageBubble
-                    backgroundColor={props.botMessage?.backgroundColor}
+                    background={props.firstMessage?.background}
                     textColor={props.botMessage?.textColor}
-                    scrollToBottom={scrollToBottom}
+                    actions={props.firstMessage?.actions}
+                    text={props.firstMessage?.text}
+                    actionsBackground={props.firstMessage?.actionsBackground}
                     setUserInput={setUserInput}
                     focusOnInput={focusOnTextarea}
                   />
@@ -387,8 +388,8 @@ export const Bot = (props: BotProps & { class?: string }) => {
                           message={message.message}
                           backgroundColor={props.userMessage?.backgroundColor}
                           textColor={props.userMessage?.textColor}
-                          showAvatar={props.userMessage?.showAvatar}
-                          avatarSrc={props.userMessage?.avatarSrc}
+                          showAvatar={false}
+                          avatarSrc={null}
                         />
                       )}
                       {message.type === 'apiMessage' && (
@@ -429,8 +430,8 @@ export const Bot = (props: BotProps & { class?: string }) => {
             showStarterPrompts={props.starterPrompts.length > 0 && messages().length <= 1}
             starterPrompts={props.starterPrompts}
             setBottomSpacerHeight={setBottomSpacerHeight}
-            scrollToBottom={scrollToBottom}
             poweredByTextColor={props.poweredByTextColor || 'black'}
+            scrollToBottom={scrollToBottom}
           />
         </main>
         {sourcePopupOpen() && <Popup isOpen={sourcePopupOpen()} value={sourcePopupSrc()} onClose={() => setSourcePopupOpen(false)} />}
