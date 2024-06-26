@@ -2,7 +2,7 @@ import { BotMessageTheme, TextInputTheme, UserMessageTheme } from '@/features/bu
 import { Popup } from '@/features/popup';
 import { MessageBE, RunInput } from '@/queries/sendMessageQuery';
 import { fetchEventSource } from '@microsoft/fetch-event-source';
-import { For, createEffect, createSignal, onMount } from 'solid-js';
+import { For, Show, createEffect, createSignal, onMount } from 'solid-js';
 import { v4 as uuidv4 } from 'uuid';
 import { Bottombar } from './Bottombar';
 import { products, setProducts, updateProducts } from './Products';
@@ -12,6 +12,7 @@ import FirstMessageBubble, { FirstMessageConfig } from './bubbles/FirstMessageBu
 import { GuestBubble } from './bubbles/GuestBubble';
 import { LoadingBubble } from './bubbles/LoadingBubble';
 import bot from '@/web';
+import { forEach } from 'lodash';
 
 type messageType = 'apiMessage' | 'userMessage' | 'usermessagewaiting';
 
@@ -100,6 +101,7 @@ export const Bot = (props: BotProps & { class?: string }) => {
     ],
     { equals: false },
   );
+  const [lastMessage, setLastMessage] = createSignal<MessageType | null>(null);
   const [isChatFlowAvailableToStream, setIsChatFlowAvailableToStream] = createSignal(false);
 
   const [chatId, setChatId] = createSignal(props.chatflowid);
@@ -117,19 +119,11 @@ export const Bot = (props: BotProps & { class?: string }) => {
     }, timeout || 50);
   };
 
-  onMount(() => {
-    messages().length > 1 ? scrollToBottom(100): scrollToTop(100);
-  });
-
   /**
    * Add each chat message into localStorage
    */
-  const addChatMessage = (allMessage: MessageType[]) => {
-    localStorage.setItem(`${props.chatflowid}_EXTERNAL`, JSON.stringify({ chatId: chatId(), chatHistory: allMessage }));
-  };
-
-  const getSkus = (message: string) => {
-    return [...message.matchAll(/<pr sku=(\d+)><\/pr>/g)].map((m) => m[1]);
+  const saveChatToLocalStorage = () => {
+    localStorage.setItem(`${props.chatflowid}_EXTERNAL`, JSON.stringify({ chatId: chatId(), chatHistory: messages() }));
   };
 
   const addEmptyMessage = () =>
@@ -138,63 +132,27 @@ export const Bot = (props: BotProps & { class?: string }) => {
       return messages;
     });
 
-  const updateLastMessage = (new_token: string) => {
-    setMessages((data) => {
-      const lastMsg = data[data.length - 1].message;
-
-      const skus = getSkus(lastMsg);
-
-      skus.forEach((sku) => {
-        if (products().has(sku)) {
-          return;
-        }
-        updateProducts(sku);
-        setProducts((prevProducts) => {
-          const newProducts = new Map(prevProducts);
-          newProducts.set(sku, { loading: true });
-          return newProducts;
-        });
-        return;
-      });
-
-      const updated = data.map((item, i) => {
-        if (i === data.length - 1) {
-          return { ...item, message: item.message + new_token };
-        }
-        return item;
-      });
-      addChatMessage(updated);
-      return [...updated];
-    });
-  };
-
   const updateLastMessageSources = (sourceProducts?: SourceDocument[], sourceInstagramPosts?: SourceDocument[]) => {
-    setMessages((data) => {
-      const updated = data.map((item, i) => {
-        if (i === data.length - 1) {
-          return {
-            ...item,
-            sourceProducts: sourceProducts || item.sourceProducts,
-            sourceInstagramPosts: sourceInstagramPosts || item.sourceInstagramPosts,
-          };
-        }
-        return item;
-      });
-      addChatMessage(updated);
-      return [...updated];
+    setLastMessage({
+      ...lastMessage(),
+      sourceProducts: sourceProducts || item.sourceProducts,
+      sourceInstagramPosts: sourceInstagramPosts || item.sourceInstagramPosts,
     });
   };
 
-  // Handle errors
-  const handleError = (message = 'Oops! There seems to be an error. Please try again.') => {
+  const moveLastMessageToMessages = () => {
+    const msg = lastMessage();
+    if (!msg) return;
+    setLastMessage(null);
     setMessages((prevMessages) => {
-      const messages: MessageType[] = [...prevMessages, { message, type: 'apiMessage' }];
-      addChatMessage(messages);
-      return messages;
+      return [...prevMessages, msg];
     });
-    setLoading(false);
-    setUserInput('');
-    scrollToBottom();
+  };
+
+  const addMessage = (msg: MessageType) => {
+    setMessages((prevMessages) => {
+      return [...prevMessages, msg];
+    });
   };
 
   const messageTypeFEtoBE = (msg: messageType) => {
@@ -221,12 +179,8 @@ export const Bot = (props: BotProps & { class?: string }) => {
 
     setLoading(true);
     scrollToBottom();
-
-    setMessages((prevMessages) => {
-      const messages: MessageType[] = [...prevMessages, { message: value, type: 'userMessage' }];
-      addChatMessage(messages);
-      return messages;
-    });
+    addMessage({ message: value, type: 'userMessage' });
+    saveChatToLocalStorage();
 
     // Send user question and history to API
     const messageList: MessageBE[] = messages().map((message) => {
@@ -244,7 +198,7 @@ export const Bot = (props: BotProps & { class?: string }) => {
     setIsChatFlowAvailableToStream(false);
     const abortCtrl = new AbortController();
 
-    let currMsg = '';
+    let waitingFirstToken = true;
     let sourceProducts: SourceDocument[] = [];
     let sourceInstagramPosts: SourceDocument[] = [];
 
@@ -276,11 +230,11 @@ export const Bot = (props: BotProps & { class?: string }) => {
         } else if (ev.event === 'data') {
           const data: ContextEvent | AnswerEvent = JSON.parse(ev.data);
           if (data.answer) {
-            if (currMsg === '') {
-              addEmptyMessage();
+            if (waitingFirstToken) {
+              waitingFirstToken = false;
+              setLoading(false);
             }
-            currMsg += data.answer;
-            updateLastMessage(data.answer);
+            setLastMessage({ type: 'apiMessage', message: (lastMessage()?.message || '') + data.answer });
           } else if (data.context) {
             let ctx: SourceDocument[] = data.context;
             sourceInstagramPosts = ctx.filter((doc) => doc.metadata?.media_url);
@@ -292,15 +246,11 @@ export const Bot = (props: BotProps & { class?: string }) => {
 
     setIsChatFlowAvailableToStream(true);
     updateLastMessageSources(sourceProducts, sourceInstagramPosts);
+    moveLastMessageToMessages();
     setLoading(false);
     setUserInput('');
     scrollToBottom();
-
-    setMessages((prevMessages) => {
-      const messages: MessageType[] = [...prevMessages];
-      addChatMessage(messages);
-      return messages;
-    });
+    saveChatToLocalStorage();
   };
 
   const clearChat = () => {
@@ -319,7 +269,7 @@ export const Bot = (props: BotProps & { class?: string }) => {
     }
   };
 
-  createEffect(async () => {
+  onMount(async () => {
     const localChatsData = localStorage.getItem(`${props.chatflowid}_EXTERNAL`);
     if (localChatsData) {
       const localChats: { chatHistory: MessageType[]; chatId: string } = JSON.parse(localChatsData);
@@ -328,21 +278,23 @@ export const Bot = (props: BotProps & { class?: string }) => {
       localChats.chatHistory.forEach((message: MessageType) => {
         msgs.push(message);
         setMessages([...msgs]);
-        updateLastMessage('');
+        setLastMessage(null);
       });
-    }
-    setIsChatFlowAvailableToStream(true);
-
-    // eslint-disable-next-line solid/reactivity
-    return () => {
-      setUserInput('');
-      setLoading(false);
+    } else {
       setMessages([
         {
           message: props.welcomeMessage ?? defaultWelcomeMessage,
           type: 'apiMessage',
         },
       ]);
+      setLastMessage(null);
+    }
+    setIsChatFlowAvailableToStream(true);
+    messages().length > 1 ? scrollToBottom(100) : scrollToTop(100);
+    // eslint-disable-next-line solid/reactivity
+    return () => {
+      setUserInput('');
+      setLoading(false);
     };
   });
 
@@ -391,35 +343,53 @@ export const Bot = (props: BotProps & { class?: string }) => {
                     focusOnInput={focusOnTextarea}
                   />
                 </div>
-                <For each={messages()}>
-                  {(message, index) => (
-                    <div class="w-full">
-                      {message.type === 'userMessage' && (
-                        <GuestBubble
-                          message={message.message}
-                          backgroundColor={props.userMessage?.backgroundColor}
-                          textColor={props.userMessage?.textColor}
-                          showAvatar={false}
-                          avatarSrc={null}
-                        />
-                      )}
-                      {message.type === 'apiMessage' && (
-                        <BotBubble
-                          message={message.message}
-                          fileAnnotations={message.fileAnnotations}
-                          apiUrl={props.apiUrl}
-                          backgroundColor={props.botMessage?.backgroundColor}
-                          textColor={props.botMessage?.textColor}
-                          showAvatar={props.botMessage?.showAvatar}
-                          avatarSrc={props.botMessage?.avatarSrc}
-                          sourceProducts={message.sourceProducts}
-                          sourceInstagramPosts={message.sourceInstagramPosts}
-                        />
-                      )}
-                      {message.type === 'userMessage' && loading() && index() === messages().length - 1 && <LoadingBubble />}
-                    </div>
-                  )}
+                <For each={[...messages()]}>
+                  {(message, index) => {
+                    const isLast = index() === messages().length - 1;
+                    return (
+                      <div class="w-full">
+                        {message.type === 'userMessage' && (
+                          <GuestBubble
+                            message={message.message}
+                            backgroundColor={props.userMessage?.backgroundColor}
+                            textColor={props.userMessage?.textColor}
+                            showAvatar={false}
+                            avatarSrc={undefined}
+                          />
+                        )}
+                        {message.type === 'apiMessage' && (
+                          <BotBubble
+                            getMessage={() => message}
+                            fileAnnotations={message.fileAnnotations}
+                            apiUrl={props.apiUrl}
+                            backgroundColor={props.botMessage?.backgroundColor}
+                            textColor={props.botMessage?.textColor}
+                            showAvatar={props.botMessage?.showAvatar}
+                            avatarSrc={props.botMessage?.avatarSrc}
+                            sourceProducts={message.sourceProducts}
+                            sourceInstagramPosts={message.sourceInstagramPosts}
+                          />
+                        )}
+                      </div>
+                    );
+                  }}
                 </For>
+                <Show when={loading()}>
+                  <LoadingBubble />
+                </Show>
+                <Show when={lastMessage()?.message}>
+                  <BotBubble
+                    getMessage={lastMessage}
+                    fileAnnotations={lastMessage().fileAnnotations}
+                    apiUrl={props.apiUrl}
+                    backgroundColor={props.botMessage?.backgroundColor}
+                    textColor={props.botMessage?.textColor}
+                    showAvatar={props.botMessage?.showAvatar}
+                    avatarSrc={props.botMessage?.avatarSrc}
+                    sourceProducts={lastMessage().sourceProducts}
+                    sourceInstagramPosts={lastMessage().sourceInstagramPosts}
+                  />
+                </Show>
               </div>
               <div class="w-full" style={{ height: bottomSpacerHeight() + 'px' }}></div>
             </div>
