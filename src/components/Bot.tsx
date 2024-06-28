@@ -328,7 +328,7 @@ export const Bot = (props: BotProps & { class?: string }) => {
           <div role="presentation" tabindex="0" class="flex h-full flex-col focus-visible:outline-0 overflow-hidden">
             <div ref={chatContainer} class="flex-1 overflow-auto scroll-smooth no-scrollbar-container">
               <div class="w-full h-16"></div>
-              <div class="overflow-hidden mx-3">
+              <div class="overflow-hidden px-3">
                 <div class="w-full">
                   <p class="m-5 text-xl font-bold text-white text-jost">{props.title}</p>
                 </div>
@@ -347,7 +347,7 @@ export const Bot = (props: BotProps & { class?: string }) => {
                   {(message, index) => {
                     const isLast = index() === messages().length - 1;
                     return (
-                      <div class="w-full">
+                      <div class="w-full my-4">
                         {message.type === 'userMessage' && (
                           <GuestBubble
                             message={message.message}

@@ -6,6 +6,7 @@ import ProductInfo from '../ProductInfo';
 import { Product, products } from '../Products';
 import { Avatar } from '../avatars/Avatar';
 import { InstagramSourcesBubble, ProductSourcesBubble } from './SourceBubble';
+import { ProductCarousel } from '../Carousel';
 
 type Props = {
   getMessage: () => MessageType;
@@ -66,25 +67,23 @@ export const TabComponent = (props: { backgroundColor: string; sourceProducts?: 
 export const BotBubble = (props: Props) => {
   console.log(props);
   return (
-    <div class="flex justify-start items-start host-container mr-12 mt-5 mb-5 text-roboto">
+    <div class="flex flex-row justify-start items-start host-container text-roboto w-full">
       <Show when={props.showAvatar}>
         <Avatar initialAvatarSrc={props.avatarSrc} classList={['h-8']} />
       </Show>
       <div
-        class="px-4 py-2 ml-2 whitespace-pre-wrap max-w-full rounded-2xl chatbot-host-bubble text-base font-normal"
+        class="mx-2 overflow-hidden whitespace-pre-wrap rounded-2xl chatbot-host-bubble text-base font-light max-w-full"
         data-testid="host-bubble"
         style={{
           'background-color': props.backgroundColor ?? defaultBackgroundColor,
           color: props.textColor ?? defaultTextColor,
         }}
       >
-        <span innerHTML={props.getMessage().message} />
-        <Show when={props.sourceInstagramPosts || props.sourceProducts}>
-          <TabComponent
-            backgroundColor={props.backgroundColor}
-            sourceInstagramPosts={props.sourceInstagramPosts}
-            sourceProducts={props.sourceProducts}
-          />
+        <div class="p-3">
+          <span innerHTML={props.getMessage().message} />
+        </div>
+        <Show when={props.sourceProducts}>
+          <ProductCarousel backgroundColor={props.backgroundColor} products={props.sourceProducts} />
         </Show>
       </div>
     </div>

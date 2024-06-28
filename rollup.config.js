@@ -13,7 +13,7 @@ import livereload from 'rollup-plugin-livereload';
 
 const extensions = ['.ts', '.tsx'];
 
-const serveFiles = process.env.ROLLUP_SERVE === 1;
+const serveFiles = process.env.ROLLUP_SERVE == 1;
 
 const servePlugins = () => [
   serve({
