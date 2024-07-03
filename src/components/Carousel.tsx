@@ -1,5 +1,5 @@
 import { Accessor, For, Index, Setter, Show, createEffect, createSignal } from 'solid-js';
-import { ProductMetadata, SourceDocument } from './Bot';
+import { ProductMetadata, SourceContent, SourceDocument, SourceProduct } from './Bot';
 import { LeftArrow, RightArrow, UpArrow } from './icons/Arrow';
 import { forEach } from 'lodash';
 
@@ -21,7 +21,7 @@ const ProductCard = (props: { isPrimary: boolean; product: ProductMetadata; onCl
 
 export type ProductCarouselProps = {
   backgroundColor: string;
-  products: SourceDocument[];
+  products: (SourceProduct | SourceContent)[];
 };
 export const ProductCarousel = (props: ProductCarouselProps) => {
   let carousel: HTMLDivElement | undefined;
@@ -63,12 +63,12 @@ export const ProductCarousel = (props: ProductCarouselProps) => {
               target="_blank"
               class="text-sm font-normal text-white pl-3 pr-1 py-2 whitespace-nowrap self-center"
             >
-              Buy now {props.products[currentSlide()].metadata.price}€
+              Buy now {Math.round(props.products[currentSlide()].metadata.price)}€
             </a>
             <a tabindex="0" role="button" class="h-auto flex flex-col pr-1">
               <div class="grow"></div>
               <div class="h-6 w-6">
-                <UpArrow width={24} height={24} classList={['w-6', 'h-6']}></UpArrow>
+                <UpArrow></UpArrow>
               </div>
               <div class="grow"></div>
             </a>
@@ -85,10 +85,10 @@ export const ProductCarousel = (props: ProductCarouselProps) => {
         <div class="w-2/5 flex flex-row justify-end pr-2">
           <div class="flex flex-row text-black">
             <button class={isStart() ? 'opacity-30' : ''} disabled={isStart()} onClick={prevSlide}>
-              <LeftArrow classList={['w-6', 'h-6']} width={24} height={24}></LeftArrow>
+              <LeftArrow></LeftArrow>
             </button>
             <button class={isEnd() ? 'opacity-30' : ''} disabled={isEnd()} onClick={nextSlide}>
-              <RightArrow classList={['w-6', 'h-6']} width={24} height={24}></RightArrow>
+              <RightArrow></RightArrow>
             </button>
           </div>
         </div>

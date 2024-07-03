@@ -1,11 +1,11 @@
 import { sendFileDownloadQuery } from '@/queries/sendMessageQuery';
 import { Marked } from '@ts-stack/markdown';
 import { For, Show, createEffect, createMemo, createSignal, onMount } from 'solid-js';
-import { MessageType, SourceDocument } from '../Bot';
+import { MessageType, SourceDocument, SourceContent, SourceProduct } from '../Bot';
 import ProductInfo from '../ProductInfo';
 import { Product, products } from '../Products';
 import { Avatar } from '../avatars/Avatar';
-import { InstagramSourcesBubble, ProductSourcesBubble } from './SourceBubble';
+import { SourcesDropdown } from './SourcesDropdown';
 import { ProductCarousel } from '../Carousel';
 
 type Props = {
@@ -16,8 +16,8 @@ type Props = {
   avatarSrc?: string;
   backgroundColor: string;
   textColor?: string;
-  sourceProducts?: SourceDocument[];
-  sourceInstagramPosts?: SourceDocument[];
+  sourceProducts?: SourceProduct[];
+  sourceContent?: SourceContent[];
 };
 
 const defaultBackgroundColor = '#f7f8ff';
@@ -26,43 +26,6 @@ const defaultTextColor = '#303235';
 Marked.setOptions({ isNoP: true });
 
 type MessagePart = { text: string } | { sku: string; product: Product };
-
-export const TabComponent = (props: { backgroundColor: string; sourceProducts?: SourceDocument[]; sourceInstagramPosts?: SourceDocument[] }) => {
-  const [activeTab, setActiveTab] = createSignal('products');
-  return (
-    <div>
-      <ul class="flex flex-row flex-nowrap text-center text-gray-500 border-t border-gray-200 mt-4">
-        <li class="grow">
-          <button
-            class={`text-jost p-4 border-b-2 rounded-t-lg ${
-              activeTab() === 'products' ? 'text-black border-black font-light' : 'border-transparent hover:text-gray-600 hover:border-gray-300'
-            }`}
-            onClick={() => setActiveTab('products')}
-            aria-current={activeTab() === 'products' ? 'page' : undefined}
-          >
-            Experiences
-          </button>
-        </li>
-        <li class="grow">
-          <button
-            class={`text-jost p-4 border-b-2 rounded-t-lg ${
-              activeTab() === 'posts' ? 'text-black border-black font-light' : 'border-transparent hover:text-gray-600 hover:border-gray-300'
-            }`}
-            onClick={() => setActiveTab('posts')}
-          >
-            Social Content
-          </button>
-        </li>
-      </ul>
-      {props.sourceProducts && props.sourceProducts.length > 0 && activeTab() === 'products' && (
-        <ProductSourcesBubble sources={props.sourceProducts} backgroundColor={props.backgroundColor} />
-      )}
-      {props.sourceInstagramPosts && props.sourceInstagramPosts.length > 0 && activeTab() === 'posts' && (
-        <InstagramSourcesBubble sources={props.sourceInstagramPosts} backgroundColor={props.backgroundColor} />
-      )}
-    </div>
-  );
-};
 
 export const BotBubble = (props: Props) => {
   console.log(props);
@@ -80,6 +43,11 @@ export const BotBubble = (props: Props) => {
         }}
       >
         <div class="p-3">
+          <Show when={props.sourceContent}>
+            <div class="w-full mb-3">
+              <SourcesDropdown sources={props.sourceContent} />
+            </div>
+          </Show>
           <span innerHTML={props.getMessage().message} />
         </div>
         <Show when={props.sourceProducts}>

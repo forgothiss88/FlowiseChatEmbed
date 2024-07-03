@@ -16,9 +16,9 @@ import { forEach } from 'lodash';
 
 type messageType = 'apiMessage' | 'userMessage' | 'usermessagewaiting';
 
-export type InstagramMetadata = {
+export type ContentMetadata = {
+  kind: 'instagram-video' | 'youtube-video' | 'video';
   caption: string;
-  kind: string;
   pk: number;
   resource_url: string;
   media_url: string;
@@ -26,20 +26,25 @@ export type InstagramMetadata = {
 };
 
 export type ProductMetadata = {
+  kind: 'product';
   name: string;
   price: string;
   item_url: string;
   thumbnail_url: string;
 };
 
-export type SourceDocument = {
+// bind K to be of type ProductMetadata or InstagramMetadata
+export type SourceDocument<K extends ProductMetadata | ContentMetadata> = {
   page_content: string;
-  metadata: ProductMetadata | InstagramMetadata;
+  metadata: K;
   type: 'Document';
 };
 
+export type SourceProduct = SourceDocument<ProductMetadata>;
+export type SourceContent = SourceDocument<ContentMetadata>;
+
 export type ContextEvent = {
-  context: SourceDocument[]; // JSON string of source documents
+  context: SourceDocument<ProductMetadata | ContentMetadata>[]; // JSON string of source documents
 };
 
 export type AnswerEvent = {
@@ -53,8 +58,8 @@ export type MetadataEvent = {
 export type MessageType = {
   message: string;
   type: messageType;
-  sourceProducts?: SourceDocument[];
-  sourceInstagramPosts?: SourceDocument[];
+  sourceProducts?: SourceProduct[];
+  sourceContents?: SourceContent[];
   fileAnnotations?: any;
 };
 
@@ -132,11 +137,11 @@ export const Bot = (props: BotProps & { class?: string }) => {
       return messages;
     });
 
-  const updateLastMessageSources = (sourceProducts?: SourceDocument[], sourceInstagramPosts?: SourceDocument[]) => {
+  const updateLastMessageSources = (sourceProducts?: SourceProduct[], sourceContents?: SourceContent[]) => {
     setLastMessage({
       ...lastMessage(),
       sourceProducts: sourceProducts || item.sourceProducts,
-      sourceInstagramPosts: sourceInstagramPosts || item.sourceInstagramPosts,
+      sourceContents: sourceContents || item.sourceContents,
     });
   };
 
@@ -199,8 +204,8 @@ export const Bot = (props: BotProps & { class?: string }) => {
     const abortCtrl = new AbortController();
 
     let waitingFirstToken = true;
-    let sourceProducts: SourceDocument[] = [];
-    let sourceInstagramPosts: SourceDocument[] = [];
+    let sourceProducts: SourceProduct[] = [];
+    let sourceContents: SourceContent[] = [];
 
     await fetchEventSource(`${props.apiUrl}/stream`, {
       signal: abortCtrl.signal,
@@ -236,16 +241,16 @@ export const Bot = (props: BotProps & { class?: string }) => {
             }
             setLastMessage({ type: 'apiMessage', message: (lastMessage()?.message || '') + data.answer });
           } else if (data.context) {
-            let ctx: SourceDocument[] = data.context;
-            sourceInstagramPosts = ctx.filter((doc) => doc.metadata?.media_url);
-            sourceProducts = ctx.filter((doc) => doc.metadata?.item_url);
+            let ctx: (SourceProduct | SourceContent)[] = data.context;
+            sourceContents = ctx.filter((doc) => doc.metadata?.kind === 'youtube-video' || doc.metadata?.kind === 'video');
+            sourceProducts = ctx.filter((doc) => doc.metadata?.kind === 'product');
           }
         }
       },
     });
 
     setIsChatFlowAvailableToStream(true);
-    updateLastMessageSources(sourceProducts, sourceInstagramPosts);
+    updateLastMessageSources(sourceProducts, sourceContents);
     moveLastMessageToMessages();
     setLoading(false);
     setUserInput('');
@@ -367,7 +372,7 @@ export const Bot = (props: BotProps & { class?: string }) => {
                             showAvatar={props.botMessage?.showAvatar}
                             avatarSrc={props.botMessage?.avatarSrc}
                             sourceProducts={message.sourceProducts}
-                            sourceInstagramPosts={message.sourceInstagramPosts}
+                            sourceContent={message.sourceContents}
                           />
                         )}
                       </div>
@@ -380,14 +385,14 @@ export const Bot = (props: BotProps & { class?: string }) => {
                 <Show when={lastMessage()?.message}>
                   <BotBubble
                     getMessage={lastMessage}
-                    fileAnnotations={lastMessage().fileAnnotations}
+                    fileAnnotations={lastMessage()?.fileAnnotations}
                     apiUrl={props.apiUrl}
                     backgroundColor={props.botMessage?.backgroundColor}
                     textColor={props.botMessage?.textColor}
                     showAvatar={props.botMessage?.showAvatar}
                     avatarSrc={props.botMessage?.avatarSrc}
-                    sourceProducts={lastMessage().sourceProducts}
-                    sourceInstagramPosts={lastMessage().sourceInstagramPosts}
+                    sourceProducts={lastMessage()?.sourceProducts}
+                    sourceContent={lastMessage()?.sourceContents}
                   />
                 </Show>
               </div>
