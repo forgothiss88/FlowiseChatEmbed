@@ -92,7 +92,12 @@ export const ProductCarousel = (props: ProductCarouselProps) => {
               <a role="button" class="text-center bg-transparent px-2 border border-b-black py-1 block text-black text-sm font-normal">
                 eBay - {Math.round(props.products[currentSlide()].metadata.price + 12)}€
               </a>
-              <a role="button" class="text-center bg-transparent px-2 py-1 block text-black text-sm font-normal">
+              <a
+                role="button"
+                href={'https://www.hdblog.it/prezzi/' + props.products[currentSlide()].metadata?.slug}
+                target="_blank"
+                class="text-center bg-transparent px-2 py-1 block text-black text-sm font-normal"
+              >
                 Vedi altri prezzi
               </a>
             </div>
