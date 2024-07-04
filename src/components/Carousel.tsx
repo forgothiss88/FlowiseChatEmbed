@@ -94,7 +94,7 @@ export const ProductCarousel = (props: ProductCarouselProps) => {
               </a>
               <a
                 role="button"
-                href={'https://www.hdblog.it/prezzi/' + props.products[currentSlide()].metadata?.slug}
+                href={'https://www.hdblog.it/prezzi/' + props.products[currentSlide()].metadata?.slug} // TODO: make this dynamic
                 target="_blank"
                 class="text-center bg-transparent px-2 py-1 block text-black text-sm font-normal"
               >
