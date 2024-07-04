@@ -24,13 +24,22 @@ const getFavicon = (url: string) => {
 const SourceCard = (props: { index: number; source: SourceContent }) => {
   // rounded card with title favicon of the website and a link to the website
   const [favicon, setFavicon] = createSignal('');
+  const url = props.source.metadata?.media_url || props.source.metadata?.url || 'https://www.hdblog.it';
   createEffect(() => {
-    setFavicon(getFavicon(props.source.metadata.media_url));
+    setFavicon(getFavicon(url));
   });
+
+  const sourceMap = {
+    'youtube-video': 'Youtube channel',
+    'instagram-video': 'Instagram',
+    video: 'Video',
+    article: 'Website',
+  };
+  console.log(props.source.metadata);
   return (
     <a
-      class="bg-white rounded-lg p-4 max-w-sm shadow-sm border w-full"
-      href={props.source.metadata.media_url}
+      class="bg-white rounded-lg p-4 max-w-sm shadow-sm border w-full flex-1"
+      href={url}
       target="_blank"
       role="menuitem"
       tabindex="-1"
@@ -41,17 +50,18 @@ const SourceCard = (props: { index: number; source: SourceContent }) => {
           class="text-sm font-medium text-gray-900"
           style={{
             display: '-webkit-box',
-            '-webkit-line-clamp': 3,
+            '-webkit-line-clamp': 2,
             '-webkit-box-orient': 'vertical',
             overflow: 'hidden',
             'text-overflow': 'ellipsis',
+            height: '2lh',
           }}
         >
           {props.source.metadata.title}
         </p>
-        <div class="w-full inline-flex items-start pt-2">
+        <div class="w-full inline-flex self-stretch items-start pt-2">
           <img src={favicon()} alt="HDBlog logo" class="w-4 h-4" />
-          <p class="pl-1 text-xs font-light text-gray-600">Youtube channel</p>
+          <p class="pl-1 text-xs font-light text-gray-600">{sourceMap[props.source.metadata.kind]}</p>
         </div>
       </div>
     </a>
@@ -61,29 +71,6 @@ const SourceCard = (props: { index: number; source: SourceContent }) => {
 export const SourcesDropdown = (props: ItemsProps) => {
   const [isOpen, setIsOpen] = createSignal(false);
 
-  const sources = props.sources || [
-    {
-      metadata: {
-        media_url: 'https://www.youtube.com',
-        website: 'youtube',
-        title: 'Best phones under 200$',
-      },
-    },
-    {
-      metadata: {
-        media_url: 'https://hdblog.it',
-        website: 'hdblog',
-        title: 'What i liked about Samsung s21',
-      },
-    },
-    {
-      metadata: {
-        media_url: 'https://tiktok.com',
-        website: 'tiktok',
-        title: 'What i liked about Samsung s21',
-      },
-    },
-  ];
   return (
     <div class="relative inline-block w-full bg-gray-100 rounded-md">
       <button role="button" tabIndex={2} class="inline-flex w-full px-2 py-1 text-sm font-medium" onClick={() => setIsOpen(!isOpen())}>
@@ -96,7 +83,7 @@ export const SourcesDropdown = (props: ItemsProps) => {
           <DownArrow />
         </div>
       </button>
-      <Show when={sources.length > 0}>
+      <Show when={props.sources.length > 0}>
         <div
           tabIndex={-1}
           role="menu"

@@ -30,6 +30,7 @@ export const ProductCarousel = (props: ProductCarouselProps) => {
   const nextSlide = () => {
     setCurrentSlide((prev: number) => Math.min(prev + 1, numProducts));
   };
+  const [isMenuOpen, setIsMenuOpen] = createSignal(false);
 
   const prevSlide = () => {
     setCurrentSlide((prev: number) => Math.max(prev - 1, 0));
@@ -51,35 +52,50 @@ export const ProductCarousel = (props: ProductCarouselProps) => {
       </div>
       <div class="pb-3 px-3 pt-2 flex flex-row w-full">
         <div class="w-3/5 flex flex-row justify-center">
-          <div class="flex flex-row dropdown dropdown-top bg-black text-white rounded-full">
-            <a class="rounded-full w-6 h-6 ml-1 my-auto bg-white">
-              <img
-                src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Amazon_icon.svg/240px-Amazon_icon.svg.png"
-                class="w-6 h-6 p-1"
-              ></img>
-            </a>
-            <a
-              href={props.products[currentSlide()].metadata.item_url}
-              target="_blank"
-              class="text-sm font-normal text-white pl-3 pr-1 py-2 whitespace-nowrap self-center"
+          <div class="ml-4 flex flex-col">
+            <div
+              class="flex flex-row bg-black text-white"
+              classList={{ 'rounded-2xl': !isMenuOpen(), 'rounded-tl-2xl rounded-tr-2xl': isMenuOpen() }}
             >
-              Buy now {Math.round(props.products[currentSlide()].metadata.price)}€
-            </a>
-            <a tabindex="0" role="button" class="h-auto flex flex-col pr-1">
-              <div class="grow"></div>
-              <div class="h-6 w-6">
-                <UpArrow></UpArrow>
-              </div>
-              <div class="grow"></div>
-            </a>
-            <ul tabindex="0" class="dropdown-content menu rounded-md bg-white shadow-md z-50 self-center">
-              <li>
-                <a class=" text-black text-sm font-normal">Buy on Amazon</a>
-              </li>
-              <li>
-                <a class=" text-black text-sm font-normal">Buy on ebay</a>
-              </li>
-            </ul>
+              <a class="bg-white rounded-2xl w-6 h-6 ml-2 my-auto">
+                <img
+                  src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Amazon_icon.svg/240px-Amazon_icon.svg.png"
+                  class="w-6 h-6 p-1"
+                ></img>
+              </a>
+              <a
+                href={props.products[currentSlide()].metadata.item_url}
+                target="_blank"
+                class="text-sm font-normal text-white pl-3 pr-1 py-2 whitespace-nowrap self-center"
+              >
+                Compra ora {Math.round(props.products[currentSlide()].metadata.price)}€
+              </a>
+              <button
+                tabindex="0"
+                role="button"
+                class="height-full content-center px-1 z-10"
+                classList={{
+                  'bg-black text-white rounded-r-full': !isMenuOpen(),
+                  'rounded-tr-2xl bg-white text-black border border-t-black border-r-black': isMenuOpen(),
+                }}
+                onClick={() => setIsMenuOpen(!isMenuOpen())}
+              >
+                <div class="h-6 w-6">
+                  <UpArrow></UpArrow>
+                </div>
+              </button>
+            </div>
+            <div classList={{ hidden: !isMenuOpen() }} class="flex-1 bg-white border border-black rounded-b-xl">
+              <a role="button" class="text-center bg-transparent px-2 border border-b-black py-1 block text-black text-sm font-normal">
+                ePRICE - {Math.round(props.products[currentSlide()].metadata.price + 10)}€
+              </a>
+              <a role="button" class="text-center bg-transparent px-2 border border-b-black py-1 block text-black text-sm font-normal">
+                eBay - {Math.round(props.products[currentSlide()].metadata.price + 12)}€
+              </a>
+              <a role="button" class="text-center bg-transparent px-2 py-1 block text-black text-sm font-normal">
+                Vedi altri prezzi
+              </a>
+            </div>
           </div>
         </div>
         <div class="w-2/5 flex flex-row justify-end pr-2">
