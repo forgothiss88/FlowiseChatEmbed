@@ -87,7 +87,7 @@ export const SourcesDropdown = (props: ItemsProps) => {
         <div
           tabIndex={-1}
           role="menu"
-          class="dropdown-content menu rounded-md z-50 self-center transition overflow-auto no-scrollbar-container"
+          class="dropdown-content menu rounded-md z-10 self-center transition overflow-auto no-scrollbar-container"
           classList={{ hidden: !isOpen(), 'ease-out': isOpen(), 'duration-100': isOpen(), 'ease-in': !isOpen(), 'duration-75': !isOpen() }}
           onFocusOut={() => setIsOpen(false)}
         >
