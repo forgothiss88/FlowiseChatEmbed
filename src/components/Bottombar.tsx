@@ -52,7 +52,7 @@ export const Bottombar = (props: Props) => {
   };
 
   const bb: HTMLDivElement = (
-    <div class="z-50">
+    <div>
       <Show when={props.starterPrompts.length > 0 && props.showStarterPrompts}>
         <div class="flex flex-row w-full flex-nowrap overflow-x-scroll overflow-y-hidden">
           <div class="ml-1"></div>
@@ -102,5 +102,5 @@ export const Bottombar = (props: Props) => {
     });
   });
 
-  return <div class="fixed bottom-0 w-full h-fit">{bb}</div>;
+  return <div class="fixed bottom-0 w-full h-fit z-50">{bb}</div>;
 };
