@@ -367,12 +367,14 @@ export const Bot = (props: BotProps & { class?: string }) => {
                             getMessage={() => message}
                             fileAnnotations={message.fileAnnotations}
                             apiUrl={props.apiUrl}
-                            backgroundColor={props.botMessage?.backgroundColor}
+                            backgroundColor={props.botMessage?.backgroundColor || 'white'}
                             textColor={props.botMessage?.textColor}
                             showAvatar={props.botMessage?.showAvatar}
                             avatarSrc={props.botMessage?.avatarSrc}
                             sourceProducts={message.sourceProducts}
                             sourceContent={message.sourceContents}
+                            enableMultipricing={props.botMessage?.enableMultipricing}
+                            purchaseButtonText={props.botMessage?.purchaseButtonText}
                           />
                         )}
                       </div>
@@ -387,12 +389,14 @@ export const Bot = (props: BotProps & { class?: string }) => {
                     getMessage={lastMessage}
                     fileAnnotations={lastMessage()?.fileAnnotations}
                     apiUrl={props.apiUrl}
-                    backgroundColor={props.botMessage?.backgroundColor}
+                    backgroundColor={props.botMessage?.backgroundColor || 'white'}
                     textColor={props.botMessage?.textColor}
                     showAvatar={props.botMessage?.showAvatar}
                     avatarSrc={props.botMessage?.avatarSrc}
                     sourceProducts={lastMessage()?.sourceProducts}
                     sourceContent={lastMessage()?.sourceContents}
+                    enableMultipricing={props.botMessage?.enableMultipricing}
+                    purchaseButtonText={props.botMessage?.purchaseButtonText}
                   />
                 </Show>
               </div>

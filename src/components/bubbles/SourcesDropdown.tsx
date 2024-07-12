@@ -68,7 +68,7 @@ const SourceCard = (props: { index: number; source: SourceContent }) => {
   );
 };
 
-export const SourcesDropdown = (props: ItemsProps) => {
+export const SourcesDropdown = (props: { sources: SourceContent[] }) => {
   const [isOpen, setIsOpen] = createSignal(false);
 
   return (

@@ -16,16 +16,16 @@ type Props = {
   avatarSrc?: string;
   backgroundColor: string;
   textColor?: string;
-  sourceProducts?: SourceProduct[];
-  sourceContent?: SourceContent[];
+  sourceProducts: SourceProduct[];
+  sourceContent: SourceContent[];
+  enableMultipricing: boolean;
+  purchaseButtonText: string;
 };
 
 const defaultBackgroundColor = '#f7f8ff';
 const defaultTextColor = '#303235';
 
 Marked.setOptions({ isNoP: true });
-
-type MessagePart = { text: string } | { sku: string; product: Product };
 
 export const BotBubble = (props: Props) => {
   console.log(props);
@@ -51,7 +51,12 @@ export const BotBubble = (props: Props) => {
           <span innerHTML={props.getMessage().message} />
         </div>
         <Show when={props.sourceProducts}>
-          <ProductCarousel backgroundColor={props.backgroundColor} products={props.sourceProducts} />
+          <ProductCarousel
+            enableMultipricing={props.enableMultipricing}
+            purchaseButtonText={props.purchaseButtonText}
+            backgroundColor={props.backgroundColor}
+            products={props.sourceProducts}
+          />
         </Show>
       </div>
     </div>

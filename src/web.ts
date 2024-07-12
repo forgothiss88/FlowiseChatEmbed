@@ -35,6 +35,7 @@ const createDefaultChatBot = () => {
     const msg: JSX.Element =
       "🎉 Hi there, I'm Twini, your guide from <a href='https://instgram.com/holidoit'>@holidoit</a>! 🌍 Ready to explore? Share what excites you and let’s dive in! 🎈 Visit <a href='https://holidoit.com'>holidoit.com</a> for more inspiration!";
     return {
+      ref: undefined,
       creatorName: props.creatorName,
       chatflowid: `${props.creatorName}-twini`,
       apiUrl: botUrl,
@@ -63,6 +64,8 @@ const createDefaultChatBot = () => {
             textColor: props.theme?.chatWindow?.botMessage?.textColor || '#283E4D',
             avatarSrc: props.theme?.chatWindow?.botMessage?.avatarSrc || props.avatarSrc,
             showAvatar: props.theme?.chatWindow?.botMessage?.showAvatar || true,
+            enableMultipricing: props.theme?.chatWindow?.botMessage?.enableMultipricing || false,
+            purchaseButtonText: props.theme?.chatWindow?.botMessage?.purchaseButtonText || 'Buy now',
           },
           userMessage: {
             backgroundColor: props.theme?.chatWindow?.userMessage?.backgroundColor || '#202124',

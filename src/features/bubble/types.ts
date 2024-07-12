@@ -26,6 +26,8 @@ export type BotMessageTheme = {
   textColor: string;
   showAvatar: boolean;
   avatarSrc: string;
+  enableMultipricing: boolean;
+  purchaseButtonText: string;
 };
 
 export type ChatWindowTheme = {
