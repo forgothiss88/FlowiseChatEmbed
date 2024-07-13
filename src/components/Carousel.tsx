@@ -1,6 +1,6 @@
 import { Accessor, For, Index, Setter, Show, createEffect, createSignal } from 'solid-js';
 import { ProductMetadata, SourceContent, SourceDocument, SourceProduct } from './Bot';
-import { LeftArrow, RightArrow, UpArrow } from './icons/Arrow';
+import { DownArrow, LeftArrow, RightArrow, UpArrow } from './icons/Arrow';
 import { forEach } from 'lodash';
 
 const ProductCard = (props: { isPrimary: boolean; product: ProductMetadata; onClick?: () => null }) => {
@@ -19,51 +19,97 @@ const ProductCard = (props: { isPrimary: boolean; product: ProductMetadata; onCl
   );
 };
 
+export type PurchaseButtonAspect = {
+  purchaseButtonText: string;
+  purchaseButtonBackgroundColor: string;
+  purchaseButtonTextColor: string;
+};
+
 export type ProductCarouselProps = {
   backgroundColor: string;
   products: SourceProduct[];
   enableMultipricing: boolean;
-  purchaseButtonText: string;
-};
+} & PurchaseButtonAspect;
 
-export const MultiPriceButton = (props: { purchaseButtonText: string; price: number; url: string; otherPricesUrl: string }) => {
+export const MultiPriceButton = (props: { price: number; url: string; otherPricesUrl: string } & PurchaseButtonAspect) => {
   const [isMenuOpen, setIsMenuOpen] = createSignal(false);
+  console.debug(props);
   return (
     <div class="ml-4 flex flex-col">
-      <div class="flex flex-row bg-black text-white" classList={{ 'rounded-2xl': !isMenuOpen(), 'rounded-tl-2xl rounded-tr-2xl': isMenuOpen() }}>
+      <div
+        class="flex flex-row"
+        classList={{ 'rounded-2xl': !isMenuOpen(), 'rounded-tl-2xl rounded-tr-2xl': isMenuOpen() }}
+        style={{
+          background: props.purchaseButtonBackgroundColor,
+          color: props.purchaseButtonTextColor,
+          'border-color': props.purchaseButtonBackgroundColor,
+        }}
+      >
         <a class="bg-white rounded-2xl w-6 h-6 ml-2 my-auto">
           <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Amazon_icon.svg/240px-Amazon_icon.svg.png" class="w-6 h-6 p-1"></img>
         </a>
-        <a href={props.url} target="_blank" class="text-sm font-normal text-white pl-3 pr-1 py-2 whitespace-nowrap self-center">
+        <a href={props.url} target="_blank" class="text-sm text-inherit font-normal pl-3 pr-1 py-2 whitespace-nowrap self-center">
           {props.purchaseButtonText} {Math.round(props.price)}€
         </a>
         <button
           tabindex="0"
           role="button"
-          class="height-full content-center px-1 z-10"
+          class="height-full content-center px-1 z-10 border-inherit"
           classList={{
-            'bg-black text-white rounded-r-full': !isMenuOpen(),
-            'rounded-tr-2xl bg-white text-black border border-t-black border-r-black': isMenuOpen(),
+            'rounded-r-full': !isMenuOpen(),
+            'rounded-tr-2xl border': isMenuOpen(),
           }}
           onClick={() => setIsMenuOpen(!isMenuOpen())}
+          style={
+            isMenuOpen()
+              ? {
+                  'background-color': 'white',
+                  color: props.purchaseButtonTextColor,
+                }
+              : {
+                  'background-color': props.purchaseButtonBackgroundColor,
+                  color: props.purchaseButtonTextColor,
+                }
+          }
         >
           <div class="h-6 w-6">
-            <UpArrow></UpArrow>
+            <Show when={!isMenuOpen()}>
+              <DownArrow></DownArrow>
+            </Show>
+            <Show when={isMenuOpen()}>
+              <UpArrow></UpArrow>
+            </Show>
           </div>
         </button>
       </div>
-      <div classList={{ hidden: !isMenuOpen() }} class="flex-1 bg-white border border-black rounded-b-xl">
-        <a role="button" class="text-center bg-transparent px-2 border border-b-black py-1 block text-black text-sm font-normal">
+      <div
+        classList={{ hidden: !isMenuOpen() }}
+        class="flex-1 border border-inherit rounded-b-xl"
+        style={
+          isMenuOpen()
+            ? {
+                'background-color': 'white',
+                color: 'black',
+                'border-color': props.purchaseButtonBackgroundColor,
+              }
+            : {
+                'background-color': props.purchaseButtonBackgroundColor,
+                color: props.purchaseButtonTextColor,
+                'border-color': props.purchaseButtonBackgroundColor,
+              }
+        }
+      >
+        <a role="button" class="text-center text-inherit bg-transparent px-2 border-b border-inherit py-1 block text-sm font-normal">
           ePRICE - {Math.round(props.price + 10)}€
         </a>
-        <a role="button" class="text-center bg-transparent px-2 border border-b-black py-1 block text-black text-sm font-normal">
+        <a role="button" class="text-center text-inherit bg-transparent px-2 border-b border-inherit py-1 block text-sm font-normal">
           eBay - {Math.round(props.price + 12)}€
         </a>
         <a
           role="button"
           href={props.otherPricesUrl} // TODO: make this dynamic
           target="_blank"
-          class="text-center bg-transparent px-2 py-1 block text-black text-sm font-normal"
+          class="text-center text-inherit bg-transparent px-2 py-1 block text-sm font-normal"
         >
           Vedi altri prezzi
         </a>
@@ -72,14 +118,21 @@ export const MultiPriceButton = (props: { purchaseButtonText: string; price: num
   );
 };
 
-export const SinglePriceButton = (props: { purchaseButtonText: string; price: number; url: string }) => {
+export const SinglePriceButton = (props: { purchaseButtonText: string; price: number; url: string } & PurchaseButtonAspect) => {
   return (
     <div class="ml-4 flex flex-col">
-      <div class="flex flex-row bg-black text-white rounded-full">
+      <div
+        class="flex flex-row rounded-full"
+        style={{
+          background: props.purchaseButtonBackgroundColor,
+          color: props.purchaseButtonTextColor,
+          'border-color': props.purchaseButtonBackgroundColor,
+        }}
+      >
         <a class="bg-white rounded-2xl w-6 h-6 ml-1 my-auto">
           <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Amazon_icon.svg/240px-Amazon_icon.svg.png" class="w-6 h-6 p-1"></img>
         </a>
-        <a href={props.url} target="_blank" class="text-sm font-normal text-white px-3 py-2 whitespace-nowrap self-center">
+        <a href={props.url} target="_blank" class="text-sm font-normal px-3 py-2 whitespace-nowrap self-center">
           {props.purchaseButtonText} {Math.round(props.price)}€
         </a>
       </div>
@@ -119,13 +172,21 @@ export const ProductCarousel = (props: ProductCarouselProps) => {
           <Show when={props.enableMultipricing}>
             <MultiPriceButton
               purchaseButtonText={props.purchaseButtonText}
+              purchaseButtonBackgroundColor={props.purchaseButtonBackgroundColor}
+              purchaseButtonTextColor={props.purchaseButtonTextColor}
               price={currProduct.price}
               url={currProduct.item_url}
               otherPricesUrl={'https://www.hdblog.it/prezzi/' + currProduct?.slug} // TODO: take multiple prices from API
             />
           </Show>
           <Show when={!props.enableMultipricing}>
-            <SinglePriceButton purchaseButtonText={props.purchaseButtonText} price={currProduct.price} url={currProduct.item_url} />
+            <SinglePriceButton
+              purchaseButtonBackgroundColor={props.purchaseButtonBackgroundColor}
+              purchaseButtonTextColor={props.purchaseButtonTextColor}
+              purchaseButtonText={props.purchaseButtonText}
+              price={currProduct.price}
+              url={currProduct.item_url}
+            />
           </Show>
         </div>
         <div class="w-2/5 flex flex-row justify-end pr-2">

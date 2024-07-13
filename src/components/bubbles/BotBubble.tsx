@@ -6,7 +6,7 @@ import ProductInfo from '../ProductInfo';
 import { Product, products } from '../Products';
 import { Avatar } from '../avatars/Avatar';
 import { SourcesDropdown } from './SourcesDropdown';
-import { ProductCarousel } from '../Carousel';
+import { ProductCarousel, PurchaseButtonAspect } from '../Carousel';
 
 type Props = {
   getMessage: () => MessageType;
@@ -19,8 +19,7 @@ type Props = {
   sourceProducts: SourceProduct[];
   sourceContent: SourceContent[];
   enableMultipricing: boolean;
-  purchaseButtonText: string;
-};
+} & PurchaseButtonAspect;
 
 const defaultBackgroundColor = '#f7f8ff';
 const defaultTextColor = '#303235';
@@ -54,6 +53,8 @@ export const BotBubble = (props: Props) => {
           <ProductCarousel
             enableMultipricing={props.enableMultipricing}
             purchaseButtonText={props.purchaseButtonText}
+            purchaseButtonBackgroundColor={props.purchaseButtonBackgroundColor}
+            purchaseButtonTextColor={props.purchaseButtonTextColor}
             backgroundColor={props.backgroundColor}
             products={props.sourceProducts}
           />

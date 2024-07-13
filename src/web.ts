@@ -66,6 +66,8 @@ const createDefaultChatBot = () => {
             showAvatar: props.theme?.chatWindow?.botMessage?.showAvatar || true,
             enableMultipricing: props.theme?.chatWindow?.botMessage?.enableMultipricing || false,
             purchaseButtonText: props.theme?.chatWindow?.botMessage?.purchaseButtonText || 'Buy now',
+            purchaseButtonBackgroundColor: props.theme?.chatWindow?.botMessage?.purchaseButtonBackgroundColor || '#283E4D',
+            purchaseButtonTextColor: props.theme?.chatWindow?.botMessage?.purchaseButtonTextColor || '#ffffff',
           },
           userMessage: {
             backgroundColor: props.theme?.chatWindow?.userMessage?.backgroundColor || '#202124',

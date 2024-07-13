@@ -1,3 +1,4 @@
+import { PurchaseButtonAspect } from '@/components/Carousel';
 import { FirstMessageConfig } from '@/components/bubbles/FirstMessageBubble';
 
 export type BubbleParams = {
@@ -27,8 +28,7 @@ export type BotMessageTheme = {
   showAvatar: boolean;
   avatarSrc: string;
   enableMultipricing: boolean;
-  purchaseButtonText: string;
-};
+} & PurchaseButtonAspect;
 
 export type ChatWindowTheme = {
   title: string;
