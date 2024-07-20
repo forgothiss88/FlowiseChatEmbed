@@ -31,7 +31,8 @@ const SourceCard = (props: { index: number; source: SourceContent }) => {
 
   const sourceMap = {
     'youtube-video': 'Youtube channel',
-    'instagram-video': 'Instagram',
+    'ig-video': 'Instagram',
+    'tiktok-video': 'TikTok',
     video: 'Video',
     article: 'Website',
   };
@@ -57,7 +58,7 @@ const SourceCard = (props: { index: number; source: SourceContent }) => {
             height: '2lh',
           }}
         >
-          {props.source.metadata.title}
+          {props.source.metadata?.title || props.source.metadata?.caption}
         </p>
         <div class="w-full inline-flex self-stretch items-start pt-2">
           <img src={favicon()} alt="HDBlog logo" class="w-4 h-4" />

@@ -17,7 +17,7 @@ import { forEach } from 'lodash';
 type messageType = 'apiMessage' | 'userMessage' | 'usermessagewaiting';
 
 export type ContentMetadata = {
-  kind: 'instagram-video' | 'youtube-video' | 'video' | 'article';
+  kind: 'ig-video' | 'youtube-video' | 'tiktok-video' | 'article';
   caption: string;
   pk: number;
   resource_url: string;
@@ -248,7 +248,7 @@ export const Bot = (props: BotProps & { class?: string }) => {
             setLastMessage({ type: 'apiMessage', message: (lastMessage()?.message || '') + data.answer });
           } else if (data.context) {
             let ctx: (SourceProduct | SourceContent)[] = data.context;
-            sourceContents = ctx.filter((doc) => ['youtube-video', 'article'].includes(doc.metadata?.kind));
+            sourceContents = ctx.filter((doc) => ['youtube-video', 'ig-video', 'tiktok-video', 'article'].includes(doc.metadata?.kind));
             sourceProducts = ctx.filter((doc) => doc.metadata?.kind === 'product');
           }
         }
