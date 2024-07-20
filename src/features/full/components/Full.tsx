@@ -56,7 +56,7 @@ export const FullBot = (props: FullProps, { element }: { element: HTMLElement })
             chatflowConfig={props.chatflowConfig}
             apiUrl={props.apiUrl}
             isFullPage={true}
-            starterPrompts={props.starterPrompts || []}
+            starterPrompts={props.starterPrompts || {}}
             creatorName={props.creatorName}
             firstMessage={props.theme?.chatWindow?.firstMessage}
           />

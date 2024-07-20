@@ -3,14 +3,14 @@ import { createEffect, createSignal, Show } from 'solid-js';
 import { isNotEmpty } from '@/utils/index';
 import { DefaultAvatar } from './DefaultAvatar';
 
-export const Avatar = (props: { initialAvatarSrc?: string; classList?: string[] }) => {
-  const [avatarSrc, setAvatarSrc] = createSignal(props.initialAvatarSrc);
+export const Avatar = (props: { src?: string; padding?: string; classList?: string[] }) => {
+  const [avatarSrc, setAvatarSrc] = createSignal(props.src);
   const classList = props.classList || [];
 
   console.debug('Avatar', props);
 
   createEffect(() => {
-    if (avatarSrc()?.startsWith('{{') && props.initialAvatarSrc?.startsWith('http')) setAvatarSrc(props.initialAvatarSrc);
+    if (avatarSrc()?.startsWith('{{') && props.src?.startsWith('http')) setAvatarSrc(props.src);
   });
 
   return (
@@ -22,6 +22,9 @@ export const Avatar = (props: { initialAvatarSrc?: string; classList?: string[] 
           ' ' +
           classList.join(' ')
         }
+        style={{
+          padding: props.padding,
+        }}
       >
         <img src={avatarSrc()} alt="Bot avatar" class="object-cover w-auto h-full" />
       </figure>

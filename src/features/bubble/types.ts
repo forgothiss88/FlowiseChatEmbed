@@ -15,6 +15,8 @@ export type TextInputTheme = {
   textColor: string;
   placeholder: string;
   sendButtonColor: string;
+  inputBackgroundColor: string;
+  resetButtonColor: string;
 };
 
 export type UserMessageTheme = {
@@ -27,6 +29,7 @@ export type BotMessageTheme = {
   textColor: string;
   showAvatar: boolean;
   avatarSrc: string;
+  avatarPadding: string;
   enableMultipricing: boolean;
 } & PurchaseButtonAspect;
 

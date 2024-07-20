@@ -63,12 +63,18 @@ export type MessageType = {
   fileAnnotations?: any;
 };
 
+export type StarterPromptsType = {
+  prompts: string[];
+  backgroundColor: string;
+  textColor: string;
+};
+
 export type BotProps = {
   creatorName: string;
   chatflowid: string;
   apiUrl: string;
   chatflowConfig?: Record<string, unknown>;
-  starterPrompts: string[];
+  starterPrompts: StarterPromptsType;
   welcomeMessage?: string;
   botMessage?: BotMessageTheme;
   userMessage?: UserMessageTheme;
@@ -371,6 +377,7 @@ export const Bot = (props: BotProps & { class?: string }) => {
                             textColor={props.botMessage?.textColor}
                             showAvatar={props.botMessage?.showAvatar}
                             avatarSrc={props.botMessage?.avatarSrc}
+                            avatarPadding={props.botMessage?.avatarPadding}
                             sourceProducts={message.sourceProducts}
                             sourceContent={message.sourceContents}
                             enableMultipricing={props.botMessage?.enableMultipricing}
@@ -395,6 +402,7 @@ export const Bot = (props: BotProps & { class?: string }) => {
                     textColor={props.botMessage?.textColor}
                     showAvatar={props.botMessage?.showAvatar}
                     avatarSrc={props.botMessage?.avatarSrc}
+                    avatarPadding={props.botMessage?.avatarPadding}
                     sourceProducts={lastMessage()?.sourceProducts}
                     sourceContent={lastMessage()?.sourceContents}
                     enableMultipricing={props.botMessage?.enableMultipricing}
@@ -410,9 +418,11 @@ export const Bot = (props: BotProps & { class?: string }) => {
           <Bottombar
             ref={textareaRef}
             backgroundColor={props.textInput?.backgroundColor}
+            inputBackgroundColor={props.textInput?.inputBackgroundColor}
             textColor={props.textInput?.textColor}
             placeholder={props.textInput?.placeholder}
             sendButtonColor={props.textInput?.sendButtonColor}
+            resetButtonColor={props.textInput?.resetButtonColor}
             fontSize={props.fontSize}
             disabled={loading()}
             getInputValue={userInput}
@@ -421,7 +431,7 @@ export const Bot = (props: BotProps & { class?: string }) => {
             isFullPage={props.isFullPage}
             clearChat={clearChat}
             isDeleteEnabled={messages().length > 1}
-            showStarterPrompts={props.starterPrompts.length > 0 && messages().length <= 1}
+            showStarterPrompts={props.starterPrompts.prompts.length > 0 && messages().length <= 1}
             starterPrompts={props.starterPrompts}
             setBottomSpacerHeight={setBottomSpacerHeight}
             poweredByTextColor={props.poweredByTextColor || 'black'}

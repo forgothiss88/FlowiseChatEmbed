@@ -125,14 +125,20 @@ export const SinglePriceButton = (props: { purchaseButtonText: string; price: nu
         class="flex flex-row rounded-full"
         style={{
           background: props.purchaseButtonBackgroundColor,
-          color: props.purchaseButtonTextColor,
           'border-color': props.purchaseButtonBackgroundColor,
         }}
       >
         <a class="bg-white rounded-2xl w-6 h-6 ml-1 my-auto">
           <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Amazon_icon.svg/240px-Amazon_icon.svg.png" class="w-6 h-6 p-1"></img>
         </a>
-        <a href={props.url} target="_blank" class="text-sm font-normal px-3 py-2 whitespace-nowrap self-center">
+        <a
+          href={props.url}
+          target="_blank"
+          class="text-sm font-normal px-3 py-2 whitespace-nowrap self-center"
+          style={{
+            color: props.purchaseButtonTextColor,
+          }}
+        >
           {props.purchaseButtonText} {Math.round(props.price)}€
         </a>
       </div>

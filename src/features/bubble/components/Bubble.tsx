@@ -67,7 +67,7 @@ export const BubbleBot = (props: BubbleProps) => {
             chatflowid={props.chatflowid}
             chatflowConfig={props.chatflowConfig}
             apiUrl={props.apiUrl}
-            starterPrompts={props.starterPrompts || []}
+            starterPrompts={props.starterPrompts || {}}
             creatorName={props.creatorName}
             firstMessage={bubbleProps.theme?.chatWindow?.firstMessage}
           />

@@ -3,6 +3,7 @@ import { StarterPromptBubble, Props as StarterPromptProps } from './bubbles/Star
 import { AutoGrowTextArea } from './inputs/textInput/components/AutoGrowTextArea';
 import { DeleteButton, SendButton } from './SendButton';
 import { Badge } from './Badge';
+import { StarterPromptsType } from './Bot';
 
 const isIOS = () => {
   return /iPad|iPhone|iPod/.test(navigator.userAgent);
@@ -15,15 +16,17 @@ export type Props = StarterPromptProps & {
   ref: HTMLTextAreaElement | undefined;
   placeholder?: string;
   backgroundColor?: string;
+  inputBackgroundColor?: string;
   textColor?: string;
   sendButtonColor?: string;
+  resetButtonColor?: string;
   poweredByTextColor: string;
   defaultValue?: string;
   fontSize?: number;
   disabled?: boolean;
   isFullPage?: boolean;
   isDeleteEnabled: boolean;
-  starterPrompts: string[];
+  starterPrompts: StarterPromptsType;
   showStarterPrompts: boolean;
   onSubmit: (value: string) => void;
   clearChat: () => void;
@@ -53,11 +56,13 @@ export const Bottombar = (props: Props) => {
 
   const bb: HTMLDivElement = (
     <div>
-      <Show when={props.starterPrompts.length > 0 && props.showStarterPrompts}>
+      <Show when={props.starterPrompts.prompts.length > 0 && props.showStarterPrompts}>
         <div class="flex flex-row w-full flex-nowrap overflow-x-scroll overflow-y-hidden">
           <div class="ml-1"></div>
-          <For each={[...props.starterPrompts]}>
-            {(prompt) => <StarterPromptBubble prompt={prompt} onPromptClick={() => props.onSubmit(prompt)} />}
+          <For each={[...props.starterPrompts.prompts]}>
+            {(prompt) => (
+              <StarterPromptBubble bg={props.starterPrompts.backgroundColor} prompt={prompt} onPromptClick={() => props.onSubmit(prompt)} />
+            )}
           </For>
         </div>
       </Show>
@@ -73,7 +78,7 @@ export const Bottombar = (props: Props) => {
           }}
           onKeyDown={submitWhenEnter}
         >
-          <DeleteButton sendButtonColor={props.sendButtonColor} type="button" isDisabled={!props.isDeleteEnabled} onClick={props.clearChat} />
+          <DeleteButton color={props.resetButtonColor} type="button" isDisabled={!props.isDeleteEnabled} onClick={props.clearChat} />
           <div class="mr-2 w-full">
             <AutoGrowTextArea
               ref={props.ref}
@@ -86,6 +91,7 @@ export const Bottombar = (props: Props) => {
               onSubmit={submit}
               sendButtonColor={props.sendButtonColor || 'black'}
               scrollToBottom={props.scrollToBottom}
+              inputBackgroundColor={props.inputBackgroundColor}
             />
           </div>
         </div>

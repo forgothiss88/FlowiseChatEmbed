@@ -21,7 +21,7 @@ const Topbar = (props: {
     >
       <Show when={props.titleAvatarSrc}>
         <div class="grow-0 ml-4">
-          <Avatar initialAvatarSrc={props.titleAvatarSrc} classList={['h-8']} />
+          <Avatar src={props.titleAvatarSrc} classList={['h-8']} />
         </div>
       </Show>
       <div class="grow"></div>

@@ -1,0 +1,95 @@
+<!doctype html>
+<html class="overflow-hidden" lang="en">
+  <head>
+    <title>@Twini</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content" />
+    <meta charset="UTF-8" />
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+      @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+    </style>
+  </head>
+
+  <script type="module">
+    import bot from '/dist/web.js';
+    bot.initFullWithDefaults({
+      apiUrl: 'http://localhost:8000/twini-stream/dermaself',
+      creatorName: 'dermaself',
+      starterPrompts: {
+        prompts: [
+          'Come capisco se ho bisogno del supporto medico?',
+          "E se non ho l'acne?",
+          'Che cosa significa che i vostri Dermatologi sono Esperti di Acne?',
+        ],
+        backgroundColor: '#9AFEBB',
+      },
+      theme: {
+        button: {
+          topbarColor: '#7547F2',
+        },
+        chatWindow: {
+          title: 'Ciao! Sono il tuo assistente AI 😊',
+          titleAvatarSrc: '/public/avatars/dermaself_title.svg',
+          titleColor: 'black',
+          welcomeMessage: 'Qui puoi chiedermi tutto sui miei contenuti e prodotti. Ti aiuterò a trovare ciò che cerchi in un lampo! ⚡',
+          backgroundColor: 'linear-gradient(180deg, #7547F2 0%, #7547F2 25%, rgba(245,245,245,1) 57%)',
+          poweredByTextColor: 'black',
+          firstMessage: {
+            text: 'Puoi chiedermi di:',
+            background: 'white',
+            // actionsBackground: '#F1E3FF',
+            // actionsBackground: '#9AFEBB',
+            actionsBackground: '#F1E3FF',
+            actions: [
+              {
+                title: 'Parlarmi della Night Cream!',
+                subtitle: 'Scopri come personalizziamo la Night Cream per la tua pelle.',
+                prompt: 'Parlami della Night Cream',
+                icon: 'lotion',
+              },
+              {
+                title: 'Consigli per la pelle acneica',
+                subtitle: 'Sappiamo un sacco di cose che potrebbero servirti.',
+                prompt: 'Che consigli avete per la pelle acneica?',
+                icon: 'smile',
+              },
+              {
+                title: 'Come avere supporto medico',
+                subtitle: 'Scopri come i nostri esperti eseguono la diagnosi per la tua pelle.',
+                prompt: 'Che supporto medico offrite?',
+                icon: 'doctor',
+              },
+            ],
+          },
+          textInput: {
+            placeholder: 'Scrivi qui...',
+            // inputBackgroundColor: 'white',
+            // backgroundColor: '#F1E3FF',
+            sendButtonColor: '#9AFEBB',
+            resetButtonColor: 'gray',
+          },
+          botMessage: {
+            backgroundColor: 'white',
+            textColor: 'black',
+            avatarSrc: '/public/avatars/dermaself_round.svg',
+            avatarPadding: '0px',
+            showAvatar: true,
+            enableMultipricing: false,
+            purchaseButtonText: 'Compra ora',
+            purchaseButtonBackgroundColor: '#7547F2',
+            purchaseButtonTextColor: '#9AFEBB',
+          },
+          userMessage: {
+            backgroundColor: 'black',
+            textColor: 'white',
+            showAvatar: false,
+          },
+        },
+      },
+    });
+  </script>
+
+  <body class="overflow-hidden" style="margin: 0px">
+    <flowise-fullchatbot></flowise-fullchatbot>
+  </body>
+</html>

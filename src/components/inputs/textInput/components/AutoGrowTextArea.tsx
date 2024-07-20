@@ -13,6 +13,7 @@ export type Props = {
   scrollToBottom: () => void;
   onSubmit: () => void;
   sendButtonColor: string;
+  inputBackgroundColor: string;
 } & Omit<JSX.InputHTMLAttributes<HTMLTextAreaElement>, 'onInput'>;
 
 export const AutoGrowTextArea = (props: Props) => {
@@ -46,11 +47,11 @@ export const AutoGrowTextArea = (props: Props) => {
   createEffect(resizeTextarea);
 
   return (
-    <div class="flex flex-row pl-3 py-1 rounded-2xl bg-gray-200">
+    <div class="flex flex-row pl-3 py-1 rounded-2xl bg-gray-200" style={{ 'background-color': props.inputBackgroundColor }}>
       {textarea}
       <div class="my-auto">
         <SendButton
-          sendButtonColor={props.sendButtonColor}
+          color={props.sendButtonColor}
           type="button"
           isDisabled={props.disabled || props.getInputValue() === ''}
           onClick={props.onSubmit}

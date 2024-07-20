@@ -39,7 +39,7 @@ const createDefaultChatBot = () => {
       creatorName: props.creatorName,
       chatflowid: `${props.creatorName}-twini`,
       apiUrl: botUrl,
-      starterPrompts: props.starterPrompts || [],
+      starterPrompts: props.starterPrompts || {},
       chatflowConfig: {},
       theme: {
         button: {
@@ -63,6 +63,7 @@ const createDefaultChatBot = () => {
             backgroundColor: props.theme?.chatWindow?.botMessage?.backgroundColor || '#ffffff',
             textColor: props.theme?.chatWindow?.botMessage?.textColor || '#283E4D',
             avatarSrc: props.theme?.chatWindow?.botMessage?.avatarSrc || props.avatarSrc,
+            avatarPadding: props.theme?.chatWindow?.botMessage?.avatarPadding || '8px',
             showAvatar: props.theme?.chatWindow?.botMessage?.showAvatar || true,
             enableMultipricing: props.theme?.chatWindow?.botMessage?.enableMultipricing || false,
             purchaseButtonText: props.theme?.chatWindow?.botMessage?.purchaseButtonText || 'Buy now',
@@ -75,9 +76,11 @@ const createDefaultChatBot = () => {
           },
           textInput: {
             backgroundColor: props.theme?.chatWindow?.textInput?.backgroundColor || '#ffffff',
+            inputBackgroundColor: props.theme?.chatWindow?.textInput?.inputBackgroundColor || undefined,
             textColor: props.theme?.chatWindow?.textInput?.textColor || '#283E4D',
             placeholder: props.theme?.chatWindow?.textInput?.placeholder || 'Ask me (almost) anything...',
             sendButtonColor: props.theme?.chatWindow?.textInput?.sendButtonColor || '#7f7970',
+            resetButtonColor: props.theme?.chatWindow?.textInput?.resetButtonColor || '#7f7970',
           },
           firstMessage: props.theme?.chatWindow?.firstMessage || {},
         },

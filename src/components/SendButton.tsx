@@ -4,7 +4,7 @@ import { SendIcon } from './icons';
 import { DeleteIcon } from './icons/DeleteIcon';
 
 type SendButtonProps = {
-  sendButtonColor?: string;
+  color?: string;
   isDisabled?: boolean;
   isLoading?: boolean;
   disableIcon?: boolean;
@@ -23,7 +23,7 @@ export const SendButton = (props: SendButtonProps) => {
       style={{ background: 'transparent', border: 'none' }}
     >
       <Show when={!props.isLoading} fallback={<Spinner class="text-white" />}>
-        <SendIcon color={props.sendButtonColor} class={'send-icon flex ' + (props.disableIcon ? 'hidden' : '')} />
+        <SendIcon color={props.color} class={'send-icon flex ' + (props.disableIcon ? 'hidden' : '')} />
       </Show>
     </button>
   );
@@ -42,7 +42,7 @@ export const DeleteButton = (props: SendButtonProps) => {
       title="New Chat"
     >
       <Show when={!props.isLoading} fallback={<Spinner class="text-white" />}>
-        <DeleteIcon color={props.sendButtonColor} class={'send-icon flex ' + (props.disableIcon ? 'hidden' : '')} />
+        <DeleteIcon color={props.color} class={'send-icon flex ' + (props.disableIcon ? 'hidden' : '')} />
       </Show>
     </button>
   );

@@ -1,5 +1,6 @@
 export type Props = {
   prompt: string;
+  bg: string;
   onPromptClick?: () => void;
 };
 export const StarterPromptBubble = (props: Props) => (
@@ -13,6 +14,7 @@ export const StarterPromptBubble = (props: Props) => (
       <span
         class="py-1 pr-2 pl-3 whitespace-pre-wrap max-w-full chatbot-host-bubble text-jost text-base font-normal rounded-full w-max cursor-pointer"
         data-testid="host-bubble"
+        style={{ 'background-color': props.bg }}
       >
         {props.prompt}
       </span>

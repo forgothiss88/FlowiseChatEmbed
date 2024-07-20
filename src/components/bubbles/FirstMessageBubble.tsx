@@ -84,6 +84,10 @@ const iconsMap = {
   web: () => <span>🌐</span>,
   ciak: () => <span>🎬</span>,
   'shopping-bag': () => <span>🛍️</span>,
+  'green-heart': () => <span>💚</span>,
+  smile: () => <span>😊</span>,
+  lotion: () => <span>🧴</span>,
+  doctor: () => <span>👩‍⚕️</span>,
 };
 
 export type FirstMessageConfig = {

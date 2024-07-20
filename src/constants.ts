@@ -4,7 +4,7 @@ export const initialBotProps: BubbleProps = {
   chatflowConfig: undefined,
   chatflowid: undefined,
   apiUrl: undefined,
-  starterPrompts: [],
+  starterPrompts: {},
   creatorName: undefined,
   titleAvatarSrc: undefined,
   firstMessage: undefined,
