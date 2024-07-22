@@ -18,11 +18,12 @@ type messageType = 'apiMessage' | 'userMessage' | 'usermessagewaiting';
 
 export type ContentMetadata = {
   kind: 'ig-video' | 'youtube-video' | 'tiktok-video' | 'article';
-  caption: string;
   pk: number;
   resource_url: string;
   media_url: string;
   subtitles: string;
+  title?: string;
+  caption?: string;
 };
 
 export type ProductMetadata = {
@@ -247,9 +248,14 @@ export const Bot = (props: BotProps & { class?: string }) => {
             }
             setLastMessage({ type: 'apiMessage', message: (lastMessage()?.message || '') + data.answer });
           } else if (data.context) {
-            let ctx: (SourceProduct | SourceContent)[] = data.context;
-            sourceContents = ctx.filter((doc) => ['youtube-video', 'ig-video', 'tiktok-video', 'article'].includes(doc.metadata?.kind));
-            sourceProducts = ctx.filter((doc) => doc.metadata?.kind === 'product');
+            const ctx = data as ContextEvent;
+            ctx.context.map((item) => {
+              if (item.metadata.kind === 'product') {
+                sourceProducts.push(item as SourceProduct);
+              } else if (['youtube-video', 'ig-video', 'tiktok-video', 'article'].includes(item.metadata.kind)) {
+                sourceContents.push(item as SourceContent);
+              }
+            });
           }
         }
       },
@@ -337,7 +343,13 @@ export const Bot = (props: BotProps & { class?: string }) => {
         <div class="flex w-full items-center justify-center bg-token-main-surface-primary overflow-hidden"></div>
         <main class={'relative h-full w-full flex-1 overflow-hidden transition-width'}>
           <div role="presentation" tabindex="0" class="flex h-full flex-col focus-visible:outline-0 overflow-hidden">
-            <div ref={chatContainer} class="flex-1 overflow-auto scroll-smooth no-scrollbar-container">
+            <div
+              ref={chatContainer}
+              class="flex-1 overflow-auto scroll-smooth no-scrollbar-container"
+              style={{
+                'min-height': '100vh',
+              }}
+            >
               <div class="w-full h-16"></div>
               <div class="overflow-hidden px-3">
                 <div class="w-full">

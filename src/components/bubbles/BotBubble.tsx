@@ -50,7 +50,7 @@ export const BotBubble = (props: Props) => {
           </Show>
           <span innerHTML={props.getMessage().message} />
         </div>
-        <Show when={props.sourceProducts}>
+        <Show when={props.sourceProducts?.length > 0}>
           <ProductCarousel
             enableMultipricing={props.enableMultipricing}
             purchaseButtonText={props.purchaseButtonText}
