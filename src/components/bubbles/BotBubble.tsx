@@ -20,6 +20,7 @@ type Props = {
   sourceProducts: SourceProduct[];
   sourceContent: SourceContent[];
   enableMultipricing: boolean;
+  faviconUrl?: string;
 } & PurchaseButtonAspect;
 
 const defaultBackgroundColor = '#f7f8ff';
@@ -45,7 +46,7 @@ export const BotBubble = (props: Props) => {
         <div class="p-3">
           <Show when={props.sourceContent}>
             <div class="w-full mb-3">
-              <SourcesDropdown sources={props.sourceContent} />
+              <SourcesDropdown sources={props.sourceContent} faviconUrl={props?.faviconUrl} />
             </div>
           </Show>
           <span innerHTML={props.getMessage().message} />

@@ -2,6 +2,7 @@ import { Accessor, For, Index, Setter, Show, createEffect, createSignal } from '
 import { ProductMetadata, SourceContent, SourceDocument, SourceProduct } from './Bot';
 import { DownArrow, LeftArrow, RightArrow, UpArrow } from './icons/Arrow';
 import { forEach } from 'lodash';
+import { url } from 'inspector';
 
 const ProductCard = (props: { isPrimary: boolean; product: ProductMetadata; onClick?: () => null }) => {
   return props.isPrimary ? (
@@ -128,9 +129,11 @@ export const SinglePriceButton = (props: { purchaseButtonText: string; price: nu
           'border-color': props.purchaseButtonBackgroundColor,
         }}
       >
-        <a class="bg-white rounded-2xl w-6 h-6 ml-1 my-auto">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Amazon_icon.svg/240px-Amazon_icon.svg.png" class="w-6 h-6 p-1"></img>
-        </a>
+        <Show when={props.url.includes('amazon') || props.url.includes('amzn')}>
+          <a class="bg-white rounded-2xl w-6 h-6 ml-1 my-auto">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Amazon_icon.svg/240px-Amazon_icon.svg.png" class="w-6 h-6 p-1"></img>
+          </a>
+        </Show>
         <a
           href={props.url}
           target="_blank"
@@ -160,7 +163,6 @@ export const ProductCarousel = (props: ProductCarouselProps) => {
 
   const isStart = () => currentSlide() === 0;
   const isEnd = () => currentSlide() + 1 === numProducts;
-  const currProduct = props.products[currentSlide()].metadata;
   return (
     <>
       <div class="text-roboto overflow-hidden w-full" style={{ background: props.backgroundColor }}>
@@ -180,9 +182,9 @@ export const ProductCarousel = (props: ProductCarouselProps) => {
               purchaseButtonText={props.purchaseButtonText}
               purchaseButtonBackgroundColor={props.purchaseButtonBackgroundColor}
               purchaseButtonTextColor={props.purchaseButtonTextColor}
-              price={currProduct.price}
-              url={currProduct.item_url}
-              otherPricesUrl={'https://www.hdblog.it/prezzi/' + currProduct?.slug} // TODO: take multiple prices from API
+              price={props.products[currentSlide()].metadata.price}
+              url={props.products[currentSlide()].metadata.item_url}
+              otherPricesUrl={'https://www.hdblog.it/prezzi/' + props.products[currentSlide()].metadata?.slug} // TODO: take multiple prices from API
             />
           </Show>
           <Show when={!props.enableMultipricing}>
@@ -190,8 +192,8 @@ export const ProductCarousel = (props: ProductCarouselProps) => {
               purchaseButtonBackgroundColor={props.purchaseButtonBackgroundColor}
               purchaseButtonTextColor={props.purchaseButtonTextColor}
               purchaseButtonText={props.purchaseButtonText}
-              price={currProduct.price}
-              url={currProduct.item_url}
+              price={props.products[currentSlide()].metadata.price}
+              url={props.products[currentSlide()].metadata.item_url}
             />
           </Show>
         </div>

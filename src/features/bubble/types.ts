@@ -31,6 +31,7 @@ export type BotMessageTheme = {
   avatarSrc: string;
   avatarPadding: string;
   enableMultipricing: boolean;
+  faviconUrl?: string;
 } & PurchaseButtonAspect;
 
 export type ChatWindowTheme = {

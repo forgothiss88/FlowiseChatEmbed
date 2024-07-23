@@ -390,6 +390,7 @@ export const Bot = (props: BotProps & { class?: string }) => {
                             showAvatar={props.botMessage?.showAvatar}
                             avatarSrc={props.botMessage?.avatarSrc}
                             avatarPadding={props.botMessage?.avatarPadding}
+                            faviconUrl={props.botMessage?.faviconUrl}
                             sourceProducts={message.sourceProducts}
                             sourceContent={message.sourceContents}
                             enableMultipricing={props.botMessage?.enableMultipricing}
@@ -415,6 +416,7 @@ export const Bot = (props: BotProps & { class?: string }) => {
                     showAvatar={props.botMessage?.showAvatar}
                     avatarSrc={props.botMessage?.avatarSrc}
                     avatarPadding={props.botMessage?.avatarPadding}
+                    faviconUrl={props.botMessage?.faviconUrl}
                     sourceProducts={lastMessage()?.sourceProducts}
                     sourceContent={lastMessage()?.sourceContents}
                     enableMultipricing={props.botMessage?.enableMultipricing}

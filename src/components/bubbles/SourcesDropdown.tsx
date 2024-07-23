@@ -22,7 +22,7 @@ const getFavicon = (url: string) => {
   return `${parsedUrl.origin}/favicon.ico`;
 };
 
-const SourceCard = (props: { index: number; source: SourceContent }) => {
+const SourceCard = (props: { index: number; faviconUrl?: string; source: SourceContent }) => {
   // rounded card with title favicon of the website and a link to the website
   const [favicon, setFavicon] = createSignal('');
   const url = props.source.metadata?.media_url || props.source.metadata?.url || 'https://www.hdblog.it';
@@ -42,10 +42,16 @@ const SourceCard = (props: { index: number; source: SourceContent }) => {
         <TikTokIcon></TikTokIcon>
       </i>
     ),
-    article: () => <img src={favicon()} alt="logo" class="w-5 h-5" />,
+    article: () => <img src={favicon()} alt="logo" class="w-8 h-8" />,
   };
   if (props.source.metadata.kind == 'article') {
-    createEffect(() => setFavicon(getFavicon(url)));
+    createEffect(() => {
+      if (props.faviconUrl) {
+        setFavicon(props.faviconUrl);
+      } else {
+        setFavicon(getFavicon(url));
+      }
+    });
   }
 
   const sourceMap = {
@@ -87,7 +93,7 @@ const SourceCard = (props: { index: number; source: SourceContent }) => {
   );
 };
 
-export const SourcesDropdown = (props: { sources: SourceContent[] }) => {
+export const SourcesDropdown = (props: { sources: SourceContent[]; faviconUrl?: string }) => {
   const [isOpen, setIsOpen] = createSignal(false);
 
   return (
@@ -114,7 +120,7 @@ export const SourcesDropdown = (props: { sources: SourceContent[] }) => {
             <For each={props.sources}>
               {(source, index) => (
                 <li class="mr-2" style={{ width: '12rem' }}>
-                  <SourceCard index={index()} source={source}></SourceCard>
+                  <SourceCard index={index()} source={source} faviconUrl={props.faviconUrl}></SourceCard>
                 </li>
               )}
             </For>
