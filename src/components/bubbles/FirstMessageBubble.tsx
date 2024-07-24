@@ -60,9 +60,9 @@ const MessagePart = (props: {
     >
       <div>
         <div class="flex flex-row pb-2 items-center">
-          <div class="flex items-center flex-wrap space-x-1">
+          <div class="flex items-center flex-nowrap space-x-1">
             <p class="font-medium text-start text-base break-words">{props.title}</p>
-            <div>{props.getIcon() || ''}</div>
+            <div class="my-auto">{props.getIcon() || ''}</div>
           </div>
         </div>
         <p class="font-light text-start text-sm text-gray-700">{props.subtitle}</p>
