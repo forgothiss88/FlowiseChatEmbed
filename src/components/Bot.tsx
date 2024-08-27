@@ -116,7 +116,7 @@ export const Bot = (props: BotProps & { class?: string }) => {
   const [lastMessage, setLastMessage] = createSignal<MessageType | null>(null);
   const [isChatFlowAvailableToStream, setIsChatFlowAvailableToStream] = createSignal(false);
 
-  const [chatId, setChatId] = createSignal(props.chatflowid);
+  const [chatRef, setChatRef] = createSignal<string | null>(null);
 
   const scrollToBottom = (timeout?: number) => {
     setTimeout(() => {
@@ -135,7 +135,7 @@ export const Bot = (props: BotProps & { class?: string }) => {
    * Add each chat message into localStorage
    */
   const saveChatToLocalStorage = () => {
-    localStorage.setItem(`${props.chatflowid}_EXTERNAL`, JSON.stringify({ chatId: chatId(), chatHistory: messages() }));
+    localStorage.setItem(`${props.chatflowid}_EXTERNAL`, JSON.stringify({ chatRef: chatRef(), chatHistory: messages() }));
   };
 
   const addEmptyMessage = () =>
@@ -182,7 +182,6 @@ export const Bot = (props: BotProps & { class?: string }) => {
 
   // Handle form submission
   const handleSubmit = async (value: string) => {
-    console.log('handleSubmit', value);
     setUserInput(value);
 
     if (value.trim() === '') {
@@ -202,9 +201,10 @@ export const Bot = (props: BotProps & { class?: string }) => {
       input: {
         input: value,
         chat_history: messageList,
+        username: props.creatorName,
+        chat_ref: chatRef(),
       },
       config: {},
-      user: props.creatorName,
     };
 
     setIsChatFlowAvailableToStream(false);
@@ -236,7 +236,6 @@ export const Bot = (props: BotProps & { class?: string }) => {
         console.log('EventSource message:', ev.data);
         if (ev.event === 'metadata') {
           const data: MetadataEvent = JSON.parse(ev.data);
-          setChatId(data.run_id);
         } else if (ev.event === 'close') {
           abortCtrl.abort();
         } else if (ev.event === 'data') {
@@ -259,6 +258,8 @@ export const Bot = (props: BotProps & { class?: string }) => {
           }
         }
       },
+    }).catch((err) => {
+      console.error('Network error:', err);
     });
 
     setIsChatFlowAvailableToStream(true);
@@ -273,7 +274,7 @@ export const Bot = (props: BotProps & { class?: string }) => {
   const clearChat = () => {
     try {
       localStorage.removeItem(`${props.chatflowid}_EXTERNAL`);
-      setChatId(uuidv4());
+      setChatRef(uuidv4());
       setMessages([
         {
           message: props.welcomeMessage ?? defaultWelcomeMessage,
@@ -289,8 +290,9 @@ export const Bot = (props: BotProps & { class?: string }) => {
   onMount(async () => {
     const localChatsData = localStorage.getItem(`${props.chatflowid}_EXTERNAL`);
     if (localChatsData) {
-      const localChats: { chatHistory: MessageType[]; chatId: string } = JSON.parse(localChatsData);
-      setChatId(localChats.chatId);
+      const localChats: { chatHistory: MessageType[]; chatRef: string } = JSON.parse(localChatsData);
+      setChatRef(localChats.chatRef);
+      console.debug('chatRef', chatRef());
       const msgs: MessageType[] = [];
       localChats.chatHistory.forEach((message: MessageType) => {
         msgs.push(message);

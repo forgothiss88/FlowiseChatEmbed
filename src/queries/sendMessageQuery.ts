@@ -11,16 +11,13 @@ export type MessageBE = {
 export type RunBody = {
   input: string;
   chat_history: MessageBE[];
+  username: string;
+  chat_ref: string;
 };
 
 export type RunInput = {
   input: RunBody;
   config?: Record<string, unknown>;
-  user: string;
-  // overrideConfig?: Record<string, unknown>;
-  // socketIOClientId?: string;
-  // chatId?: string;
-  // fileName?: string; // Only for assistant
 };
 
 export type MessageRequest = {
