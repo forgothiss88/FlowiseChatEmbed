@@ -29,11 +29,11 @@ const defaultTextColor = '#303235';
 Marked.setOptions({ isNoP: true });
 
 export const BotBubble = (props: Props) => {
-  console.log(props);
+  console.log('BotBubble', props);
   return (
     <div class="flex flex-row justify-start items-start host-container text-roboto w-full">
       <Show when={props.showAvatar}>
-        <Avatar src={props.avatarSrc} padding={props.avatarPadding} classList={['h-8']} />
+        <Avatar src={props.avatarSrc} padding={props.avatarPadding} classList={['h-8', 'w-8']} isImgRounded={true} />
       </Show>
       <div
         class="mx-2 overflow-hidden whitespace-pre-wrap rounded-2xl chatbot-host-bubble text-base font-light max-w-full"

@@ -3,7 +3,7 @@ import { createEffect, createSignal, Show } from 'solid-js';
 import { isNotEmpty } from '@/utils/index';
 import { DefaultAvatar } from './DefaultAvatar';
 
-export const Avatar = (props: { src?: string; padding?: string; classList?: string[] }) => {
+export const Avatar = (props: { src?: string; padding?: string; classList?: string[]; isImgRounded?: boolean }) => {
   const [avatarSrc, setAvatarSrc] = createSignal(props.src);
   const classList = props.classList || [];
 
@@ -26,7 +26,14 @@ export const Avatar = (props: { src?: string; padding?: string; classList?: stri
           padding: props.padding,
         }}
       >
-        <img src={avatarSrc()} alt="Bot avatar" class="object-cover w-auto h-full" />
+        <img
+          src={avatarSrc()}
+          alt="Bot avatar"
+          class="object-cover w-auto h-full"
+          classList={{
+            'rounded-full': props.isImgRounded,
+          }}
+        />
       </figure>
     </Show>
   );

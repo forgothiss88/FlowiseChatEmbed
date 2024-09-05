@@ -43,8 +43,6 @@ export type ChatWindowTheme = {
   height?: number;
   width?: number;
   fontSize: number;
-  userMessage: UserMessageTheme;
-  botMessage: BotMessageTheme;
   textInput: TextInputTheme;
   firstMessage: FirstMessageConfig;
   poweredByTextColor: string;

@@ -1,0 +1,96 @@
+<!doctype html>
+<html class="overflow-hidden" lang="en">
+  <head>
+    <title>@Twini</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content" />
+    <meta charset="UTF-8" />
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+      @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+    </style>
+  </head>
+
+  <script type="module">
+    import bot from '/dist/web.js';
+    bot.initFullWithDefaults({
+      apiUrl: 'http://localhost:8001/twini-stream',
+      creatorName: 'skinfirst',
+      starterPrompts: {
+        prompts: [
+          'Come capisco se ho bisogno del supporto medico?',
+          "E se non ho l'acne?",
+          'Che cosa significa che i vostri Dermatologi sono Esperti di Acne?',
+        ],
+        backgroundColor: '#FFECF4',
+      },
+      theme: {
+        button: {
+          topbarColor: '#7ADC93',
+        },
+        chatWindow: {
+          title: 'Ciao! Sono il tuo assistente AI 😊',
+          titleAvatarSrc: '/public/avatars/skinfirst.png',
+          titleColor: 'black',
+          welcomeMessage: 'Qui puoi chiedermi tutto sui miei contenuti e prodotti. Ti aiuterò a trovare ciò che cerchi in un lampo! ⚡',
+          backgroundColor: 'linear-gradient(180deg, #7ADC93 0%, #7ADC93 25%, #F5F5F5 57%)',
+          poweredByTextColor: 'black',
+          firstMessage: {
+            text: 'Puoi chiedermi di:',
+            background: 'white',
+            // actionsBackground: '#F1E3FF',
+            // actionsBackground: '#9AFEBB',
+            actionsBackground: '#FFECF4',
+            actions: [
+              {
+                title: 'Scopri la nostra crema personalizzata!',
+                subtitle: 'Rispondi al nostro quiz e scopri gli ingredienti che abbiamo pensato per la tua Night Cream.',
+                prompt: 'Parlami della Night Cream',
+                icon: 'lotion',
+              },
+              {
+                title: 'Parla con un dermatologo specializzato',
+                subtitle: 'La skincare non basta per la tua acne? Richiedi un consulto con il nostro migliore dermatologo.',
+                prompt: 'Parlami delle consulenze dermatologiche',
+                icon: 'doctor',
+              },
+              {
+                title: 'Crea la tua skincare routine ideale',
+                subtitle: 'Raccontami di te e della tua pelle per ricevere i miei consigli sui migliori prodotti da utilizzare.',
+                prompt: 'Aiutami a creare la mia skincare routine',
+                icon: 'smile',
+              },
+            ],
+          },
+        },
+        textInput: {
+          placeholder: 'Scrivi qui...',
+          // inputBackgroundColor: 'white',
+          // backgroundColor: '#F1E3FF',
+          sendButtonColor: 'gray',
+          resetButtonColor: 'gray',
+        },
+        botMessage: {
+          backgroundColor: 'white',
+          textColor: 'black',
+          avatarSrc: '/public/avatars/skinfirst_avatar.png',
+          avatarPadding: '0px',
+          showAvatar: true,
+          enableMultipricing: false,
+          purchaseButtonText: 'Compra ora',
+          purchaseButtonBackgroundColor: 'black',
+          purchaseButtonTextColor: '#9AFEBB',
+          faviconUrl: 'https://www.skinfirstcosmetics.it/favicon.ico',
+        },
+        userMessage: {
+          backgroundColor: 'black',
+          textColor: 'white',
+          showAvatar: false,
+        },
+      },
+    });
+  </script>
+
+  <body class="overflow-hidden" style="margin: 0px">
+    <flowise-fullchatbot></flowise-fullchatbot>
+  </body>
+</html>
