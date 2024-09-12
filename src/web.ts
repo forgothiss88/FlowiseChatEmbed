@@ -56,7 +56,7 @@ const createDefaultChatBot = () => {
           backgroundColor: props.theme?.chatWindow?.backgroundColor,
           fontSize: props.theme?.chatWindow?.fontSize || 16,
           poweredByTextColor: props.theme?.chatWindow?.poweredByTextColor || '#283E4D',
-          title: props.theme?.chatWindow?.title || '@holidoit',
+          title: props.theme?.chatWindow?.title || '',
           titleAvatarSrc: props.theme?.chatWindow?.titleAvatarSrc || props.titleAvatarSrc,
           titleColor: props.theme?.chatWindow?.titleColor || '#ffffff',
           botMessage: {
