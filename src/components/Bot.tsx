@@ -138,12 +138,6 @@ export const Bot = (props: BotProps & { class?: string }) => {
     localStorage.setItem(`${props.chatflowid}_EXTERNAL`, JSON.stringify({ chatRef: chatRef(), chatHistory: messages() }));
   };
 
-  const addEmptyMessage = () =>
-    setMessages((prevMessages) => {
-      const messages: MessageType[] = [...prevMessages, { message: '', type: 'apiMessage' }];
-      return messages;
-    });
-
   const updateLastMessageSources = (sourceProducts?: SourceProduct[], sourceContents?: SourceContent[]) => {
     setLastMessage({
       ...lastMessage(),
@@ -281,6 +275,7 @@ export const Bot = (props: BotProps & { class?: string }) => {
           type: 'apiMessage',
         },
       ]);
+      saveChatToLocalStorage();
     } catch (error: any) {
       const errorData = error.response.data || `${error.response.status}: ${error.response.statusText}`;
       console.error(`error: ${errorData}`);
