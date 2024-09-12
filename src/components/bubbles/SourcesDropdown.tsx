@@ -97,36 +97,38 @@ export const SourcesDropdown = (props: { sources: SourceContent[]; faviconUrl?: 
   const [isOpen, setIsOpen] = createSignal(false);
 
   return (
-    <div class="relative inline-block w-full bg-gray-100 rounded-md">
-      <button role="button" tabIndex={2} class="inline-flex w-full px-2 py-1 text-sm font-medium" onClick={() => setIsOpen(!isOpen())}>
-        <div class="w-4 h-4 my-auto">
-          <Hamburger />
-        </div>
-        <span class="my-auto mx-2 font-normal text-sm">Fonti</span>
-        <div class="flex-1"></div>
-        <div class="my-auto">
-          <DownArrow />
-        </div>
-      </button>
-      <Show when={props.sources.length > 0}>
-        <div
-          tabIndex={-1}
-          role="menu"
-          class="dropdown-content menu rounded-md z-10 self-center transition overflow-auto no-scrollbar-container"
-          classList={{ hidden: !isOpen(), 'ease-out': isOpen(), 'duration-100': isOpen(), 'ease-in': !isOpen(), 'duration-75': !isOpen() }}
-          onFocusOut={() => setIsOpen(false)}
-        >
-          <div class="no-scrollbar-container inline-flex">
-            <For each={props.sources}>
-              {(source, index) => (
-                <li class="mr-2" style={{ width: '12rem' }}>
-                  <SourceCard index={index()} source={source} faviconUrl={props.faviconUrl}></SourceCard>
-                </li>
-              )}
-            </For>
+    <Show when={props.sources.length > 0}>
+      <div class="relative inline-block w-full bg-gray-100 rounded-md">
+        <button role="button" tabIndex={2} class="inline-flex w-full px-2 py-1 text-sm font-medium" onClick={() => setIsOpen(!isOpen())}>
+          <div class="w-4 h-4 my-auto">
+            <Hamburger />
           </div>
-        </div>
-      </Show>
-    </div>
+          <span class="my-auto mx-2 font-normal text-sm">Fonti</span>
+          <div class="flex-1"></div>
+          <div class="my-auto">
+            <DownArrow />
+          </div>
+        </button>
+        <Show when={props.sources.length > 0}>
+          <div
+            tabIndex={-1}
+            role="menu"
+            class="dropdown-content menu rounded-md z-10 self-center transition overflow-auto no-scrollbar-container"
+            classList={{ hidden: !isOpen(), 'ease-out': isOpen(), 'duration-100': isOpen(), 'ease-in': !isOpen(), 'duration-75': !isOpen() }}
+            onFocusOut={() => setIsOpen(false)}
+          >
+            <div class="no-scrollbar-container inline-flex">
+              <For each={props.sources}>
+                {(source, index) => (
+                  <li class="mr-2" style={{ width: '12rem' }}>
+                    <SourceCard index={index()} source={source} faviconUrl={props.faviconUrl}></SourceCard>
+                  </li>
+                )}
+              </For>
+            </div>
+          </div>
+        </Show>
+      </div>
+    </Show>
   );
 };
