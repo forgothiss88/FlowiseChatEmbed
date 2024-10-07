@@ -26,11 +26,7 @@ const Topbar = (props: {
       </Show>
       <div class="grow"></div>
       <div class="grow-0 order-last mr-4  bg-white rounded-full h-8 flex">
-        <a
-          href="https://www.twini.span "
-          target="_blank"
-          class="px-4 whitespace-pre-wrap font-semibold text-sm max-w-full text-black text-jost my-auto"
-        >
+        <a href="https://www.twini.ai" target="_blank" class="px-4 whitespace-pre-wrap font-semibold text-sm max-w-full text-black text-jost my-auto">
           Create your @Twini
         </a>
       </div>
