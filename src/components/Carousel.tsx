@@ -1,8 +1,6 @@
-import { Accessor, For, Index, Setter, Show, createEffect, createSignal } from 'solid-js';
-import { ProductMetadata, SourceContent, SourceDocument, SourceProduct } from './Bot';
+import { Show, createSignal } from 'solid-js';
+import { ProductMetadata, SourceProduct } from './Bot';
 import { DownArrow, LeftArrow, RightArrow, UpArrow } from './icons/Arrow';
-import { forEach } from 'lodash';
-import { url } from 'inspector';
 
 const ProductCard = (props: { isPrimary: boolean; product: ProductMetadata; onClick?: () => null }) => {
   return props.isPrimary ? (

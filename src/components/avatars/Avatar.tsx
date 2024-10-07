@@ -1,6 +1,6 @@
+import { isNotEmpty } from '@/utils/index';
 import { isMobile } from '@/utils/isMobileSignal';
 import { createEffect, createSignal, Show } from 'solid-js';
-import { isNotEmpty } from '@/utils/index';
 import { DefaultAvatar } from './DefaultAvatar';
 
 export const Avatar = (props: { src?: string; padding?: string; classList?: string[]; isImgRounded?: boolean }) => {

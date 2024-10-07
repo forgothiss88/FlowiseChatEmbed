@@ -1,12 +1,9 @@
-import { sendFileDownloadQuery } from '@/queries/sendMessageQuery';
 import { Marked } from '@ts-stack/markdown';
-import { For, Show, createEffect, createMemo, createSignal, onMount } from 'solid-js';
-import { MessageType, SourceDocument, SourceContent, SourceProduct } from '../Bot';
-import ProductInfo from '../ProductInfo';
-import { Product, products } from '../Products';
+import { Show } from 'solid-js';
+import { MessageType, SourceContent, SourceProduct } from '../Bot';
+import { ProductCarousel, PurchaseButtonAspect } from '../Carousel';
 import { Avatar } from '../avatars/Avatar';
 import { SourcesDropdown } from './SourcesDropdown';
-import { ProductCarousel, PurchaseButtonAspect } from '../Carousel';
 
 type Props = {
   getMessage: () => MessageType;

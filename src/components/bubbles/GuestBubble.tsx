@@ -1,6 +1,5 @@
 import { Marked } from '@ts-stack/markdown';
-import { Show, onMount } from 'solid-js';
-import { Avatar } from '../avatars/Avatar';
+import { onMount } from 'solid-js';
 
 type Props = {
   message: string;
