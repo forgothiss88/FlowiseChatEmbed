@@ -1,18 +1,7 @@
-import { BotMessageTheme } from '@/features/bubble/types';
-import { toNumber } from 'lodash';
 import { For, Show, createEffect, createSignal } from 'solid-js';
-import { ContentMetadata, ProductMetadata, SourceContent, SourceDocument } from '../Bot';
-import { DownArrow, Hamburger, LeftArrow, RightArrow, UpArrow } from '../icons/Arrow';
+import { SourceContent } from '../Bot';
+import { DownArrow, Hamburger } from '../icons/Arrow';
 import { InstagramIcon, TikTokIcon, YoutubeIcon } from '../icons/SocialNetwork';
-
-type ItemsProps = {
-  sources: SourceContent[];
-} & BotMessageTheme;
-
-type ItemProps = {
-  source: SourceContent;
-  backgroundColor: string;
-};
 
 const getFavicon = (url: string) => {
   // Create a new URL object to easily extract components of the provided URL
@@ -22,10 +11,18 @@ const getFavicon = (url: string) => {
   return `${parsedUrl.origin}/favicon.ico`;
 };
 
+const urlToDomain = (url: string) => {
+  // Create a new URL object to easily extract components of the provided URL
+  const parsedUrl = new URL(url);
+
+  // Return the domain name
+  return parsedUrl.hostname;
+};
+
 const SourceCard = (props: { index: number; faviconUrl?: string; source: SourceContent }) => {
   // rounded card with title favicon of the website and a link to the website
   const [favicon, setFavicon] = createSignal('');
-  const url = props.source.metadata?.media_url || props.source.metadata?.url || 'https://www.hdblog.it';
+  const url = props.source.metadata?.media_url || props.source.metadata?.url;
   const kindToIcon = {
     'youtube-video': () => (
       <i class="w-8 h-8">
@@ -55,11 +52,11 @@ const SourceCard = (props: { index: number; faviconUrl?: string; source: SourceC
   }
 
   const sourceMap = {
-    'youtube-video': 'Youtube',
-    'ig-video': 'Instagram',
-    'tiktok-video': 'TikTok',
-    video: 'Video',
-    article: 'Website',
+    'youtube-video': () => 'Youtube',
+    'ig-video': () => 'Instagram',
+    'tiktok-video': () => 'TikTok',
+    video: () => 'Video',
+    article: () => urlToDomain(url),
   };
   return (
     <a
@@ -86,7 +83,7 @@ const SourceCard = (props: { index: number; faviconUrl?: string; source: SourceC
         </p>
         <div class="w-full inline-flex self-stretch items-start pt-2">
           {kindToIcon[props.source.metadata.kind]()}
-          <p class="pl-1 text-xs font-light text-gray-600 my-auto">{sourceMap[props.source.metadata.kind]}</p>
+          <p class="pl-1 text-xs font-light text-gray-600 my-auto">{sourceMap[props.source.metadata.kind]()}</p>
         </div>
       </div>
     </a>
