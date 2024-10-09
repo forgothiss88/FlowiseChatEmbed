@@ -4,9 +4,9 @@ import { BubbleBot } from './features/bubble';
 import { FullBot } from './features/full';
 
 export const registerWebComponents = () => {
-  let ref: HTMLElement | undefined;
+  let ref: HTMLElement;
   if (typeof window === 'undefined') return;
-  // @ts-expect-error element incorect type
-  customElement('flowise-fullchatbot', initialBotProps, FullBot);
-  customElement('flowise-chatbot', initialBotProps, BubbleBot);
+
+  customElement('flowise-fullchatbot', initialBotProps | { element: ref }, FullBot);
+  customElement('flowise-chatbot', initialBotProps | { element: ref }, BubbleBot);
 };

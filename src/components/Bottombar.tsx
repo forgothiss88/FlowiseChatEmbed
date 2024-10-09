@@ -1,9 +1,8 @@
-import { For, Show, createEffect, createSignal, onMount } from 'solid-js';
-import { StarterPromptBubble, Props as StarterPromptProps } from './bubbles/StarterPromptBubble';
-import { AutoGrowTextArea } from './inputs/textInput/components/AutoGrowTextArea';
-import { DeleteButton, SendButton } from './SendButton';
+import { Show, createEffect, createSignal, onMount } from 'solid-js';
 import { Badge } from './Badge';
 import { StarterPromptsType } from './Bot';
+import { DeleteButton } from './SendButton';
+import { AutoGrowTextArea } from './inputs/textInput/components/AutoGrowTextArea';
 
 const isIOS = () => {
   return /iPad|iPhone|iPod/.test(navigator.userAgent);
@@ -12,7 +11,7 @@ const isIOS = () => {
 const defaultBackgroundColor = '#ffffff';
 const defaultTextColor = '#303235';
 
-export type Props = StarterPromptProps & {
+export type Props = {
   ref: HTMLTextAreaElement | undefined;
   placeholder?: string;
   backgroundColor?: string;
@@ -57,17 +56,17 @@ export const Bottombar = (props: Props) => {
   const bb: HTMLDivElement = (
     <div>
       <Show when={props.starterPrompts.prompts.length > 0 && props.showStarterPrompts}>
-        <div class="flex flex-row w-full flex-nowrap overflow-x-scroll overflow-y-hidden">
+        {/* <div class="flex flex-row w-full flex-nowrap overflow-x-scroll overflow-y-hidden">
           <div class="ml-1"></div>
           <For each={[...props.starterPrompts.prompts]}>
             {(prompt) => (
               <StarterPromptBubble bg={props.starterPrompts.backgroundColor} prompt={prompt} onPromptClick={() => props.onSubmit(prompt)} />
             )}
           </For>
-        </div>
+        </div> */}
       </Show>
       <div
-        class={'shadow-sm' + (props.isFullPage ? '' : ' rounded-b-3xl')}
+        class={'shadow-sm' + (props.isFullPage ? '' : ' md:rounded-b-3xl')}
         style={{ 'background-color': props.backgroundColor ?? defaultBackgroundColor, 'border-top': '1px solid #eeeeee' }}
       >
         <div
@@ -81,7 +80,7 @@ export const Bottombar = (props: Props) => {
           <DeleteButton color={props.resetButtonColor} type="button" isDisabled={!props.isDeleteEnabled} onClick={props.clearChat} />
           <div class="mr-2 w-full">
             <AutoGrowTextArea
-              ref={props.ref}
+              getElement={props.ref}
               setInputValue={props.setInputValue}
               getInputValue={props.getInputValue}
               fontSize={props.fontSize}

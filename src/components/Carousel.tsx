@@ -135,7 +135,7 @@ export const SinglePriceButton = (props: { purchaseButtonText: string; price: nu
         <a
           href={props.url}
           target="_blank"
-          class="text-sm font-normal px-3 py-2 whitespace-nowrap self-center"
+          class="text-base font-medium px-3 py-2 whitespace-nowrap self-center"
           style={{
             color: props.purchaseButtonTextColor,
           }}
@@ -164,7 +164,7 @@ export const ProductCarousel = (props: ProductCarouselProps) => {
   return (
     <>
       <div class="text-roboto overflow-hidden w-full" style={{ background: props.backgroundColor }}>
-        <div ref={carousel} class="flex flex-row overflow-hidden w-full">
+        <div getElement={carousel} class="flex flex-row overflow-hidden w-full">
           <Show when={numProducts > 0}>
             <ProductCard isPrimary={true} product={props.products[currentSlide()].metadata} />
           </Show>

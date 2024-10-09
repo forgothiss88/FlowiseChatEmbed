@@ -1,0 +1,92 @@
+<!doctype html>
+<html class="overflow-hidden" lang="en">
+  <head>
+    <title>@Twini</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content" />
+    <meta charset="UTF-8" />
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+      @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+    </style>
+  </head>
+
+  <script type="module">
+    import bot from '/dist/web.js';
+    bot.initFullWithDefaults({
+      apiUrl: 'http://localhost:8000/twini-stream/grandpal',
+      creatorName: 'skinfirst',
+      starterPrompts: {
+        prompts: ['Il migliore tonico per pelli grasse?', 'Come capisco che tipo di pelle ho?', 'Come trattare le macchie solari?'],
+        backgroundColor: '#FFECF4',
+      },
+      theme: {
+        button: {
+          topbarColor: '#7ADC93',
+        },
+        chatWindow: {
+          title: '',
+          titleAvatarSrc: '/public/avatars/skinfirst.png',
+          titleColor: 'black',
+          welcomeMessage: 'Qui puoi chiedermi tutto sui miei contenuti e prodotti. Ti aiuterò a trovare ciò che cerchi in un lampo! ⚡',
+          backgroundColor: 'linear-gradient(180deg, #7ADC93 0%, #7ADC93 25%, #F5F5F5 57%)',
+          poweredByTextColor: 'black',
+          firstMessage: {
+            text: 'Ciao, sono la dott.ssa Maria Priore 😊',
+            background: 'white',
+            // actionsBackground: '#F1E3FF',
+            // actionsBackground: '#9AFEBB',
+            actionsBackground: '#FFECF4',
+            actions: [
+              {
+                title: 'Personalizza la tua skincare routine',
+                subtitle: 'Raccontami di te e della tua pelle per ricevere i miei consigli personalizzati',
+                prompt: 'Aiutami a fare una skincare routine',
+                icon: 'lotion',
+              },
+              {
+                title: 'Carica un selfie per un’analisi dettagliata',
+                subtitle: 'La nostra AI darà un voto da 0 a 100 a parametri come rossori, lucidità e acne.',
+                prompt: 'Analizza la mia pelle',
+                icon: 'doctor',
+              },
+              {
+                title: 'Informati con la nostra skin academy',
+                subtitle: 'Informati con le nostre guide per sfatare miti e approfondire le tematiche della skincare.',
+                prompt: 'Vorrei approfondire le tematiche della skincare',
+                icon: 'smile',
+              },
+            ],
+          },
+          textInput: {
+            placeholder: 'Scrivi qui...',
+            // inputBackgroundColor: 'white',
+            // backgroundColor: '#F1E3FF',
+            sendButtonColor: 'gray',
+            resetButtonColor: 'gray',
+          },
+          botMessage: {
+            backgroundColor: 'white',
+            textColor: 'black',
+            avatarSrc: '/public/avatars/skinfirst_avatar.png',
+            avatarPadding: '0px',
+            showAvatar: true,
+            enableMultipricing: false,
+            purchaseButtonText: 'Compra ora',
+            purchaseButtonBackgroundColor: 'black',
+            purchaseButtonTextColor: '#9AFEBB',
+            faviconUrl: 'https://www.skinfirstcosmetics.it/cdn/shop/files/favicon-SF_32x32.jpg?v=1620720505',
+          },
+          userMessage: {
+            backgroundColor: 'black',
+            textColor: 'white',
+            showAvatar: false,
+          },
+        },
+      },
+    });
+  </script>
+
+  <body class="overflow-hidden" style="margin: 0px">
+    <flowise-fullchatbot></flowise-fullchatbot>
+  </body>
+</html>

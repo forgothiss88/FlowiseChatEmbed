@@ -1,5 +1,5 @@
 import { SendButton } from '@/components/SendButton';
-import { createEffect, onMount, splitProps } from 'solid-js';
+import { createEffect, splitProps } from 'solid-js';
 import { JSX } from 'solid-js/jsx-runtime';
 
 export type Props = {
@@ -20,7 +20,7 @@ export const AutoGrowTextArea = (props: Props) => {
   const [local, others] = splitProps(props, ['ref', 'placeholder', 'getInputValue', 'setInputValue', 'scrollToBottom']);
   const textarea: HTMLTextAreaElement = (
     <textarea
-      ref={local.ref}
+      getElement={local.ref}
       class="overflow-hidden resize-none bg-transparent w-full my-auto text-roboto text-base font-normal placeholder:italic placeholder:font-light disabled:opacity-50 disabled:cursor-not-allowed disabled:brightness-100 focus:outline-none focus:animate-fade-in"
       aria-placeholder={local.placeholder}
       placeholder={local.placeholder}

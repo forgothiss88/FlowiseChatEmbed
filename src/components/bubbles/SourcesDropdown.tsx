@@ -100,7 +100,7 @@ export const SourcesDropdown = (props: { sources: SourceContent[]; faviconUrl?: 
           <div class="w-4 h-4 my-auto">
             <Hamburger />
           </div>
-          <span class="my-auto mx-2 font-normal text-sm">Fonti</span>
+          <span class="my-auto mx-2 font-normal text-sm">Sources</span>
           <div class="flex-1"></div>
           <div class="my-auto">
             <DownArrow />

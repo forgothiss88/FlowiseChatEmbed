@@ -2,30 +2,26 @@
 <html class="overflow-hidden" lang="en">
   <head>
     <title>@Twini</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content, user-scalable=no" />
+    <meta charset="UTF-8" />
     <style>
       @import url('https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
       @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+      @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
     </style>
   </head>
 
-  <script type="module">
-    // import bot from "https://cdn.jsdelivr.net/npm/@glowi/glowi-chatbot@0.0.22/dist/web.js";
-    import bot from '/dist/web.js';
-    bot.initFullWithDefaults({
-      apiUrl: 'http://localhost:8000/twini-stream/holidoit',
-      creatorName: 'holidoit',
-      avatarSrc: '/public/avatars/holidoit.jpg',
-      titleAvatarSrc: '/public/avatars/holidoit.jpg',
-      starterPrompts: [
-        'Do you have horseback 🐎 adventures?',
-        'Hey, what nice things can I do on Garda Lake?',
-        'Something crazy, like an helicopter tour?',
-      ],
-    });
-  </script>
-
-  <body class="overflow-hidden" style="margin: 0px">
-    <flowise-fullchatbot></flowise-fullchatbot>
+  <body
+    class="overflow-hidden"
+    style="
+      margin: 0px;
+      background-image: url('/public/avatars/viron_page_bg.png');
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+    "
+  >
+    <flowise-chatbot data-twini-api-url="http://localhost:8000/twini-stream/viron"></flowise-chatbot>
+    <script type="module" src="/dist/vironfull.js"></script>
   </body>
 </html>

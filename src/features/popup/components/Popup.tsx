@@ -1,5 +1,5 @@
 import { isNotDefined } from '@/utils/index';
-import { Show, createEffect, createSignal, onMount, splitProps } from 'solid-js';
+import { Show, createEffect, createSignal, splitProps } from 'solid-js';
 import styles from '../../../assets/index.css';
 
 export type PopupProps = {
@@ -36,15 +36,7 @@ function syntaxHighlight(json: any) {
 }
 
 export const Popup = (props: PopupProps) => {
-  let preEl: HTMLPreElement | undefined;
-
   const [popupProps] = splitProps(props, ['onOpen', 'onClose', 'isOpen', 'value']);
-
-  onMount(() => {
-    if (preEl) {
-      preEl.innerHTML = syntaxHighlight(JSON.stringify(props?.value, undefined, 2));
-    }
-  });
 
   const [isBotOpened, setIsBotOpened] = createSignal(
     // eslint-disable-next-line solid/reactivity
@@ -96,7 +88,7 @@ export const Popup = (props: PopupProps) => {
             >
               {props.value && (
                 <div style={{ background: 'white', margin: 'auto', padding: '7px' }}>
-                  <pre ref={preEl} />
+                  <pre getElement={preEl} />
                 </div>
               )}
             </div>

@@ -15,6 +15,7 @@ const defaultTextColor = '#ffffff';
 Marked.setOptions({ isNoP: true });
 
 export const GuestBubble = (props: Props) => {
+  console.log('GuestBubble', props);
   let userMessageEl: HTMLDivElement | undefined;
 
   onMount(() => {
@@ -27,7 +28,7 @@ export const GuestBubble = (props: Props) => {
     <div class="flex justify-end items-end guest-container text-roboto">
       <span
         ref={userMessageEl}
-        class="p-3 mx-2 rounded-xl whitespace-pre-wrap max-w-full chatbot-guest-bubble font-light"
+        class="p-3 mx-2 rounded-2xl rounded-tr-none whitespace-pre-wrap max-w-full chatbot-guest-bubble text-sm font-light"
         data-testid="guest-bubble"
         style={{
           'background-color': props.backgroundColor ?? defaultBackgroundColor,

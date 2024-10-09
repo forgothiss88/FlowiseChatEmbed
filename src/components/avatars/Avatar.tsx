@@ -17,8 +17,9 @@ export const Avatar = (props: { src?: string; padding?: string; classList?: stri
     <Show when={isNotEmpty(avatarSrc())} keyed fallback={<DefaultAvatar />}>
       <figure
         class={
-          'flex justify-center items-center rounded-full text-white bg-white relative flex-shrink-0 ' +
-          (isMobile() ? 'text-sm' : 'p-2 text-xl') +
+          'flex justify-center items-center rounded-full relative flex-shrink-0' +
+          ' ' +
+          (isMobile() ? 'text-sm' : 'text-xl') +
           ' ' +
           classList.join(' ')
         }

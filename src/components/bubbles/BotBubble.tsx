@@ -7,7 +7,6 @@ import { SourcesDropdown } from './SourcesDropdown';
 
 type Props = {
   getMessage: () => MessageType;
-  apiUrl?: string;
   fileAnnotations?: any;
   showAvatar?: boolean;
   avatarSrc?: string;
@@ -27,13 +26,14 @@ Marked.setOptions({ isNoP: true });
 
 export const BotBubble = (props: Props) => {
   console.log('BotBubble', props);
+  let msgRef: HTMLDivElement | undefined;
   return (
-    <div class="flex flex-row justify-start items-start host-container text-roboto w-full">
+    <div class="flex flex-row justify-start items-start host-container text-roboto w-11/12">
       <Show when={props.showAvatar}>
-        <Avatar src={props.avatarSrc} padding={props.avatarPadding} classList={['h-8', 'w-8']} isImgRounded={true} />
+        <Avatar src={props.avatarSrc} padding={props.avatarPadding} classList={['h-10', 'w-10', 'bg-transparent', 'mr-2']} isImgRounded={true} />
       </Show>
       <div
-        class="mx-2 overflow-hidden whitespace-pre-wrap rounded-2xl chatbot-host-bubble text-base font-light max-w-full"
+        class="overflow-hidden whitespace-pre-wrap rounded-2xl rounded-tl-none chatbot-host-bubble text-sm font-light max-w-full"
         data-testid="host-bubble"
         style={{
           'background-color': props.backgroundColor ?? defaultBackgroundColor,
@@ -46,7 +46,7 @@ export const BotBubble = (props: Props) => {
               <SourcesDropdown sources={props.sourceContent} faviconUrl={props?.faviconUrl} />
             </div>
           </Show>
-          <span innerHTML={props.getMessage().message} />
+          <span ref={msgRef} innerHTML={props.getMessage().message} />
         </div>
         <Show when={props.sourceProducts?.length > 0}>
           <ProductCarousel

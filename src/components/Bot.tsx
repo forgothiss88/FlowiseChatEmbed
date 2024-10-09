@@ -2,17 +2,16 @@ import { BotMessageTheme, TextInputTheme, UserMessageTheme } from '@/features/bu
 import { Popup } from '@/features/popup';
 import { MessageBE, RunInput } from '@/queries/sendMessageQuery';
 import { fetchEventSource } from '@microsoft/fetch-event-source';
-import { For, Show, createEffect, createSignal, onMount } from 'solid-js';
+import { For, Show, createSignal, onMount } from 'solid-js';
 import { v4 as uuidv4 } from 'uuid';
 import { Bottombar } from './Bottombar';
-import { products, setProducts, updateProducts } from './Products';
-import Topbar from './Topbar';
+import { Avatar } from './avatars/Avatar';
 import { BotBubble } from './bubbles/BotBubble';
-import FirstMessageBubble, { FirstMessageConfig } from './bubbles/FirstMessageBubble';
+import { FirstMessageConfig } from './bubbles/FirstMessageBubble';
 import { GuestBubble } from './bubbles/GuestBubble';
+import { HintBubble } from './bubbles/HintBubble';
 import { LoadingBubble } from './bubbles/LoadingBubble';
-import bot from '@/web';
-import { forEach } from 'lodash';
+import { XIcon } from './icons/Ics';
 
 type messageType = 'apiMessage' | 'userMessage' | 'usermessagewaiting';
 
@@ -76,11 +75,11 @@ export type BotProps = {
   apiUrl: string;
   chatflowConfig?: Record<string, unknown>;
   starterPrompts: StarterPromptsType;
-  welcomeMessage?: string;
-  botMessage?: BotMessageTheme;
-  userMessage?: UserMessageTheme;
-  firstMessage?: FirstMessageConfig;
-  textInput?: TextInputTheme;
+  welcomeMessage: string;
+  botMessage: BotMessageTheme;
+  userMessage: UserMessageTheme;
+  firstMessage: FirstMessageConfig;
+  textInput: TextInputTheme;
   poweredByTextColor?: string;
   badgeBackgroundColor?: string;
   bubbleButtonColor?: string;
@@ -91,7 +90,8 @@ export type BotProps = {
   titleAvatarSrc?: string;
   fontSize?: number;
   isFullPage?: boolean;
-  ref: HTMLElement;
+  getElement: () => HTMLElement;
+  closeBot: () => void;
 };
 
 const defaultWelcomeMessage = 'Hi there! How can I help?';
@@ -113,10 +113,24 @@ export const Bot = (props: BotProps & { class?: string }) => {
     ],
     { equals: false },
   );
-  const [lastMessage, setLastMessage] = createSignal<MessageType | null>(null);
+
+  const [lastBotResponse, setLastMessage] = createSignal<MessageType | null>(null);
   const [isChatFlowAvailableToStream, setIsChatFlowAvailableToStream] = createSignal(false);
 
   const [chatRef, setChatRef] = createSignal<string | null>(null);
+
+  const [config, setConfig] = createSignal({
+    apiUrl: props.apiUrl,
+  });
+
+  onMount(() => {
+    const apiUrl = props.getElement()?.getAttribute('data-twini-api-url');
+    if (apiUrl) {
+      setConfig({
+        apiUrl,
+      });
+    }
+  });
 
   const scrollToBottom = (timeout?: number) => {
     setTimeout(() => {
@@ -140,25 +154,22 @@ export const Bot = (props: BotProps & { class?: string }) => {
 
   const updateLastMessageSources = (sourceProducts?: SourceProduct[], sourceContents?: SourceContent[]) => {
     setLastMessage({
-      ...lastMessage(),
+      ...lastBotResponse(),
       sourceProducts: sourceProducts || item.sourceProducts,
       sourceContents: sourceContents || item.sourceContents,
     });
   };
 
   const moveLastMessageToMessages = () => {
-    const msg = lastMessage();
+    const msg = lastBotResponse();
+    console.log('moveLastMessageToMessages', msg);
     if (!msg) return;
     setLastMessage(null);
-    setMessages((prevMessages) => {
-      return [...prevMessages, msg];
-    });
+    setMessages([...messages(), msg]);
   };
 
   const addMessage = (msg: MessageType) => {
-    setMessages((prevMessages) => {
-      return [...prevMessages, msg];
-    });
+    setMessages([...messages(), msg]);
   };
 
   const messageTypeFEtoBE = (msg: messageType) => {
@@ -184,6 +195,7 @@ export const Bot = (props: BotProps & { class?: string }) => {
 
     setLoading(true);
     scrollToBottom();
+    console.log('handleSubmit', value);
     addMessage({ message: value, type: 'userMessage' });
     saveChatToLocalStorage();
 
@@ -208,7 +220,7 @@ export const Bot = (props: BotProps & { class?: string }) => {
     let sourceProducts: SourceProduct[] = [];
     let sourceContents: SourceContent[] = [];
 
-    await fetchEventSource(`${props.apiUrl}/stream`, {
+    await fetchEventSource(`${config().apiUrl}/stream`, {
       signal: abortCtrl.signal,
       method: 'POST',
       body: JSON.stringify(body),
@@ -239,7 +251,8 @@ export const Bot = (props: BotProps & { class?: string }) => {
               waitingFirstToken = false;
               setLoading(false);
             }
-            setLastMessage({ type: 'apiMessage', message: (lastMessage()?.message || '') + data.answer });
+            const streamingAnswer = (lastBotResponse()?.message || '') + data.answer;
+            setLastMessage({ type: 'apiMessage', message: streamingAnswer });
           } else if (data.context) {
             const ctx = data as ContextEvent;
             ctx.context.map((item) => {
@@ -287,13 +300,7 @@ export const Bot = (props: BotProps & { class?: string }) => {
     if (localChatsData) {
       const localChats: { chatHistory: MessageType[]; chatRef: string } = JSON.parse(localChatsData);
       setChatRef(localChats.chatRef);
-      console.debug('chatRef', chatRef());
-      const msgs: MessageType[] = [];
-      localChats.chatHistory.forEach((message: MessageType) => {
-        msgs.push(message);
-        setMessages([...msgs]);
-        setLastMessage(null);
-      });
+      setMessages([...localChats.chatHistory]);
     } else {
       setMessages([
         {
@@ -301,15 +308,14 @@ export const Bot = (props: BotProps & { class?: string }) => {
           type: 'apiMessage',
         },
       ]);
-      setLastMessage(null);
     }
+    setLastMessage(null);
     setIsChatFlowAvailableToStream(true);
     messages().length > 1 ? scrollToBottom(100) : scrollToTop(100);
+    setUserInput('');
+    setLoading(false);
     // eslint-disable-next-line solid/reactivity
-    return () => {
-      setUserInput('');
-      setLoading(false);
-    };
+    return;
   });
 
   const isValidURL = (url: string): URL | undefined => {
@@ -328,15 +334,6 @@ export const Bot = (props: BotProps & { class?: string }) => {
   return (
     <div class="relative flex flex-col z-0 h-full w-full overflow-hidden">
       <div class="relative flex max-h-full flex-1 flex-col overflow-hidden">
-        <Topbar
-          title={props.title}
-          titleColor={props.titleColor}
-          titleAvatarSrc={props.titleAvatarSrc}
-          bubbleTextColor={props.bubbleTextColor}
-          bubbleButtonColor={props.bubbleButtonColor}
-          topbarColor={props.topbarColor}
-          isFullPage={props.isFullPage}
-        />
         <div class="flex w-full items-center justify-center bg-token-main-surface-primary overflow-hidden"></div>
         <main class={'relative h-full w-full flex-1 overflow-hidden transition-width'}>
           <div role="presentation" tabindex="0" class="flex h-full flex-col focus-visible:outline-0 overflow-hidden">
@@ -349,23 +346,14 @@ export const Bot = (props: BotProps & { class?: string }) => {
             >
               <div class="w-full h-16"></div>
               <div class="overflow-hidden px-3">
-                <div class="w-full">
-                  <p class="m-5 text-xl font-bold text-white text-jost">{props.title}</p>
+                <div class="fixed top-4 right-4 rounded-full bg-white p-4 shadow-lg shadow-black z-10" onClick={props.closeBot}>
+                  <XIcon color="black" width={16} height={16}></XIcon>
                 </div>
-                <div class="w-full">
-                  <FirstMessageBubble
-                    background={props.firstMessage?.background}
-                    textColor={props.botMessage?.textColor}
-                    actions={props.firstMessage?.actions}
-                    text={props.firstMessage?.text}
-                    actionsBackground={props.firstMessage?.actionsBackground}
-                    setUserInput={setUserInput}
-                    focusOnInput={focusOnTextarea}
-                  />
+                <div class="flex justify-center py-10">
+                  <Avatar src={props.titleAvatarSrc} classList={['h-1/4', 'w-1/4', 'shadow-lg', 'shadow-black']} />
                 </div>
-                <For each={[...messages()]}>
+                <For each={messages()}>
                   {(message, index) => {
-                    const isLast = index() === messages().length - 1;
                     return (
                       <div class="w-full my-4">
                         {message.type === 'userMessage' && (
@@ -381,7 +369,6 @@ export const Bot = (props: BotProps & { class?: string }) => {
                           <BotBubble
                             getMessage={() => message}
                             fileAnnotations={message.fileAnnotations}
-                            apiUrl={props.apiUrl}
                             backgroundColor={props.botMessage?.backgroundColor || 'white'}
                             textColor={props.botMessage?.textColor}
                             showAvatar={props.botMessage?.showAvatar}
@@ -403,24 +390,30 @@ export const Bot = (props: BotProps & { class?: string }) => {
                 <Show when={loading()}>
                   <LoadingBubble />
                 </Show>
-                <Show when={lastMessage()?.message}>
+                <Show when={lastBotResponse()?.message}>
                   <BotBubble
-                    getMessage={lastMessage}
-                    fileAnnotations={lastMessage()?.fileAnnotations}
-                    apiUrl={props.apiUrl}
+                    getMessage={lastBotResponse}
+                    fileAnnotations={lastBotResponse()?.fileAnnotations}
                     backgroundColor={props.botMessage?.backgroundColor || 'white'}
                     textColor={props.botMessage?.textColor}
                     showAvatar={props.botMessage?.showAvatar}
                     avatarSrc={props.botMessage?.avatarSrc}
                     avatarPadding={props.botMessage?.avatarPadding}
                     faviconUrl={props.botMessage?.faviconUrl}
-                    sourceProducts={lastMessage()?.sourceProducts}
-                    sourceContent={lastMessage()?.sourceContents}
-                    enableMultipricing={props.botMessage?.enableMultipricing}
+                    sourceProducts={lastBotResponse()?.sourceProducts || []}
+                    sourceContent={lastBotResponse()?.sourceContents || []}
+                    enableMultipricing={props.botMessage?.enableMultipricing || false}
                     purchaseButtonText={props.botMessage?.purchaseButtonText}
                     purchaseButtonBackgroundColor={props.botMessage?.purchaseButtonBackgroundColor}
                     purchaseButtonTextColor={props.botMessage?.purchaseButtonTextColor}
                   />
+                </Show>
+                <Show when={messages().length == 1 && props.starterPrompts?.prompts}>
+                  <For each={props.starterPrompts.prompts}>
+                    {(prompt, index) => (
+                      <HintBubble message={prompt} background="transparent" textColor="white" onClick={() => handleSubmit(prompt)} />
+                    )}
+                  </For>
                 </Show>
               </div>
               <div class="w-full" style={{ height: bottomSpacerHeight() + 'px' }}></div>

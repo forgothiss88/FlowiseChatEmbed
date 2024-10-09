@@ -1,6 +1,6 @@
 import { Bot, BotProps } from '@/components/Bot';
 import { BubbleParams } from '@/features/bubble/types';
-import { Show, createSignal, onCleanup, onMount } from 'solid-js';
+import { Show, createSignal, onMount } from 'solid-js';
 import styles from '../../../assets/index.css';
 
 const defaultButtonColor = '#3B81F6';
@@ -8,25 +8,12 @@ const defaultIconColor = 'white';
 
 export type FullProps = BotProps & BubbleParams;
 
-export const FullBot = (props: FullProps, { element }: { element: HTMLElement }) => {
+export const FullBot = (props: FullProps & { getElement: () => HTMLElement }) => {
   const [isBotDisplayed, setIsBotDisplayed] = createSignal(false);
 
-  const launchBot = () => {
-    setIsBotDisplayed(true);
-  };
-
-  const botLauncherObserver = new IntersectionObserver((intersections) => {
-    if (intersections.some((intersection) => intersection.isIntersecting)) launchBot();
-  });
-
   onMount(() => {
-    botLauncherObserver.observe(element);
+    setIsBotDisplayed(true);
   });
-
-  onCleanup(() => {
-    botLauncherObserver.disconnect();
-  });
-
   return (
     <>
       <style>{styles}</style>
@@ -39,6 +26,7 @@ export const FullBot = (props: FullProps, { element }: { element: HTMLElement })
           }}
         >
           <Bot
+            getElement={props.getElement}
             badgeBackgroundColor={props.theme?.chatWindow?.backgroundColor}
             bubbleButtonColor={props.theme?.button?.bubbleButtonColor ?? defaultButtonColor}
             topbarColor={props.theme?.button?.topbarColor ?? defaultButtonColor}
@@ -59,6 +47,7 @@ export const FullBot = (props: FullProps, { element }: { element: HTMLElement })
             starterPrompts={props.starterPrompts || {}}
             creatorName={props.creatorName}
             firstMessage={props.theme?.chatWindow?.firstMessage}
+            closeBot={() => null} // closeBot is not needed in full mode
           />
         </div>
       </Show>

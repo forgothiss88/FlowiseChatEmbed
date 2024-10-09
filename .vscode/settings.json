@@ -1,4 +1,4 @@
 {
-    "typescript.tsdk": "node_modules/typescript/lib",
-    "livePreview.defaultPreviewPath": "/index_full.html"
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "livePreview.defaultPreviewPath": "/viron.html"
 }

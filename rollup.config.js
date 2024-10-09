@@ -1,19 +1,21 @@
+import { babel } from '@rollup/plugin-babel';
+import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
 import terser from '@rollup/plugin-terser';
-import { babel } from '@rollup/plugin-babel';
-import postcss from 'rollup-plugin-postcss';
-import autoprefixer from 'autoprefixer';
-import tailwindcss from 'tailwindcss';
 import typescript from '@rollup/plugin-typescript';
-import { typescriptPaths } from 'rollup-plugin-typescript-paths';
-import commonjs from '@rollup/plugin-commonjs';
-import sourcemaps from 'rollup-plugin-sourcemaps';
-import serve from 'rollup-plugin-serve';
+import autoprefixer from 'autoprefixer';
 import livereload from 'rollup-plugin-livereload';
+import postcss from 'rollup-plugin-postcss';
+import serve from 'rollup-plugin-serve';
+import sourcemaps from 'rollup-plugin-sourcemaps';
+import { typescriptPaths } from 'rollup-plugin-typescript-paths';
+import tailwindcss from 'tailwindcss';
 
 const extensions = ['.ts', '.tsx'];
 
 const serveFiles = process.env.ROLLUP_SERVE == 1;
+
+const randomPort = Math.floor(Math.random() * 10000) + 10000;
 
 const servePlugins = () => [
   serve({
@@ -23,7 +25,7 @@ const servePlugins = () => [
     contentBase: '',
     host: '0.0.0.0',
     // host: 'localhost',
-    port: 5678,
+    port: randomPort,
     headers: {
       'Content-Type': 'text/html; charset=utf-8',
     },
@@ -64,11 +66,38 @@ const indexConfig = {
 const configs = [
   {
     ...indexConfig,
+    input: './src/vironpopup.tsx',
+    output: {
+      sourcemap: true,
+      file: 'dist/vironpopup.js',
+      format: 'es',
+    },
+  },
+  {
+    ...indexConfig,
+    input: './src/vironfull.tsx',
+    output: {
+      sourcemap: true,
+      file: 'dist/vironfull.js',
+      format: 'es',
+    },
+  },
+  {
+    ...indexConfig,
     input: './src/web.ts',
     output: {
       sourcemap: true,
-      file: 'dist/web.js',
+      file: 'dist/web.es.js',
       format: 'es',
+    },
+  },
+  {
+    ...indexConfig,
+    input: './src/web.ts',
+    output: {
+      sourcemap: true,
+      file: 'dist/web.cjs.js',
+      format: 'cjs',
     },
   },
 ];

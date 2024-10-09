@@ -3,12 +3,12 @@
   "version": "0.0.97",
   "description": "Javascript library to display glowi-customized flowise chatbot on your website",
   "type": "module",
-  "main": "dist/web.js",
-  "browser": "dist/web.js",
-  "jsdelivr": "dist/web.js",
+  "main": "dist/bot.es.js",
+  "browser": "dist/bot.es.js",
+  "jsdelivr": "dist/bot.es.js",
   "types": "dist/index.d.ts",
   "files": [
-    "dist/web.js"
+    "dist"
   ],
   "scripts": {
     "dev": "rollup --watch --config rollup.config.js",
