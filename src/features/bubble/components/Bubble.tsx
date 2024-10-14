@@ -16,13 +16,18 @@ export const BubbleBot = (props: BubbleProps & { getElement: () => HTMLElement }
   const [isBotOpened, setIsBotOpened] = createSignal(false);
   const [isBotStarted, setIsBotStarted] = createSignal(false);
 
+  let bodyOverflow = '';
+
   const openBot = () => {
     if (!isBotStarted()) setIsBotStarted(true);
     setIsBotOpened(true);
+    bodyOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
   };
 
   const closeBot = () => {
     setIsBotOpened(false);
+    document.body.style.overflow = bodyOverflow;
   };
 
   const toggleBot = () => {
@@ -33,21 +38,21 @@ export const BubbleBot = (props: BubbleProps & { getElement: () => HTMLElement }
   return (
     <>
       <style>{styles}</style>
-      <BubbleButton {...bubbleProps.theme?.button} toggleBot={toggleBot} isBotOpened={isBotOpened} />
+      <Show when={!isBotOpened()}>
+        <BubbleButton {...bubbleProps.theme?.button} toggleBot={toggleBot} isBotOpened={isBotOpened} />
+      </Show>
       <div
         part="bot"
         style={{
-          height: bubbleProps.theme?.chatWindow?.height ? `${bubbleProps.theme?.chatWindow?.height.toString()}px` : '100%',
+          height: bubbleProps.theme?.chatWindow?.height ? `${bubbleProps.theme?.chatWindow?.height.toString()}px` : '',
           transition: 'transform 200ms cubic-bezier(0, 1.2, 1, 1), opacity 150ms ease-out',
-          // 'transform-origin': 'bottom right',
-          'transform-origin': 'calc(100% - 32px) calc(100% - 32px)', // Adjust transform-origin 16px inside
+          'transform-origin': 'calc(100% - 32px) calc(100% - 32px)',
           transform: isBotOpened() ? 'scale3d(1, 1, 1)' : 'scale3d(0, 0, 1)',
           'box-shadow': 'rgb(0 0 0 / 16%) 0px 5px 40px',
           background: props.theme?.chatWindow?.backgroundColor + ' fixed',
-          'z-index': 42424242,
         }}
         class={
-          'fixed right-0 md:rounded-3xl w-full sm:w-full md:max-w-md lg:max-h-[704px]' +
+          'fixed z-50 right-0 bottom-0 backdrop-blur md:rounded-3xl lg:right-4 lg:bottom-4 w-full lg:max-w-md top-0 lg:top-auto lg:h-[704px]' +
           (isBotOpened() ? ' opacity-1' : ' opacity-0 pointer-events-none')
         }
       >

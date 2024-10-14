@@ -69,7 +69,7 @@ const SourceCard = (props: { index: number; faviconUrl?: string; source: SourceC
     >
       <div class="flex flex-col w-full">
         <p
-          class="text-sm font-medium text-gray-900"
+          class="text-sm font-medium text-gray-900 grid"
           style={{
             display: '-webkit-box',
             '-webkit-line-clamp': 2,
@@ -83,7 +83,7 @@ const SourceCard = (props: { index: number; faviconUrl?: string; source: SourceC
         </p>
         <div class="w-full inline-flex self-stretch items-start pt-2">
           {kindToIcon[props.source.metadata.kind]()}
-          <p class="pl-1 text-xs font-light text-gray-600 my-auto">{sourceMap[props.source.metadata.kind]()}</p>
+          <p class="pl-1 text-xs font-light text-gray-600 my-auto overflow-x-hidden">{sourceMap[props.source.metadata.kind]()}</p>
         </div>
       </div>
     </a>

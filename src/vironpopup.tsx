@@ -60,12 +60,23 @@ const getFullProps = (props: DefaultBotProps): BotProps & BubbleParams => {
 };
 
 render(() => {
-  const props = getFullProps(vironProps({ apiUrl: 'http://localhost:8000/twini-stream/viron-agents' }));
   const getChatbot = (): HTMLElement => document.getElementsByTagName('flowise-chatbot')[0];
   if (!getChatbot()) {
     console.error('Element with id "flowise-chatbot" not found.');
     return;
   }
-  const bot = <BubbleBot {...props} getElement={getChatbot} />;
+  const props = vironProps({ apiUrl: 'http://localhost:8000/twini-stream/viron-agents' });
+  const avatarShopifyCdnUrl = getChatbot().getAttribute('data-avatar-shopify-cdn-url');
+  if (avatarShopifyCdnUrl) {
+    console.log('Shopify CDN URL:', avatarShopifyCdnUrl);
+    props.theme.chatWindow.titleAvatarSrc = avatarShopifyCdnUrl;
+    props.theme.chatWindow.botMessage.avatarSrc = avatarShopifyCdnUrl;
+    props.theme.chatWindow.botMessage.faviconUrl = avatarShopifyCdnUrl;
+  } else {
+    console.error('Attribute "data-shopify-cdn-url" not found.');
+  }
+
+  const botProps = getFullProps(props);
+  const bot = <BubbleBot {...botProps} getElement={getChatbot} />;
   return bot;
 }, document.getElementsByTagName('flowise-chatbot')[0]);

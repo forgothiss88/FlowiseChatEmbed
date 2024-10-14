@@ -16,7 +16,7 @@ export const vironProps = (props: { apiUrl: string }): DefaultBotProps => {
     creatorName: 'viron',
     starterPrompts: {
       prompts: ["What's special about the materials used?", 'Can you tell me more about the fit?', 'Are they good for a trip?'],
-      background: 'rgba(51, 51, 51, 0.75)',
+      background: 'transparent',
     },
     theme: {
       button: {
@@ -70,7 +70,7 @@ export const vironProps = (props: { apiUrl: string }): DefaultBotProps => {
           avatarPadding: '0px',
           showAvatar: false,
           enableMultipricing: false,
-          purchaseButtonText: 'Buy now',
+          purchaseButtonText: 'View product',
           purchaseButtonBackgroundColor: '#007B4B',
           purchaseButtonTextColor: 'black',
           faviconUrl: '/public/avatars/viron.png',
@@ -78,7 +78,6 @@ export const vironProps = (props: { apiUrl: string }): DefaultBotProps => {
         userMessage: {
           backgroundColor: 'black',
           textColor: 'white',
-          showAvatar: false,
         },
       },
     },

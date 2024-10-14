@@ -7,8 +7,6 @@ export const Avatar = (props: { src?: string; padding?: string; classList?: stri
   const [avatarSrc, setAvatarSrc] = createSignal(props.src);
   const classList = props.classList || [];
 
-  console.debug('Avatar', props);
-
   createEffect(() => {
     if (avatarSrc()?.startsWith('{{') && props.src?.startsWith('http')) setAvatarSrc(props.src);
   });

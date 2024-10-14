@@ -20,8 +20,8 @@ export const AutoGrowTextArea = (props: Props) => {
   const [local, others] = splitProps(props, ['ref', 'placeholder', 'getInputValue', 'setInputValue', 'scrollToBottom']);
   const textarea: HTMLTextAreaElement = (
     <textarea
-      getElement={local.ref}
-      class="overflow-hidden resize-none bg-transparent w-full my-auto text-roboto text-base font-normal placeholder:italic placeholder:font-light disabled:opacity-50 disabled:cursor-not-allowed disabled:brightness-100 focus:outline-none focus:animate-fade-in"
+      ref={local.ref}
+      class="overflow-hidden resize-none bg-transparent w-full my-auto text-roboto text-base font-normal placeholder:italic placeholder:font-light disabled:opacity-50 disabled:cursor-not-allowed disabled:brightness-100 outline-none focus:ring-0 focus:animate-fade-in"
       aria-placeholder={local.placeholder}
       placeholder={local.placeholder}
       rows="1"

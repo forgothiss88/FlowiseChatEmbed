@@ -1,7 +1,7 @@
 import { Marked } from '@ts-stack/markdown';
 import { Show } from 'solid-js';
 import { MessageType, SourceContent, SourceProduct } from '../Bot';
-import { ProductCarousel, PurchaseButtonAspect } from '../Carousel';
+import { ProductCarousel, PurchaseButtonAspect, SingleProductShowcase } from '../Carousel';
 import { Avatar } from '../avatars/Avatar';
 import { SourcesDropdown } from './SourcesDropdown';
 
@@ -17,6 +17,7 @@ type Props = {
   sourceContent: SourceContent[];
   enableMultipricing: boolean;
   faviconUrl?: string;
+  suggestedProduct?: SourceProduct;
 } & PurchaseButtonAspect;
 
 const defaultBackgroundColor = '#f7f8ff';
@@ -25,8 +26,10 @@ const defaultTextColor = '#303235';
 Marked.setOptions({ isNoP: true });
 
 export const BotBubble = (props: Props) => {
-  console.log('BotBubble', props);
   let msgRef: HTMLDivElement | undefined;
+
+  console.debug('BotBubble', props);
+
   return (
     <div class="flex flex-row justify-start items-start host-container text-roboto w-11/12">
       <Show when={props.showAvatar}>
@@ -41,14 +44,22 @@ export const BotBubble = (props: Props) => {
         }}
       >
         <div class="p-3">
-          <Show when={props.sourceContent}>
+          <Show when={props.sourceContent != null && props.sourceContent?.length > 0}>
             <div class="w-full mb-3">
               <SourcesDropdown sources={props.sourceContent} faviconUrl={props?.faviconUrl} />
             </div>
           </Show>
           <span ref={msgRef} innerHTML={props.getMessage().message} />
         </div>
-        <Show when={props.sourceProducts?.length > 0}>
+        <Show when={props.suggestedProduct != null}>
+          <SingleProductShowcase
+            purchaseButtonText={props.purchaseButtonText}
+            purchaseButtonBackgroundColor={props.purchaseButtonBackgroundColor}
+            purchaseButtonTextColor={props.purchaseButtonTextColor}
+            product={props.suggestedProduct as SourceProduct}
+          />
+        </Show>
+        <Show when={props.suggestedProduct == null && props.sourceProducts?.length > 0}>
           <ProductCarousel
             enableMultipricing={props.enableMultipricing}
             purchaseButtonText={props.purchaseButtonText}

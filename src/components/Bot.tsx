@@ -28,6 +28,7 @@ export type ContentMetadata = {
 export type ProductMetadata = {
   kind: 'product';
   name: string;
+  slug: string;
   price: string;
   item_url: string;
   thumbnail_url: string;
@@ -55,11 +56,24 @@ export type MetadataEvent = {
   run_id: string;
 };
 
+export type ServerSentEvent = {
+  event_name: string;
+};
+
+export type IncrementalAnswerEvent = ServerSentEvent & {
+  message: string;
+};
+
+export type SuggestionGeneratedEvent = ServerSentEvent & {
+  suggestion_slug: string;
+};
+
 export type MessageType = {
   message: string;
   type: messageType;
-  sourceProducts?: SourceProduct[];
-  sourceContents?: SourceContent[];
+  sourceProducts: SourceProduct[];
+  sourceContents: SourceContent[];
+  suggestedProduct?: SourceProduct;
   fileAnnotations?: any;
 };
 
@@ -101,9 +115,9 @@ export const Bot = (props: BotProps & { class?: string }) => {
   let textareaRef: HTMLTextAreaElement | undefined;
 
   const [userInput, setUserInput] = createSignal('');
-  const [loading, setLoading] = createSignal(false);
   const [sourcePopupOpen, setSourcePopupOpen] = createSignal(false);
   const [sourcePopupSrc, setSourcePopupSrc] = createSignal({});
+  const [lastBotResponse, setLastMessage] = createSignal<MessageType | null>(null);
   const [messages, setMessages] = createSignal<MessageType[]>(
     [
       {
@@ -114,22 +128,13 @@ export const Bot = (props: BotProps & { class?: string }) => {
     { equals: false },
   );
 
-  const [lastBotResponse, setLastMessage] = createSignal<MessageType | null>(null);
-  const [isChatFlowAvailableToStream, setIsChatFlowAvailableToStream] = createSignal(false);
+  const [isBusy, setBusy] = createSignal(true);
+  const [isWaitingForResponse, setWaitingForResponse] = createSignal(false);
 
   const [chatRef, setChatRef] = createSignal<string | null>(null);
 
   const [config, setConfig] = createSignal({
     apiUrl: props.apiUrl,
-  });
-
-  onMount(() => {
-    const apiUrl = props.getElement()?.getAttribute('data-twini-api-url');
-    if (apiUrl) {
-      setConfig({
-        apiUrl,
-      });
-    }
   });
 
   const scrollToBottom = (timeout?: number) => {
@@ -187,15 +192,15 @@ export const Bot = (props: BotProps & { class?: string }) => {
 
   // Handle form submission
   const handleSubmit = async (value: string) => {
-    setUserInput(value);
-
+    console.log('handleSubmit', value);
     if (value.trim() === '') {
       return;
     }
 
-    setLoading(true);
+    setUserInput(value);
+    setWaitingForResponse(true);
+    setBusy(true);
     scrollToBottom();
-    console.log('handleSubmit', value);
     addMessage({ message: value, type: 'userMessage' });
     saveChatToLocalStorage();
 
@@ -213,12 +218,11 @@ export const Bot = (props: BotProps & { class?: string }) => {
       config: {},
     };
 
-    setIsChatFlowAvailableToStream(false);
     const abortCtrl = new AbortController();
 
-    let waitingFirstToken = true;
     let sourceProducts: SourceProduct[] = [];
     let sourceContents: SourceContent[] = [];
+    let suggestedProductSlug: string | null = null;
 
     await fetchEventSource(`${config().apiUrl}/stream`, {
       signal: abortCtrl.signal,
@@ -244,13 +248,18 @@ export const Bot = (props: BotProps & { class?: string }) => {
           const data: MetadataEvent = JSON.parse(ev.data);
         } else if (ev.event === 'close') {
           abortCtrl.abort();
+        } else if (ev.event === 'suggestion_generated') {
+          const data: SuggestionGeneratedEvent = JSON.parse(ev.data);
+          suggestedProductSlug = data['suggestion_slug'];
+        } else if (ev.event === 'incremental_message_streamed') {
+          const data: IncrementalAnswerEvent = JSON.parse(ev.data);
+          if ((data.message ?? '').trim().length > 0) {
+            setLastMessage({ type: 'apiMessage', message: data.message });
+          }
         } else if (ev.event === 'data') {
           const data: ContextEvent | AnswerEvent = JSON.parse(ev.data);
           if (data.answer) {
-            if (waitingFirstToken) {
-              waitingFirstToken = false;
-              setLoading(false);
-            }
+            setWaitingForResponse(false);
             const streamingAnswer = (lastBotResponse()?.message || '') + data.answer;
             setLastMessage({ type: 'apiMessage', message: streamingAnswer });
           } else if (data.context) {
@@ -269,13 +278,16 @@ export const Bot = (props: BotProps & { class?: string }) => {
       console.error('Network error:', err);
     });
 
-    setIsChatFlowAvailableToStream(true);
+    setWaitingForResponse(false);
     updateLastMessageSources(sourceProducts, sourceContents);
+    if (suggestedProductSlug) {
+      setLastMessage({ ...lastBotResponse(), suggestedProduct: sourceProducts.find((product) => product.metadata.slug === suggestedProductSlug) });
+    }
     moveLastMessageToMessages();
-    setLoading(false);
+    saveChatToLocalStorage();
     setUserInput('');
     scrollToBottom();
-    saveChatToLocalStorage();
+    setBusy(false);
   };
 
   const clearChat = () => {
@@ -296,35 +308,26 @@ export const Bot = (props: BotProps & { class?: string }) => {
   };
 
   onMount(async () => {
+    const apiUrl = props.getElement()?.getAttribute('data-twini-api-url');
+    if (apiUrl) {
+      setConfig({
+        apiUrl,
+      });
+    }
     const localChatsData = localStorage.getItem(`${props.chatflowid}_EXTERNAL`);
     if (localChatsData) {
       const localChats: { chatHistory: MessageType[]; chatRef: string } = JSON.parse(localChatsData);
       setChatRef(localChats.chatRef);
       setMessages([...localChats.chatHistory]);
-    } else {
-      setMessages([
-        {
-          message: props.welcomeMessage ?? defaultWelcomeMessage,
-          type: 'apiMessage',
-        },
-      ]);
     }
-    setLastMessage(null);
-    setIsChatFlowAvailableToStream(true);
-    messages().length > 1 ? scrollToBottom(100) : scrollToTop(100);
-    setUserInput('');
-    setLoading(false);
-    // eslint-disable-next-line solid/reactivity
-    return;
-  });
 
-  const isValidURL = (url: string): URL | undefined => {
-    try {
-      return new URL(url);
-    } catch (err) {
-      return undefined;
-    }
-  };
+    // Scroll to bottom on first render if there are messages
+    messages().length > 1 ? scrollToBottom(100) : scrollToTop(100);
+
+    setUserInput('');
+    setWaitingForResponse(false);
+    setBusy(false);
+  });
 
   const [bottomSpacerHeight, setBottomSpacerHeight] = createSignal(0);
   const focusOnTextarea = () => {
@@ -336,6 +339,9 @@ export const Bot = (props: BotProps & { class?: string }) => {
       <div class="relative flex max-h-full flex-1 flex-col overflow-hidden">
         <div class="flex w-full items-center justify-center bg-token-main-surface-primary overflow-hidden"></div>
         <main class={'relative h-full w-full flex-1 overflow-hidden transition-width'}>
+          <div class="fixed top-4 right-4 rounded-full bg-white p-4 shadow-lg shadow-black z-10" onClick={props.closeBot}>
+            <XIcon color="black" width={16} height={16}></XIcon>
+          </div>
           <div role="presentation" tabindex="0" class="flex h-full flex-col focus-visible:outline-0 overflow-hidden">
             <div
               ref={chatContainer}
@@ -344,11 +350,8 @@ export const Bot = (props: BotProps & { class?: string }) => {
                 'min-height': '100vh',
               }}
             >
-              <div class="w-full h-16"></div>
+              <div class="w-full h-16" style={{ display: 'block' }}></div>
               <div class="overflow-hidden px-3">
-                <div class="fixed top-4 right-4 rounded-full bg-white p-4 shadow-lg shadow-black z-10" onClick={props.closeBot}>
-                  <XIcon color="black" width={16} height={16}></XIcon>
-                </div>
                 <div class="flex justify-center py-10">
                   <Avatar src={props.titleAvatarSrc} classList={['h-1/4', 'w-1/4', 'shadow-lg', 'shadow-black']} />
                 </div>
@@ -368,7 +371,6 @@ export const Bot = (props: BotProps & { class?: string }) => {
                         {message.type === 'apiMessage' && (
                           <BotBubble
                             getMessage={() => message}
-                            fileAnnotations={message.fileAnnotations}
                             backgroundColor={props.botMessage?.backgroundColor || 'white'}
                             textColor={props.botMessage?.textColor}
                             showAvatar={props.botMessage?.showAvatar}
@@ -377,6 +379,7 @@ export const Bot = (props: BotProps & { class?: string }) => {
                             faviconUrl={props.botMessage?.faviconUrl}
                             sourceProducts={message.sourceProducts}
                             sourceContent={message.sourceContents}
+                            suggestedProduct={message.suggestedProduct || undefined}
                             enableMultipricing={props.botMessage?.enableMultipricing}
                             purchaseButtonText={props.botMessage?.purchaseButtonText}
                             purchaseButtonBackgroundColor={props.botMessage?.purchaseButtonBackgroundColor}
@@ -387,13 +390,12 @@ export const Bot = (props: BotProps & { class?: string }) => {
                     );
                   }}
                 </For>
-                <Show when={loading()}>
+                <Show when={isWaitingForResponse()}>
                   <LoadingBubble />
                 </Show>
-                <Show when={lastBotResponse()?.message}>
+                <Show when={!isWaitingForResponse() && lastBotResponse()?.message}>
                   <BotBubble
                     getMessage={lastBotResponse}
-                    fileAnnotations={lastBotResponse()?.fileAnnotations}
                     backgroundColor={props.botMessage?.backgroundColor || 'white'}
                     textColor={props.botMessage?.textColor}
                     showAvatar={props.botMessage?.showAvatar}
@@ -402,6 +404,7 @@ export const Bot = (props: BotProps & { class?: string }) => {
                     faviconUrl={props.botMessage?.faviconUrl}
                     sourceProducts={lastBotResponse()?.sourceProducts || []}
                     sourceContent={lastBotResponse()?.sourceContents || []}
+                    suggestedProduct={lastBotResponse()?.suggestedProduct}
                     enableMultipricing={props.botMessage?.enableMultipricing || false}
                     purchaseButtonText={props.botMessage?.purchaseButtonText}
                     purchaseButtonBackgroundColor={props.botMessage?.purchaseButtonBackgroundColor}
@@ -416,7 +419,7 @@ export const Bot = (props: BotProps & { class?: string }) => {
                   </For>
                 </Show>
               </div>
-              <div class="w-full" style={{ height: bottomSpacerHeight() + 'px' }}></div>
+              <div class="w-full" style={{ display: 'block', height: bottomSpacerHeight() + 'px' }}></div>
             </div>
           </div>
           <Bottombar
@@ -428,7 +431,7 @@ export const Bot = (props: BotProps & { class?: string }) => {
             sendButtonColor={props.textInput?.sendButtonColor}
             resetButtonColor={props.textInput?.resetButtonColor}
             fontSize={props.fontSize}
-            disabled={loading()}
+            disabled={isBusy()}
             getInputValue={userInput}
             setInputValue={setUserInput}
             onSubmit={handleSubmit}

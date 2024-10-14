@@ -46,6 +46,8 @@ export type ChatWindowTheme = {
   textInput: TextInputTheme;
   firstMessage: FirstMessageConfig;
   poweredByTextColor: string;
+  botMessage: BotMessageTheme;
+  userMessage: UserMessageTheme;
 };
 
 export type ButtonTheme = {

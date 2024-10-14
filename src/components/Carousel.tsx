@@ -147,6 +147,36 @@ export const SinglePriceButton = (props: { purchaseButtonText: string; price: nu
   );
 };
 
+export const SingleProductShowcase = (props: { product: SourceProduct } & PurchaseButtonAspect) => {
+  return (
+    <div class="text-roboto overflow-hidden flex flex-col p-3" style={{ 'max-width': '208px' }}>
+      <div class="flex flex-col pt-4 w-full" style={{ flex: '0 0 auto' }}>
+        <img
+          class="aspect-auto object-cover bg-white animate-fade-in rounded-lg border-gray-500 bottom-1"
+          src={props.product.metadata.thumbnail_url}
+          alt=""
+        />
+        <p class="text-xs font-normal text-left p-1">{props.product.metadata.name}</p>
+        <p class="text-base font-normal text-left p-1">{Math.round(props.product.metadata.price)}€</p>
+        <div class="pb-3 pt-1">
+          <a
+            href={props.product.metadata.item_url}
+            target="_blank"
+            class="w-full text-sm font-normal px-4 py-2 whitespace-nowrap self-center block text-center"
+            style={{
+              background: props.purchaseButtonBackgroundColor,
+              color: props.purchaseButtonTextColor,
+              'border-color': props.purchaseButtonBackgroundColor,
+            }}
+          >
+            {props.purchaseButtonText}
+          </a>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export const ProductCarousel = (props: ProductCarouselProps) => {
   let carousel: HTMLDivElement | undefined;
   const [currentSlide, setCurrentSlide] = createSignal(0);
