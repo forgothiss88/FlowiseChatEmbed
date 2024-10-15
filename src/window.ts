@@ -1,5 +1,5 @@
 import { BotProps } from './components/Bot';
-import { FullProps } from './features/full';
+import { FullProps } from './components/props';
 
 export const initFull = (props: FullProps & { id?: string }) => {
   const fullElement = props.id ? document.getElementById(props.id) : document.querySelector('flowise-fullchatbot');
@@ -8,7 +8,7 @@ export const initFull = (props: FullProps & { id?: string }) => {
 };
 
 export const init = (props: BotProps) => {
-  const element = document.createElement('flowise-chatbot');
+  const element = document.createElement('twini-chatbot');
   Object.assign(element, props);
   document.body.appendChild(element);
 };
@@ -20,8 +20,8 @@ export type Chatbot = {
 
 declare const window:
   | {
-      Chatbot: Chatbot | undefined;
-    }
+    Chatbot: Chatbot | undefined;
+  }
   | undefined;
 
 export const parseChatbot = () => ({

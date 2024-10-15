@@ -8,5 +8,5 @@ export const registerWebComponents = () => {
   if (typeof window === 'undefined') return;
 
   customElement('flowise-fullchatbot', initialBotProps | { element: ref }, FullBot);
-  customElement('flowise-chatbot', initialBotProps | { element: ref }, BubbleBot);
+  customElement('twini-chatbot', initialBotProps | { element: ref }, BubbleBot);
 };

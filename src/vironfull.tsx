@@ -62,12 +62,12 @@ const getFullProps = (props: DefaultBotProps): BotProps & BubbleParams => {
 };
 
 render(() => {
-  const props = getFullProps(vironProps({ apiUrl: 'http://localhost:8000/twini-stream/viron-agents' }));
-  const getChatbot = (): HTMLElement => document.getElementsByTagName('flowise-chatbot')[0];
+  const props = vironProps();
+  const getChatbot = (): HTMLElement => document.getElementsByTagName('twini-chatbot')[0];
   if (!getChatbot()) {
-    console.error('Element with id "flowise-chatbot" not found.');
+    console.error('Element with id "twini-chatbot" not found.');
     return;
   }
   const bot = <FullBot {...props} getElement={getChatbot} />;
   return bot;
-}, document.getElementsByTagName('flowise-chatbot')[0]);
+}, document.getElementsByTagName('twini-chatbot')[0]);

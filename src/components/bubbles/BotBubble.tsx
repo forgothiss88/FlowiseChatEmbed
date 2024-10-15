@@ -13,8 +13,8 @@ type Props = {
   avatarPadding?: string;
   backgroundColor: string;
   textColor?: string;
-  sourceProducts: SourceProduct[];
-  sourceContent: SourceContent[];
+  sourceProducts?: SourceProduct[];
+  sourceContent?: SourceContent[];
   enableMultipricing: boolean;
   faviconUrl?: string;
   suggestedProduct?: SourceProduct;
@@ -31,7 +31,7 @@ export const BotBubble = (props: Props) => {
   console.debug('BotBubble', props);
 
   return (
-    <div class="flex flex-row justify-start items-start host-container text-roboto w-11/12">
+    <div class="flex flex-row justify-start items-start host-container text-poppins w-11/12">
       <Show when={props.showAvatar}>
         <Avatar src={props.avatarSrc} padding={props.avatarPadding} classList={['h-10', 'w-10', 'bg-transparent', 'mr-2']} isImgRounded={true} />
       </Show>

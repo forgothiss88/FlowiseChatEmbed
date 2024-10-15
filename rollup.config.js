@@ -21,7 +21,7 @@ const servePlugins = () => [
   serve({
     open: true,
     verbose: true,
-    openPage: '/index_full.html',
+    openPage: '/index.html',
     contentBase: '',
     host: '0.0.0.0',
     // host: 'localhost',
@@ -79,6 +79,15 @@ const configs = [
     output: {
       sourcemap: true,
       file: 'dist/vironfull.js',
+      format: 'es',
+    },
+  },
+  {
+    ...indexConfig,
+    input: './src/glowipopup.tsx',
+    output: {
+      sourcemap: true,
+      file: 'dist/glowipopup.js',
       format: 'es',
     },
   },

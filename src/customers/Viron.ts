@@ -1,3 +1,4 @@
+import { FullProps } from '@/components/props';
 import { BubbleTheme } from '@/features/bubble/types';
 
 export type DefaultBotProps = {
@@ -10,77 +11,67 @@ export type DefaultBotProps = {
   theme: BubbleTheme;
 };
 
-export const vironProps = (props: { apiUrl: string }): DefaultBotProps => {
+const brandColors = {
+  primary: 'black',
+  primaryTextColor: 'white',
+  secondary: 'white',
+  secondaryTextColor: 'black',
+  actionPrimary: '#007B4B',
+  actionPrimaryTextColor: 'black',
+  actionSecondary: 'black',
+  actionSecondaryTextColor: 'white',
+}
+
+export const vironProps = (): FullProps => {
   return {
-    apiUrl: props.apiUrl,
+    apiUrl: "http://localhost:8000/twini-stream/viron-agents",
     creatorName: 'viron',
     starterPrompts: {
       prompts: ["What's special about the materials used?", 'Can you tell me more about the fit?', 'Are they good for a trip?'],
-      background: 'transparent',
+      textColor: 'white',
+      actionColor: brandColors.actionPrimary
     },
     theme: {
       button: {
-        topbarColor: '#007B4B',
+        topbarColor: brandColors.primary,
+        size: 'medium',
+        iconColor: brandColors.actionSecondary, // color inside the icon
+        bubbleButtonColor: brandColors.actionPrimary,
       },
       chatWindow: {
         title: '',
         titleAvatarSrc: '/public/avatars/viron.png',
-        titleColor: 'black',
+        titleColor: brandColors.primary,
         welcomeMessage: 'Hey there! I’m here to help you with the <a class="text-black"><b>1970 Black Corn boots</b></a>. How can I assist?',
         backgroundColor: 'rgba(51, 51, 51, 0.75)',
         poweredByTextColor: 'black',
-        firstMessage: {
-          text: 'Ciao, sono la dott.ssa Maria Priore 😊',
-          background: 'white',
-          // actionsBackground: '#F1E3FF',
-          // actionsBackground: '#9AFEBB',
-          actionsBackground: '#FFECF4',
-          actions: [
-            {
-              title: 'Personalizza la tua skincare routine',
-              subtitle: 'Raccontami di te e della tua pelle per ricevere i miei consigli personalizzati',
-              prompt: 'Aiutami a fare una skincare routine',
-              icon: 'lotion',
-            },
-            {
-              title: 'Carica un selfie per un’analisi dettagliata',
-              subtitle: 'La nostra AI darà un voto da 0 a 100 a parametri come rossori, lucidità e acne.',
-              prompt: 'Analizza la mia pelle',
-              icon: 'doctor',
-            },
-            {
-              title: 'Informati con la nostra skin academy',
-              subtitle: 'Informati con le nostre guide per sfatare miti e approfondire le tematiche della skincare.',
-              prompt: 'Vorrei approfondire le tematiche della skincare',
-              icon: 'smile',
-            },
-          ],
-        },
+        firstMessage: undefined,
         textInput: {
           placeholder: 'Chat with AI...',
-          // inputBackgroundColor: 'white',
-          // backgroundColor: '#F1E3FF',
-          sendButtonColor: 'gray',
-          resetButtonColor: 'gray',
+          inputBackgroundColor: '#F9F9F9',
+          inputBorderColor: '#e5e5e5',
+          backgroundColor: 'white',
+          textColor: brandColors.secondaryTextColor,
+          sendButtonColor: brandColors.actionPrimary,
+          resetButtonColor: brandColors.actionPrimary,
         },
         botMessage: {
-          backgroundColor: 'white',
-          textColor: 'black',
-          avatarSrc: '/public/avatars/viron.png',
-          avatarPadding: '0px',
+          backgroundColor: brandColors.secondary,
+          textColor: brandColors.primary,
           showAvatar: false,
           enableMultipricing: false,
           purchaseButtonText: 'View product',
-          purchaseButtonBackgroundColor: '#007B4B',
-          purchaseButtonTextColor: 'black',
+          purchaseButtonBackgroundColor: brandColors.actionPrimary,
+          purchaseButtonTextColor: brandColors.primary,
           faviconUrl: '/public/avatars/viron.png',
         },
         userMessage: {
-          backgroundColor: 'black',
-          textColor: 'white',
+          backgroundColor: brandColors.secondary,
+          textColor: brandColors.secondaryTextColor,
         },
       },
     },
+    brandColors: brandColors
   };
 };
 

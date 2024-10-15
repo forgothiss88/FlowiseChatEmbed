@@ -2,12 +2,11 @@ import { BotMessageTheme, TextInputTheme, UserMessageTheme } from '@/features/bu
 import { Popup } from '@/features/popup';
 import { MessageBE, RunInput } from '@/queries/sendMessageQuery';
 import { fetchEventSource } from '@microsoft/fetch-event-source';
-import { For, Show, createSignal, onMount } from 'solid-js';
+import { Accessor, For, Show, createSignal, onMount } from 'solid-js';
 import { v4 as uuidv4 } from 'uuid';
 import { Bottombar } from './Bottombar';
 import { Avatar } from './avatars/Avatar';
 import { BotBubble } from './bubbles/BotBubble';
-import { FirstMessageConfig } from './bubbles/FirstMessageBubble';
 import { GuestBubble } from './bubbles/GuestBubble';
 import { HintBubble } from './bubbles/HintBubble';
 import { LoadingBubble } from './bubbles/LoadingBubble';
@@ -68,39 +67,35 @@ export type SuggestionGeneratedEvent = ServerSentEvent & {
   suggestion_slug: string;
 };
 
+export type NextQuestionsGeneratedEvent = ServerSentEvent & {
+  questions: string[];
+};
+
 export type MessageType = {
   message: string;
   type: messageType;
-  sourceProducts: SourceProduct[];
-  sourceContents: SourceContent[];
+  sourceProducts?: SourceProduct[];
+  sourceContents?: SourceContent[];
   suggestedProduct?: SourceProduct;
-  fileAnnotations?: any;
+  nextQuestions?: string[];
 };
 
 export type StarterPromptsType = {
   prompts: string[];
-  backgroundColor: string;
   textColor: string;
+  actionColor: string;
 };
 
 export type BotProps = {
   creatorName: string;
   chatflowid: string;
   apiUrl: string;
-  chatflowConfig?: Record<string, unknown>;
   starterPrompts: StarterPromptsType;
   welcomeMessage: string;
   botMessage: BotMessageTheme;
   userMessage: UserMessageTheme;
-  firstMessage: FirstMessageConfig;
   textInput: TextInputTheme;
   poweredByTextColor?: string;
-  badgeBackgroundColor?: string;
-  bubbleButtonColor?: string;
-  topbarColor?: string;
-  bubbleTextColor?: string;
-  titleColor?: string;
-  title?: string;
   titleAvatarSrc?: string;
   fontSize?: number;
   isFullPage?: boolean;
@@ -110,19 +105,22 @@ export type BotProps = {
 
 const defaultWelcomeMessage = 'Hi there! How can I help?';
 
-export const Bot = (props: BotProps & { class?: string }) => {
+export const Bot = (props: BotProps) => {
   let chatContainer: HTMLDivElement | undefined;
   let textareaRef: HTMLTextAreaElement | undefined;
 
   const [userInput, setUserInput] = createSignal('');
   const [sourcePopupOpen, setSourcePopupOpen] = createSignal(false);
   const [sourcePopupSrc, setSourcePopupSrc] = createSignal({});
+
   const [lastBotResponse, setLastMessage] = createSignal<MessageType | null>(null);
+  const [nextQuestions, setNextQuestions] = createSignal([...props.starterPrompts.prompts]);
   const [messages, setMessages] = createSignal<MessageType[]>(
     [
       {
         message: props.welcomeMessage ?? defaultWelcomeMessage,
         type: 'apiMessage',
+        nextQuestions: [...props.starterPrompts.prompts],
       },
     ],
     { equals: false },
@@ -155,14 +153,6 @@ export const Bot = (props: BotProps & { class?: string }) => {
    */
   const saveChatToLocalStorage = () => {
     localStorage.setItem(`${props.chatflowid}_EXTERNAL`, JSON.stringify({ chatRef: chatRef(), chatHistory: messages() }));
-  };
-
-  const updateLastMessageSources = (sourceProducts?: SourceProduct[], sourceContents?: SourceContent[]) => {
-    setLastMessage({
-      ...lastBotResponse(),
-      sourceProducts: sourceProducts || item.sourceProducts,
-      sourceContents: sourceContents || item.sourceContents,
-    });
   };
 
   const moveLastMessageToMessages = () => {
@@ -256,6 +246,12 @@ export const Bot = (props: BotProps & { class?: string }) => {
           if ((data.message ?? '').trim().length > 0) {
             setLastMessage({ type: 'apiMessage', message: data.message });
           }
+        } else if (ev.event === 'next_questions_generated') {
+          const data: NextQuestionsGeneratedEvent = JSON.parse(ev.data);
+          setLastMessage({
+            ...(lastBotResponse() as MessageType),
+            nextQuestions: data.questions,
+          });
         } else if (ev.event === 'data') {
           const data: ContextEvent | AnswerEvent = JSON.parse(ev.data);
           if (data.answer) {
@@ -264,12 +260,17 @@ export const Bot = (props: BotProps & { class?: string }) => {
             setLastMessage({ type: 'apiMessage', message: streamingAnswer });
           } else if (data.context) {
             const ctx = data as ContextEvent;
-            ctx.context.map((item) => {
+            ctx.context.forEach((item) => {
               if (item.metadata.kind === 'product') {
                 sourceProducts.push(item as SourceProduct);
               } else if (['youtube-video', 'ig-video', 'tiktok-video', 'article'].includes(item.metadata.kind)) {
                 sourceContents.push(item as SourceContent);
               }
+            });
+            setLastMessage({
+              ...(lastBotResponse() as MessageType),
+              sourceProducts: sourceProducts,
+              sourceContents: sourceContents,
             });
           }
         }
@@ -279,10 +280,18 @@ export const Bot = (props: BotProps & { class?: string }) => {
     });
 
     setWaitingForResponse(false);
-    updateLastMessageSources(sourceProducts, sourceContents);
+
+    let suggestedProduct = undefined;
     if (suggestedProductSlug) {
-      setLastMessage({ ...lastBotResponse(), suggestedProduct: sourceProducts.find((product) => product.metadata.slug === suggestedProductSlug) });
+      suggestedProduct = sourceProducts.find((product) => product.metadata.slug === suggestedProductSlug);
+      if (suggestedProduct == null) {
+        console.error('Suggested product with slug ', suggestedProductSlug, 'not found among ', sourceProducts);
+      }
     }
+    setLastMessage({
+      ...(lastBotResponse() as MessageType),
+      suggestedProduct: suggestedProduct,
+    });
     moveLastMessageToMessages();
     saveChatToLocalStorage();
     setUserInput('');
@@ -395,15 +404,15 @@ export const Bot = (props: BotProps & { class?: string }) => {
                 </Show>
                 <Show when={!isWaitingForResponse() && lastBotResponse()?.message}>
                   <BotBubble
-                    getMessage={lastBotResponse}
+                    getMessage={lastBotResponse as Accessor<MessageType>}
                     backgroundColor={props.botMessage?.backgroundColor || 'white'}
                     textColor={props.botMessage?.textColor}
                     showAvatar={props.botMessage?.showAvatar}
                     avatarSrc={props.botMessage?.avatarSrc}
                     avatarPadding={props.botMessage?.avatarPadding}
                     faviconUrl={props.botMessage?.faviconUrl}
-                    sourceProducts={lastBotResponse()?.sourceProducts || []}
-                    sourceContent={lastBotResponse()?.sourceContents || []}
+                    sourceProducts={lastBotResponse()?.sourceProducts}
+                    sourceContent={lastBotResponse()?.sourceContents}
                     suggestedProduct={lastBotResponse()?.suggestedProduct}
                     enableMultipricing={props.botMessage?.enableMultipricing || false}
                     purchaseButtonText={props.botMessage?.purchaseButtonText}
@@ -411,12 +420,19 @@ export const Bot = (props: BotProps & { class?: string }) => {
                     purchaseButtonTextColor={props.botMessage?.purchaseButtonTextColor}
                   />
                 </Show>
-                <Show when={messages().length == 1 && props.starterPrompts?.prompts}>
-                  <For each={props.starterPrompts.prompts}>
-                    {(prompt, index) => (
-                      <HintBubble message={prompt} background="transparent" textColor="white" onClick={() => handleSubmit(prompt)} />
-                    )}
-                  </For>
+                <Show when={!isBusy()}>
+                  {messages()[messages().length - 1]?.nextQuestions != null && (
+                    <For each={messages()[messages().length - 1]?.nextQuestions}>
+                      {(prompt, _) => (
+                        <HintBubble
+                          actionColor={props.starterPrompts.actionColor}
+                          message={prompt}
+                          textColor={props.starterPrompts.textColor}
+                          onClick={() => handleSubmit(prompt)}
+                        />
+                      )}
+                    </For>
+                  )}
                 </Show>
               </div>
               <div class="w-full" style={{ display: 'block', height: bottomSpacerHeight() + 'px' }}></div>
@@ -424,12 +440,12 @@ export const Bot = (props: BotProps & { class?: string }) => {
           </div>
           <Bottombar
             ref={textareaRef}
-            backgroundColor={props.textInput?.backgroundColor}
-            inputBackgroundColor={props.textInput?.inputBackgroundColor}
-            textColor={props.textInput?.textColor}
-            placeholder={props.textInput?.placeholder}
-            sendButtonColor={props.textInput?.sendButtonColor}
-            resetButtonColor={props.textInput?.resetButtonColor}
+            backgroundColor={props.textInput.backgroundColor}
+            inputBackgroundColor={props.textInput.inputBackgroundColor}
+            textColor={props.textInput.textColor}
+            placeholder={props.textInput.placeholder}
+            sendButtonColor={props.textInput.sendButtonColor}
+            resetButtonColor={props.textInput.resetButtonColor}
             fontSize={props.fontSize}
             disabled={isBusy()}
             getInputValue={userInput}
@@ -438,10 +454,9 @@ export const Bot = (props: BotProps & { class?: string }) => {
             isFullPage={props.isFullPage}
             clearChat={clearChat}
             isDeleteEnabled={messages().length > 1}
-            showStarterPrompts={props.starterPrompts.prompts.length > 0 && messages().length <= 1}
-            starterPrompts={props.starterPrompts}
             setBottomSpacerHeight={setBottomSpacerHeight}
-            poweredByTextColor={props.poweredByTextColor || 'black'}
+            poweredByTextColor={props.poweredByTextColor ?? 'black'}
+            inputBorderColor={props.textInput.inputBorderColor}
             scrollToBottom={scrollToBottom}
           />
         </main>

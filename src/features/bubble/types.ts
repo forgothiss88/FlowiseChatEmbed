@@ -16,6 +16,7 @@ export type TextInputTheme = {
   placeholder: string;
   sendButtonColor: string;
   inputBackgroundColor: string;
+  inputBorderColor: string;
   resetButtonColor: string;
 };
 
@@ -28,8 +29,8 @@ export type BotMessageTheme = {
   backgroundColor: string;
   textColor: string;
   showAvatar: boolean;
-  avatarSrc: string;
-  avatarPadding: string;
+  avatarSrc?: string;
+  avatarPadding?: string;
   enableMultipricing: boolean;
   faviconUrl?: string;
 } & PurchaseButtonAspect;
@@ -55,7 +56,7 @@ export type ButtonTheme = {
   bubbleButtonColor: string;
   topbarColor: string;
   iconColor: string;
-  customIconSrc: string;
+  customIconSrc?: string;
   bottom?: number;
   right?: number;
 };

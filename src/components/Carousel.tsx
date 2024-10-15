@@ -149,7 +149,7 @@ export const SinglePriceButton = (props: { purchaseButtonText: string; price: nu
 
 export const SingleProductShowcase = (props: { product: SourceProduct } & PurchaseButtonAspect) => {
   return (
-    <div class="text-roboto overflow-hidden flex flex-col p-3" style={{ 'max-width': '208px' }}>
+    <div class="text-poppins overflow-hidden flex flex-col p-3" style={{ 'max-width': '208px' }}>
       <div class="flex flex-col pt-4 w-full" style={{ flex: '0 0 auto' }}>
         <img
           class="aspect-auto object-cover bg-white animate-fade-in rounded-lg border-gray-500 bottom-1"
@@ -193,8 +193,8 @@ export const ProductCarousel = (props: ProductCarouselProps) => {
   const isEnd = () => currentSlide() + 1 === numProducts;
   return (
     <>
-      <div class="text-roboto overflow-hidden w-full" style={{ background: props.backgroundColor }}>
-        <div getElement={carousel} class="flex flex-row overflow-hidden w-full">
+      <div class="text-poppins overflow-hidden w-full" style={{ background: props.backgroundColor }}>
+        <div ref={carousel} class="flex flex-row overflow-hidden w-full">
           <Show when={numProducts > 0}>
             <ProductCard isPrimary={true} product={props.products[currentSlide()].metadata} />
           </Show>

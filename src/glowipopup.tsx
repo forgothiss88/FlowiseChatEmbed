@@ -1,9 +1,9 @@
 import { render } from 'solid-js/web';
 import { FullProps } from './components/props';
-import { DefaultBotProps, vironProps } from './customers/Viron';
+import { DefaultBotProps, glowiProps } from './customers/Glowi';
 import { BubbleBot } from './features/bubble';
 
-const getAllProps = (props: DefaultBotProps): FullProps => {
+const getFullProps = (props: DefaultBotProps): FullProps => {
   return {
     creatorName: props.creatorName,
     chatflowid: `${props.creatorName}-twini`,
@@ -64,8 +64,7 @@ render(() => {
     console.error('Element with id "twini-chatbot" not found.');
     return;
   }
-  const props = vironProps();
-  props.apiUrl = 'http://localhost:8000/twini-stream/viron-agents';
+  const props = glowiProps({ apiUrl: 'http://localhost:8000/twini-stream/viron-agents' });
   const avatarShopifyCdnUrl = getChatbot().getAttribute('data-avatar-shopify-cdn-url');
   if (avatarShopifyCdnUrl) {
     console.log('Shopify CDN URL:', avatarShopifyCdnUrl);
@@ -76,7 +75,7 @@ render(() => {
     console.error('Attribute "data-shopify-cdn-url" not found.');
   }
 
-  // const botProps = getAllProps(props);
-  const bot = <BubbleBot {...props} getElement={getChatbot} />;
+  const botProps = getFullProps(props);
+  const bot = <BubbleBot {...botProps} getElement={getChatbot} />;
   return bot;
 }, document.getElementsByTagName('twini-chatbot')[0]);

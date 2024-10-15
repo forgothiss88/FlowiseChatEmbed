@@ -35,7 +35,7 @@ export const BubbleButton = (props: Props) => {
           }}
           class={
             `stroke-2 fill-transparent absolute duration-200 transition ` +
-            (props.isBotOpened ? 'scale-0 opacity-0' : 'scale-100 opacity-100') +
+            (props.isBotOpened() ? 'scale-0 opacity-0' : 'scale-100 opacity-100') +
             (props.size === 'large' ? ' w-9' : ' w-7')
           }
         >
@@ -47,7 +47,7 @@ export const BubbleButton = (props: Props) => {
           src={props.customIconSrc}
           class={
             'rounded-full object-cover' +
-            (props.isBotOpened ? 'scale-0 opacity-0' : 'scale-100 opacity-100') +
+            (props.isBotOpened() ? 'scale-0 opacity-0' : 'scale-100 opacity-100') +
             (props.size === 'large' ? ' w-9 h-9' : ' w-7 h-7')
           }
           alt="Bubble button icon"
@@ -59,7 +59,7 @@ export const BubbleButton = (props: Props) => {
         style={{ fill: props.iconColor ?? 'white' }}
         class={
           `absolute duration-200 transition ` +
-          (props.isBotOpened ? 'scale-100 rotate-0 opacity-100' : 'scale-0 -rotate-180 opacity-0') +
+          (props.isBotOpened() ? 'scale-100 rotate-0 opacity-100' : 'scale-0 -rotate-180 opacity-0') +
           (props.size === 'large' ? ' w-9' : ' w-7')
         }
       >

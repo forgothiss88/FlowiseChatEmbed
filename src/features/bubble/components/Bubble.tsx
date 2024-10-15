@@ -59,9 +59,8 @@ export const BubbleBot = (props: BubbleProps & { getElement: () => HTMLElement }
         <Show when={isBotStarted()}>
           <Bot
             getElement={props.getElement}
-            badgeBackgroundColor={bubbleProps.theme?.chatWindow?.backgroundColor}
-            bubbleButtonColor={bubbleProps.theme?.button?.bubbleButtonColor ?? defaultButtonColor}
             topbarColor={bubbleProps.theme?.button?.topbarColor ?? defaultButtonColor}
+            bubbleButtonColor={bubbleProps.theme?.button?.bubbleButtonColor ?? defaultButtonColor}
             bubbleTextColor={bubbleProps.theme?.button?.iconColor ?? defaultIconColor}
             title={bubbleProps.theme?.chatWindow?.title}
             titleColor={bubbleProps.theme?.chatWindow?.titleColor}
@@ -73,7 +72,6 @@ export const BubbleBot = (props: BubbleProps & { getElement: () => HTMLElement }
             userMessage={bubbleProps.theme?.chatWindow?.userMessage}
             fontSize={bubbleProps.theme?.chatWindow?.fontSize}
             chatflowid={props.chatflowid}
-            chatflowConfig={props.chatflowConfig}
             apiUrl={props.apiUrl}
             starterPrompts={props.starterPrompts || {}}
             creatorName={props.creatorName}

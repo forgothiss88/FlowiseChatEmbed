@@ -1,12 +1,10 @@
-import { Bot, BotProps } from '@/components/Bot';
-import { BubbleParams } from '@/features/bubble/types';
+import { Bot } from '@/components/Bot';
+import { FullProps } from '@/components/props';
 import { Show, createSignal, onMount } from 'solid-js';
 import styles from '../../../assets/index.css';
 
 const defaultButtonColor = '#3B81F6';
 const defaultIconColor = 'white';
-
-export type FullProps = BotProps & BubbleParams;
 
 export const FullBot = (props: FullProps & { getElement: () => HTMLElement }) => {
   const [isBotDisplayed, setIsBotDisplayed] = createSignal(false);
@@ -27,7 +25,6 @@ export const FullBot = (props: FullProps & { getElement: () => HTMLElement }) =>
         >
           <Bot
             getElement={props.getElement}
-            badgeBackgroundColor={props.theme?.chatWindow?.backgroundColor}
             bubbleButtonColor={props.theme?.button?.bubbleButtonColor ?? defaultButtonColor}
             topbarColor={props.theme?.button?.topbarColor ?? defaultButtonColor}
             bubbleTextColor={props.theme?.button?.iconColor ?? defaultIconColor}
@@ -41,7 +38,6 @@ export const FullBot = (props: FullProps & { getElement: () => HTMLElement }) =>
             userMessage={props.theme?.chatWindow?.userMessage}
             fontSize={props.theme?.chatWindow?.fontSize}
             chatflowid={props.chatflowid}
-            chatflowConfig={props.chatflowConfig}
             apiUrl={props.apiUrl}
             isFullPage={true}
             starterPrompts={props.starterPrompts || {}}

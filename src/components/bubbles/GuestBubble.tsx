@@ -25,7 +25,7 @@ export const GuestBubble = (props: Props) => {
   });
 
   return (
-    <div class="flex justify-end items-end guest-container text-roboto">
+    <div class="flex justify-end items-end guest-container text-poppins">
       <span
         ref={userMessageEl}
         class="p-3 rounded-2xl rounded-tr-none whitespace-pre-wrap max-w-full chatbot-guest-bubble text-sm font-light"
