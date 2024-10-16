@@ -23,6 +23,7 @@
   "license": "MIT",
   "dependencies": {
     "@microsoft/fetch-event-source": "^2.0.1",
+    "@sentry/rollup-plugin": "^2.22.5",
     "@sentry/solid": "^8.34.0",
     "@ts-stack/markdown": "^1.4.0",
     "lodash": "^4.17.21",

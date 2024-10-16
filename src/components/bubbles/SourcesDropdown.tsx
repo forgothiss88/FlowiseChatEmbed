@@ -59,32 +59,23 @@ const SourceCard = (props: { index: number; faviconUrl?: string; source: SourceC
     article: () => urlToDomain(url),
   };
   return (
-    <a
-      class="bg-white rounded-lg p-4 max-w-sm shadow-sm border w-full flex-1"
-      href={url}
-      target="_blank"
-      role="menuitem"
-      tabindex="-1"
-      id={'menu-item-' + props.index}
-    >
-      <div class="flex flex-col w-full">
-        <p
-          class="text-sm font-medium text-gray-900 grid"
-          style={{
-            display: '-webkit-box',
-            '-webkit-line-clamp': 2,
-            '-webkit-box-orient': 'vertical',
-            overflow: 'hidden',
-            'text-overflow': 'ellipsis',
-            height: '2lh',
-          }}
-        >
-          {props.source.metadata?.title || props.source.metadata?.caption}
-        </p>
-        <div class="w-full inline-flex self-stretch items-start pt-2">
-          {kindToIcon[props.source.metadata.kind]()}
-          <p class="pl-1 text-xs font-light text-gray-600 my-auto overflow-x-hidden">{sourceMap[props.source.metadata.kind]()}</p>
-        </div>
+    <a class="bg-white rounded-lg p-4 shadow-sm border flex flex-col w-full" href={url} target="_blank">
+      <p
+        class="text-sm font-medium text-gray-900 grid"
+        style={{
+          display: '-webkit-box',
+          '-webkit-line-clamp': 2,
+          '-webkit-box-orient': 'vertical',
+          overflow: 'hidden',
+          'text-overflow': 'ellipsis',
+          height: '2lh',
+        }}
+      >
+        {props.source.metadata?.title || props.source.metadata?.caption}
+      </p>
+      <div class="w-full inline-flex self-stretch items-start pt-2">
+        {kindToIcon[props.source.metadata.kind]()}
+        <p class="pl-1 text-xs font-light text-gray-600 my-auto overflow-x-hidden">{sourceMap[props.source.metadata.kind]()}</p>
       </div>
     </a>
   );
@@ -95,8 +86,8 @@ export const SourcesDropdown = (props: { sources: SourceContent[]; faviconUrl?: 
 
   return (
     <Show when={props.sources.length > 0}>
-      <div class="relative inline-block w-full bg-gray-100 rounded-md">
-        <button role="button" tabIndex={2} class="inline-flex w-full px-2 py-1 text-sm font-medium" onClick={() => setIsOpen(!isOpen())}>
+      <div class="inline-block w-full bg-gray-100 rounded-md">
+        <button tabIndex={2} class="inline-flex w-full px-2 py-1 text-sm font-medium" onClick={() => setIsOpen(!isOpen())}>
           <div class="w-4 h-4 my-auto">
             <Hamburger />
           </div>
@@ -108,21 +99,19 @@ export const SourcesDropdown = (props: { sources: SourceContent[]; faviconUrl?: 
         </button>
         <Show when={props.sources.length > 0}>
           <div
-            tabIndex={-1}
-            role="menu"
-            class="dropdown-content menu rounded-md z-10 self-center transition overflow-auto no-scrollbar-container"
+            class="rounded-md z-10 self-center transition overflow-auto no-scrollbar-container"
             classList={{ hidden: !isOpen(), 'ease-out': isOpen(), 'duration-100': isOpen(), 'ease-in': !isOpen(), 'duration-75': !isOpen() }}
             onFocusOut={() => setIsOpen(false)}
           >
-            <div class="no-scrollbar-container inline-flex">
+            <ul class="no-scrollbar-container inline-flex">
               <For each={props.sources}>
                 {(source, index) => (
-                  <li class="mr-2" style={{ width: '12rem' }}>
+                  <li class="mx-2 mb-2 w-40">
                     <SourceCard index={index()} source={source} faviconUrl={props.faviconUrl}></SourceCard>
                   </li>
                 )}
               </For>
-            </div>
+            </ul>
           </div>
         </Show>
       </div>

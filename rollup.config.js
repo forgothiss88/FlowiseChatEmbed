@@ -3,6 +3,7 @@ import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
 import terser from '@rollup/plugin-terser';
 import typescript from '@rollup/plugin-typescript';
+import { sentryRollupPlugin } from '@sentry/rollup-plugin';
 import autoprefixer from 'autoprefixer';
 import livereload from 'rollup-plugin-livereload';
 import postcss from 'rollup-plugin-postcss';
@@ -60,6 +61,11 @@ const indexConfig = {
     terser({ output: { comments: false } }),
     // If you want to see the live app
     ...(serveFiles ? servePlugins() : []),
+    sentryRollupPlugin({
+      authToken: process.env.SENTRY_AUTH_TOKEN,
+      org: 'twini-srl',
+      project: 'chatbot-fe',
+    }),
   ],
 };
 
@@ -71,42 +77,6 @@ const configs = [
       sourcemap: true,
       file: 'dist/vironpopup.js',
       format: 'es',
-    },
-  },
-  {
-    ...indexConfig,
-    input: './src/vironfull.tsx',
-    output: {
-      sourcemap: true,
-      file: 'dist/vironfull.js',
-      format: 'es',
-    },
-  },
-  {
-    ...indexConfig,
-    input: './src/glowipopup.tsx',
-    output: {
-      sourcemap: true,
-      file: 'dist/glowipopup.js',
-      format: 'es',
-    },
-  },
-  {
-    ...indexConfig,
-    input: './src/web.ts',
-    output: {
-      sourcemap: true,
-      file: 'dist/web.es.js',
-      format: 'es',
-    },
-  },
-  {
-    ...indexConfig,
-    input: './src/web.ts',
-    output: {
-      sourcemap: true,
-      file: 'dist/web.cjs.js',
-      format: 'cjs',
     },
   },
 ];
