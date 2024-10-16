@@ -118,12 +118,12 @@ export const Bot = (props: BotProps) => {
   const [sourcePopupSrc, setSourcePopupSrc] = createSignal({});
 
   const [lastBotResponse, setLastBotResponse] = createSignal<MessageType | null>(null);
-  const [nextQuestions, setNextQuestions] = createSignal<string[]>([]);
+  const [nextQuestions, setNextQuestions] = createSignal<string[]>([...props.starterPrompts.prompts]);
   const [messages, setMessages] = createSignal<MessageType[]>(
     [
       {
-        message: props.welcomeMessage ?? defaultWelcomeMessage,
         type: 'apiMessage',
+        message: props.welcomeMessage ?? defaultWelcomeMessage,
         nextQuestions: [...props.starterPrompts.prompts],
       },
     ],
@@ -300,6 +300,7 @@ export const Bot = (props: BotProps) => {
         suggestedProduct: suggestedProducts[0],
         sourceProducts: [],
         sourceContents: sourceContents,
+        nextQuestions: nextQuestions(),
       });
     } else if (suggestedProducts?.length == 4) {
       setLastBotResponse({
@@ -307,6 +308,7 @@ export const Bot = (props: BotProps) => {
         suggestedProduct: undefined,
         sourceProducts: suggestedProducts,
         sourceContents: sourceContents,
+        nextQuestions: nextQuestions(),
       });
     } else {
       setLastBotResponse({
@@ -314,6 +316,7 @@ export const Bot = (props: BotProps) => {
         suggestedProduct: undefined,
         sourceProducts: [],
         sourceContents: sourceContents,
+        nextQuestions: nextQuestions(),
       });
     }
 
@@ -352,11 +355,14 @@ export const Bot = (props: BotProps) => {
       });
     }
     const localChatsData = localStorage.getItem(`${props.chatflowid}_EXTERNAL`);
-    if (localChatsData) {
+    if (localChatsData != null) {
       const localChats: { chatHistory: MessageType[]; chatRef: string } = JSON.parse(localChatsData);
+      console.log('Restoring chats with chatRef', localChats.chatRef);
       setChatRef(localChats.chatRef);
       setMessages([...localChats.chatHistory]);
       setNextQuestions(localChats.chatHistory[localChats.chatHistory.length - 1].nextQuestions ?? []);
+    } else {
+      setChatRef(uuidv4());
     }
 
     // Scroll to bottom on first render if there are messages

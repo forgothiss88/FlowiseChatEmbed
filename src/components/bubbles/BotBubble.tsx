@@ -23,9 +23,6 @@ Marked.setOptions({ isNoP: true });
 export const BotBubble = (props: Props) => {
   let msgRef: HTMLDivElement | undefined;
 
-  console.debug('BotBubble', props);
-  console.debug('BotBubble Message', props.getMessage());
-
   return (
     <div class="flex flex-row justify-start items-start host-container text-poppins w-11/12">
       <div
