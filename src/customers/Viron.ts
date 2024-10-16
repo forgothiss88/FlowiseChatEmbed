@@ -26,6 +26,7 @@ export const vironProps = (): FullProps => {
   return {
     apiUrl: "http://localhost:8000/twini-stream/viron-agents",
     creatorName: 'viron',
+    chatflowid: 'viron',
     starterPrompts: {
       prompts: ["What's special about the materials used?", 'Can you tell me more about the fit?', 'Are they good for a trip?'],
       textColor: 'white',
@@ -66,8 +67,8 @@ export const vironProps = (): FullProps => {
           faviconUrl: '/public/avatars/viron.png',
         },
         userMessage: {
-          backgroundColor: brandColors.secondary,
-          textColor: brandColors.secondaryTextColor,
+          backgroundColor: brandColors.primary,
+          textColor: brandColors.primaryTextColor,
         },
       },
     },
