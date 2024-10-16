@@ -7,7 +7,7 @@ const ProductCard = (props: { isPrimary: boolean; product: ProductMetadata; onCl
     <div>
       <img class="w-full rounded-2xl aspect-auto object-cover bg-white animate-fade-in" src={props.product.thumbnail_url} alt="" />
       <p class="text-xs font-normal text-start p-1">{props.product.name}</p>
-      <p class="text-base font-normal text-start p-1">{Math.round(props.products[currentSlide()].metadata.price)}€</p>
+      <p class="text-base font-normal text-start p-1">{Math.round(props.product.price)}€</p>
     </div>
   ) : (
     <div class="content-center h-full" onClick={props.onClick}>
