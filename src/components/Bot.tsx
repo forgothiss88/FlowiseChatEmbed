@@ -67,6 +67,10 @@ export type SuggestionGeneratedEvent = ServerSentEvent & {
   suggestion_slug: string;
 };
 
+export type FourSuggestionsGeneratedEvent = ServerSentEvent & {
+  suggestion_slugs: string[];
+};
+
 export type NextQuestionsGeneratedEvent = ServerSentEvent & {
   questions: string[];
 };
@@ -109,12 +113,12 @@ export const Bot = (props: BotProps) => {
   let chatContainer: HTMLDivElement | undefined;
   let textareaRef: HTMLTextAreaElement | undefined;
 
-  const [userInput, setUserInput] = createSignal('');
-  const [sourcePopupOpen, setSourcePopupOpen] = createSignal(false);
+  const [userInput, setUserInput] = createSignal<string>('');
+  const [sourcePopupOpen, setSourcePopupOpen] = createSignal<boolean>(false);
   const [sourcePopupSrc, setSourcePopupSrc] = createSignal({});
 
-  const [lastBotResponse, setLastMessage] = createSignal<MessageType | null>(null);
-  const [nextQuestions, setNextQuestions] = createSignal([...props.starterPrompts.prompts]);
+  const [lastBotResponse, setLastBotResponse] = createSignal<MessageType | null>(null);
+  const [nextQuestions, setNextQuestions] = createSignal<string[]>([]);
   const [messages, setMessages] = createSignal<MessageType[]>(
     [
       {
@@ -158,9 +162,9 @@ export const Bot = (props: BotProps) => {
   const moveLastMessageToMessages = () => {
     const msg = lastBotResponse();
     console.log('moveLastMessageToMessages', msg);
-    if (!msg) return;
-    setLastMessage(null);
+    if (msg == null) return;
     setMessages([...messages(), msg]);
+    setLastBotResponse(null);
   };
 
   const addMessage = (msg: MessageType) => {
@@ -187,9 +191,10 @@ export const Bot = (props: BotProps) => {
       return;
     }
 
-    setUserInput(value);
     setWaitingForResponse(true);
     setBusy(true);
+    setUserInput(value);
+    setNextQuestions([]);
     scrollToBottom();
     addMessage({ message: value, type: 'userMessage' });
     saveChatToLocalStorage();
@@ -212,7 +217,7 @@ export const Bot = (props: BotProps) => {
 
     let sourceProducts: SourceProduct[] = [];
     let sourceContents: SourceContent[] = [];
-    let suggestedProductSlug: string | null = null;
+    let suggestedProductSlugs: string[] | null = null;
 
     await fetchEventSource(`${config().apiUrl}/stream`, {
       signal: abortCtrl.signal,
@@ -228,6 +233,7 @@ export const Bot = (props: BotProps) => {
       onerror: (err) => {
         console.error('EventSource error:', err);
         abortCtrl.abort();
+        throw err;
       },
       onopen: async (response) => {
         console.log('EventSource opened', response);
@@ -240,62 +246,82 @@ export const Bot = (props: BotProps) => {
           abortCtrl.abort();
         } else if (ev.event === 'suggestion_generated') {
           const data: SuggestionGeneratedEvent = JSON.parse(ev.data);
-          suggestedProductSlug = data['suggestion_slug'];
+          suggestedProductSlugs = [data['suggestion_slug']];
+        } else if (ev.event === 'four_suggestions_generated') {
+          const data: FourSuggestionsGeneratedEvent = JSON.parse(ev.data);
+          suggestedProductSlugs = data['suggestion_slugs'];
         } else if (ev.event === 'incremental_message_streamed') {
+          setWaitingForResponse(false);
           const data: IncrementalAnswerEvent = JSON.parse(ev.data);
-          if ((data.message ?? '').trim().length > 0) {
-            setLastMessage({ type: 'apiMessage', message: data.message });
-          }
+          setLastBotResponse({ type: 'apiMessage', message: data.message });
         } else if (ev.event === 'next_questions_generated') {
           const data: NextQuestionsGeneratedEvent = JSON.parse(ev.data);
-          setLastMessage({
-            ...(lastBotResponse() as MessageType),
-            nextQuestions: data.questions,
+          setNextQuestions(data.questions);
+        } else if (ev.event === 'message_context_streamed') {
+          const data: ContextEvent = JSON.parse(ev.data);
+          data.context.forEach((item) => {
+            if (item.metadata.kind === 'product') {
+              sourceProducts.push(item as SourceProduct);
+            } else if (['youtube-video', 'ig-video', 'tiktok-video', 'article'].includes(item.metadata.kind)) {
+              sourceContents.push(item as SourceContent);
+            }
           });
         } else if (ev.event === 'data') {
-          const data: ContextEvent | AnswerEvent = JSON.parse(ev.data);
+          const data: AnswerEvent = JSON.parse(ev.data);
           if (data.answer) {
             setWaitingForResponse(false);
-            const streamingAnswer = (lastBotResponse()?.message || '') + data.answer;
-            setLastMessage({ type: 'apiMessage', message: streamingAnswer });
-          } else if (data.context) {
-            const ctx = data as ContextEvent;
-            ctx.context.forEach((item) => {
-              if (item.metadata.kind === 'product') {
-                sourceProducts.push(item as SourceProduct);
-              } else if (['youtube-video', 'ig-video', 'tiktok-video', 'article'].includes(item.metadata.kind)) {
-                sourceContents.push(item as SourceContent);
-              }
-            });
-            setLastMessage({
-              ...(lastBotResponse() as MessageType),
-              sourceProducts: sourceProducts,
-              sourceContents: sourceContents,
-            });
+            const response = lastBotResponse() as MessageType;
+            const streamingAnswer = (response?.message || '') + data.answer;
+            setLastBotResponse({ ...response, type: 'apiMessage', message: streamingAnswer });
           }
         }
       },
-    }).catch((err) => {
-      console.error('Network error:', err);
-    });
+    }).catch((err) => {});
 
-    setWaitingForResponse(false);
+    if (abortCtrl.signal.aborted) {
+      console.log('abortCtrl', abortCtrl);
+      setUserInput('');
+      scrollToBottom();
+      setLastBotResponse(null);
+      setWaitingForResponse(false);
+      setBusy(false);
+    }
 
-    let suggestedProduct = undefined;
-    if (suggestedProductSlug) {
-      suggestedProduct = sourceProducts.find((product) => product.metadata.slug === suggestedProductSlug);
-      if (suggestedProduct == null) {
-        console.error('Suggested product with slug ', suggestedProductSlug, 'not found among ', sourceProducts);
+    let suggestedProducts: SourceProduct[] | undefined = undefined;
+    if (suggestedProductSlugs != null) {
+      suggestedProducts = sourceProducts.filter((product) => suggestedProductSlugs?.includes(product.metadata.slug));
+      if (suggestedProducts == null) {
+        console.error('Suggested product with slug ', suggestedProductSlugs, 'not found among ', sourceProducts);
       }
     }
-    setLastMessage({
-      ...(lastBotResponse() as MessageType),
-      suggestedProduct: suggestedProduct,
-    });
+    if (suggestedProducts?.length == 1) {
+      setLastBotResponse({
+        ...(lastBotResponse() as MessageType),
+        suggestedProduct: suggestedProducts[0],
+        sourceProducts: [],
+        sourceContents: sourceContents,
+      });
+    } else if (suggestedProducts?.length == 4) {
+      setLastBotResponse({
+        ...(lastBotResponse() as MessageType),
+        suggestedProduct: undefined,
+        sourceProducts: suggestedProducts,
+        sourceContents: sourceContents,
+      });
+    } else {
+      setLastBotResponse({
+        ...(lastBotResponse() as MessageType),
+        suggestedProduct: undefined,
+        sourceProducts: [],
+        sourceContents: sourceContents,
+      });
+    }
+
     moveLastMessageToMessages();
     saveChatToLocalStorage();
     setUserInput('');
     scrollToBottom();
+    setWaitingForResponse(false);
     setBusy(false);
   };
 
@@ -307,8 +333,10 @@ export const Bot = (props: BotProps) => {
         {
           message: props.welcomeMessage ?? defaultWelcomeMessage,
           type: 'apiMessage',
+          nextQuestions: [...props.starterPrompts.prompts],
         },
       ]);
+      setNextQuestions([...(props.starterPrompts.prompts ?? [])]);
       saveChatToLocalStorage();
     } catch (error: any) {
       const errorData = error.response.data || `${error.response.status}: ${error.response.statusText}`;
@@ -328,6 +356,7 @@ export const Bot = (props: BotProps) => {
       const localChats: { chatHistory: MessageType[]; chatRef: string } = JSON.parse(localChatsData);
       setChatRef(localChats.chatRef);
       setMessages([...localChats.chatHistory]);
+      setNextQuestions(localChats.chatHistory[localChats.chatHistory.length - 1].nextQuestions ?? []);
     }
 
     // Scroll to bottom on first render if there are messages
@@ -365,7 +394,7 @@ export const Bot = (props: BotProps) => {
                   <Avatar src={props.titleAvatarSrc} classList={['h-1/4', 'w-1/4', 'shadow-lg', 'shadow-black']} />
                 </div>
                 <For each={messages()}>
-                  {(message, index) => {
+                  {(message, _) => {
                     return (
                       <div class="w-full my-4">
                         {message.type === 'userMessage' && (
@@ -380,11 +409,8 @@ export const Bot = (props: BotProps) => {
                         {message.type === 'apiMessage' && (
                           <BotBubble
                             getMessage={() => message}
-                            backgroundColor={props.botMessage?.backgroundColor || 'white'}
+                            backgroundColor={props.botMessage?.backgroundColor || 'black'}
                             textColor={props.botMessage?.textColor}
-                            showAvatar={props.botMessage?.showAvatar}
-                            avatarSrc={props.botMessage?.avatarSrc}
-                            avatarPadding={props.botMessage?.avatarPadding}
                             faviconUrl={props.botMessage?.faviconUrl}
                             sourceProducts={message.sourceProducts}
                             sourceContent={message.sourceContents}
@@ -405,11 +431,8 @@ export const Bot = (props: BotProps) => {
                 <Show when={!isWaitingForResponse() && lastBotResponse()?.message}>
                   <BotBubble
                     getMessage={lastBotResponse as Accessor<MessageType>}
-                    backgroundColor={props.botMessage?.backgroundColor || 'white'}
+                    backgroundColor={props.botMessage?.backgroundColor || 'black'}
                     textColor={props.botMessage?.textColor}
-                    showAvatar={props.botMessage?.showAvatar}
-                    avatarSrc={props.botMessage?.avatarSrc}
-                    avatarPadding={props.botMessage?.avatarPadding}
                     faviconUrl={props.botMessage?.faviconUrl}
                     sourceProducts={lastBotResponse()?.sourceProducts}
                     sourceContent={lastBotResponse()?.sourceContents}
@@ -421,18 +444,16 @@ export const Bot = (props: BotProps) => {
                   />
                 </Show>
                 <Show when={!isBusy()}>
-                  {messages()[messages().length - 1]?.nextQuestions != null && (
-                    <For each={messages()[messages().length - 1]?.nextQuestions}>
-                      {(prompt, _) => (
-                        <HintBubble
-                          actionColor={props.starterPrompts.actionColor}
-                          message={prompt}
-                          textColor={props.starterPrompts.textColor}
-                          onClick={() => handleSubmit(prompt)}
-                        />
-                      )}
-                    </For>
-                  )}
+                  <For each={nextQuestions()}>
+                    {(prompt, _) => (
+                      <HintBubble
+                        actionColor={props.starterPrompts.actionColor}
+                        message={prompt}
+                        textColor={props.starterPrompts.textColor}
+                        onClick={() => handleSubmit(prompt)}
+                      />
+                    )}
+                  </For>
                 </Show>
               </div>
               <div class="w-full" style={{ display: 'block', height: bottomSpacerHeight() + 'px' }}></div>

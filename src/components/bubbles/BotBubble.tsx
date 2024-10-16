@@ -2,15 +2,10 @@ import { Marked } from '@ts-stack/markdown';
 import { Show } from 'solid-js';
 import { MessageType, SourceContent, SourceProduct } from '../Bot';
 import { ProductCarousel, PurchaseButtonAspect, SingleProductShowcase } from '../Carousel';
-import { Avatar } from '../avatars/Avatar';
 import { SourcesDropdown } from './SourcesDropdown';
 
 type Props = {
   getMessage: () => MessageType;
-  fileAnnotations?: any;
-  showAvatar?: boolean;
-  avatarSrc?: string;
-  avatarPadding?: string;
   backgroundColor: string;
   textColor?: string;
   sourceProducts?: SourceProduct[];
@@ -29,12 +24,10 @@ export const BotBubble = (props: Props) => {
   let msgRef: HTMLDivElement | undefined;
 
   console.debug('BotBubble', props);
+  console.debug('BotBubble Message', props.getMessage());
 
   return (
     <div class="flex flex-row justify-start items-start host-container text-poppins w-11/12">
-      <Show when={props.showAvatar}>
-        <Avatar src={props.avatarSrc} padding={props.avatarPadding} classList={['h-10', 'w-10', 'bg-transparent', 'mr-2']} isImgRounded={true} />
-      </Show>
       <div
         class="overflow-hidden whitespace-pre-wrap rounded-2xl rounded-tl-none chatbot-host-bubble text-sm font-light max-w-full"
         data-testid="host-bubble"

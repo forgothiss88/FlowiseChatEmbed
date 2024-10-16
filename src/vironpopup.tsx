@@ -1,62 +1,19 @@
+import * as Sentry from '@sentry/solid';
 import { render } from 'solid-js/web';
-import { FullProps } from './components/props';
-import { DefaultBotProps, vironProps } from './customers/Viron';
+import { vironProps } from './customers/Viron';
 import { BubbleBot } from './features/bubble';
 
-const getAllProps = (props: DefaultBotProps): FullProps => {
-  return {
-    creatorName: props.creatorName,
-    chatflowid: `${props.creatorName}-twini`,
-    apiUrl: props.apiUrl,
-    starterPrompts: props.starterPrompts,
-    chatflowConfig: {},
-    theme: {
-      button: {
-        right: props.theme?.button?.right || 20,
-        bottom: props.theme?.button?.bottom || 20,
-        size: props.theme?.button?.size || 'medium',
-        iconColor: props.theme?.button?.iconColor || 'white',
-        bubbleButtonColor: props.theme?.button?.bubbleButtonColor || '#050a30',
-        topbarColor: props.theme?.button?.topbarColor,
-        customIconSrc: props.theme?.button?.customIconSrc || '',
-      },
-      chatWindow: {
-        welcomeMessage: props.theme?.chatWindow?.welcomeMessage,
-        backgroundColor: props.theme?.chatWindow?.backgroundColor,
-        fontSize: props.theme?.chatWindow?.fontSize || 16,
-        poweredByTextColor: props.theme?.chatWindow?.poweredByTextColor || '#283E4D',
-        title: props.theme?.chatWindow?.title || '',
-        titleAvatarSrc: props.theme?.chatWindow?.titleAvatarSrc || props.titleAvatarSrc,
-        titleColor: props.theme?.chatWindow?.titleColor || '#ffffff',
-        botMessage: {
-          backgroundColor: props.theme?.chatWindow?.botMessage?.backgroundColor || '#ffffff',
-          textColor: props.theme?.chatWindow?.botMessage?.textColor || '#283E4D',
-          avatarSrc: props.theme?.chatWindow?.botMessage?.avatarSrc || props.avatarSrc,
-          avatarPadding: props.theme?.chatWindow?.botMessage?.avatarPadding || '8px',
-          showAvatar: props.theme?.chatWindow?.botMessage?.showAvatar,
-          enableMultipricing: props.theme?.chatWindow?.botMessage?.enableMultipricing || false,
-          purchaseButtonText: props.theme?.chatWindow?.botMessage?.purchaseButtonText || 'Buy now',
-          purchaseButtonBackgroundColor: props.theme?.chatWindow?.botMessage?.purchaseButtonBackgroundColor || '#283E4D',
-          purchaseButtonTextColor: props.theme?.chatWindow?.botMessage?.purchaseButtonTextColor || '#ffffff',
-          faviconUrl: props.theme?.chatWindow?.botMessage?.faviconUrl || undefined,
-        },
-        userMessage: {
-          backgroundColor: props.theme?.chatWindow?.userMessage?.backgroundColor || '#202124',
-          textColor: props.theme?.chatWindow?.userMessage?.textColor || '#ffffff',
-        },
-        textInput: {
-          backgroundColor: props.theme?.chatWindow?.textInput?.backgroundColor || '#ffffff',
-          inputBackgroundColor: props.theme?.chatWindow?.textInput?.inputBackgroundColor || undefined,
-          textColor: props.theme?.chatWindow?.textInput?.textColor || '#283E4D',
-          placeholder: props.theme?.chatWindow?.textInput?.placeholder || 'Ask me (almost) anything...',
-          sendButtonColor: props.theme?.chatWindow?.textInput?.sendButtonColor || '#7f7970',
-          resetButtonColor: props.theme?.chatWindow?.textInput?.resetButtonColor || '#7f7970',
-        },
-        firstMessage: props.theme?.chatWindow?.firstMessage || {},
-      },
-    },
-  };
-};
+Sentry.init({
+  dsn: 'https://0e923b8b2f8f5f284443d82e730e5fd8@o4508080401088512.ingest.de.sentry.io/4508132557717584',
+  integrations: [Sentry.browserTracingIntegration(), Sentry.replayIntegration()],
+  // Tracing
+  tracesSampleRate: 1.0, //  Capture 100% of the transactions
+  // Set 'tracePropagationTargets' to control for which URLs distributed tracing should be enabled
+  tracePropagationTargets: ['localhost', /^https:\/\/twini-be-production\.up\.railway\.app/],
+  // Session Replay
+  replaysSessionSampleRate: 1.0, // This sets the sample rate at 10%. You may want to change it to 100% while in development and then sample at a lower rate in production.
+  replaysOnErrorSampleRate: 1.0, // If you're not already sampling the entire session, change the sample rate to 100% when sampling sessions where errors occur.
+});
 
 render(() => {
   const getChatbot = (): HTMLElement => document.getElementsByTagName('twini-chatbot')[0];
