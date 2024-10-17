@@ -64,7 +64,7 @@ export const Bottombar = (props: Props) => {
           }}
           onKeyDown={submitWhenEnter}
         >
-          <DeleteButton color={props.resetButtonColor} type="button" isDisabled={!props.isDeleteEnabled} onClick={props.clearChat} />
+          <DeleteButton color={props.resetButtonColor} type="reset" isDisabled={!props.isDeleteEnabled} onClick={props.clearChat} />
           <div class="mr-2 w-full">
             <AutoGrowTextArea
               ref={props.ref}

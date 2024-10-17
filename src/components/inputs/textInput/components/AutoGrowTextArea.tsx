@@ -53,7 +53,7 @@ export const AutoGrowTextArea = (props: Props) => {
       style={{ 'background-color': props.inputBackgroundColor, 'border-color': props.inputBorderColor }}
     >
       {textarea}
-      <div class="my-auto">
+      <div class="my-auto py-2 pr-3">
         <SendButton
           color={props.sendButtonColor}
           type="button"

@@ -11,7 +11,7 @@ export type DefaultBotProps = {
   theme: BubbleTheme;
 };
 
-const brandColors = {
+export const brandColors = {
   primary: 'black',
   primaryTextColor: 'white',
   secondary: 'white',

@@ -79,6 +79,15 @@ const configs = [
       format: 'es',
     },
   },
+  {
+    ...indexConfig,
+    input: './src/viron_chat_with_product.tsx',
+    output: {
+      sourcemap: true,
+      file: 'dist/viron_chat_with_product.js',
+      format: 'es',
+    },
+  },
 ];
 
 export default configs;
