@@ -8,7 +8,6 @@ type Props = {
 };
 
 export const HintBubble = (props: Props) => {
-  console.log('HintBubble', props);
   return (
     <div class="flex justify-end guest-container py-1 w-full">
       <button

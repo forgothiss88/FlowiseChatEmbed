@@ -15,7 +15,6 @@ const defaultTextColor = '#ffffff';
 Marked.setOptions({ isNoP: true });
 
 export const GuestBubble = (props: Props) => {
-  console.log('GuestBubble', props);
   let userMessageEl: HTMLDivElement | undefined;
 
   onMount(() => {
