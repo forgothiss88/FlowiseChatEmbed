@@ -377,13 +377,7 @@ export const Bot = (props: BotProps) => {
             <XIcon color="black" width={16} height={16}></XIcon>
           </div>
           <div role="presentation" tabindex="0" class="flex h-full flex-col focus-visible:outline-0 overflow-hidden">
-            <div
-              ref={chatContainer}
-              class="flex-1 overflow-auto scroll-smooth no-scrollbar-container"
-              style={{
-                'min-height': '100vh',
-              }}
-            >
+            <div ref={chatContainer} class="flex-1 overflow-auto scroll-smooth no-scrollbar-container">
               <div class="w-full h-16" style={{ display: 'block' }}></div>
               <div class="overflow-hidden px-3">
                 <div class="flex justify-center py-10">
