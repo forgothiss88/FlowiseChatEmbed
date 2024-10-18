@@ -1,9 +1,9 @@
 import { render } from 'solid-js/web';
-import { FullProps } from './components/props';
+import { FullBotProps } from './components/props';
 import { DefaultBotProps, glowiProps } from './customers/Glowi';
 import { BubbleBot } from './features/bubble';
 
-const getFullProps = (props: DefaultBotProps): FullProps => {
+const getFullProps = (props: DefaultBotProps): FullBotProps => {
   return {
     creatorName: props.creatorName,
     chatflowid: `${props.creatorName}-twini`,

@@ -1,7 +1,7 @@
 import { BotProps } from './components/Bot';
-import { FullProps } from './components/props';
+import { FullBotProps } from './components/props';
 
-export const initFull = (props: FullProps & { id?: string }) => {
+export const initFull = (props: FullBotProps & { id?: string }) => {
   const fullElement = props.id ? document.getElementById(props.id) : document.querySelector('flowise-fullchatbot');
   if (!fullElement) throw new Error('<flowise-fullchatbot> element not found.');
   Object.assign(fullElement, props);

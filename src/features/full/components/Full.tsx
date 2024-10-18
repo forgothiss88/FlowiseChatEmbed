@@ -1,12 +1,12 @@
 import { Bot } from '@/components/Bot';
-import { FullProps } from '@/components/props';
+import { FullBotProps } from '@/components/props';
 import { Show, createSignal, onMount } from 'solid-js';
 import styles from '../../../assets/index.css';
 
 const defaultButtonColor = '#3B81F6';
 const defaultIconColor = 'white';
 
-export const FullBot = (props: FullProps & { getElement: () => HTMLElement }) => {
+export const FullBot = (props: FullBotProps & { getElement: () => HTMLElement }) => {
   const [isBotDisplayed, setIsBotDisplayed] = createSignal(false);
 
   onMount(() => {

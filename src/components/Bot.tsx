@@ -10,7 +10,7 @@ import { BotBubble } from './bubbles/BotBubble';
 import { GuestBubble } from './bubbles/GuestBubble';
 import { HintBubble } from './bubbles/HintBubble';
 import { LoadingBubble } from './bubbles/LoadingBubble';
-import { XIcon } from './icons/Ics';
+import { XIcon } from './icons/XIcon';
 
 type messageType = 'apiMessage' | 'userMessage' | 'usermessagewaiting';
 
@@ -135,10 +135,6 @@ export const Bot = (props: BotProps) => {
 
   const [chatRef, setChatRef] = createSignal<string | null>(null);
 
-  const [config, setConfig] = createSignal({
-    apiUrl: props.apiUrl,
-  });
-
   const scrollToBottom = (timeout?: number) => {
     setTimeout(() => {
       if (props.isFullPage) window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
@@ -219,7 +215,7 @@ export const Bot = (props: BotProps) => {
     let sourceContents: SourceContent[] = [];
     let suggestedProductSlugs: string[] | null = null;
 
-    await fetchEventSource(`${config().apiUrl}/stream`, {
+    await fetchEventSource(`${props.apiUrl}/stream`, {
       signal: abortCtrl.signal,
       method: 'POST',
       body: JSON.stringify(body),
@@ -348,12 +344,6 @@ export const Bot = (props: BotProps) => {
   };
 
   onMount(async () => {
-    const apiUrl = props.getElement()?.getAttribute('data-twini-api-url');
-    if (apiUrl) {
-      setConfig({
-        apiUrl,
-      });
-    }
     const localChatsData = localStorage.getItem(`${props.chatflowid}_EXTERNAL`);
     if (localChatsData != null) {
       const localChats: { chatHistory: MessageType[]; chatRef: string } = JSON.parse(localChatsData);

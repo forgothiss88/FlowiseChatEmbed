@@ -1,4 +1,4 @@
-import { FullProps } from '@/components/props';
+import { FullBotProps } from '@/components/props';
 import { BubbleTheme } from '@/features/bubble/types';
 
 export type DefaultBotProps = {
@@ -22,7 +22,7 @@ export const brandColors = {
   actionSecondaryTextColor: 'white',
 }
 
-export const vironProps = (): FullProps => {
+export const vironProps = (): FullBotProps => {
   return {
     apiUrl: "http://localhost:8000/twini-stream/viron-agents",
     creatorName: 'viron',

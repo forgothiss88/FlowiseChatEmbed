@@ -1,19 +1,14 @@
-import { createSignal } from 'solid-js';
+import { Accessor, Setter } from 'solid-js';
 import styles from '../assets/index.css';
 import { SendButton } from './SendButton';
 export type Props = {
   textColor: string;
   backgroundColor: string;
+  isBotOpened: Accessor<boolean>;
+  setIsBotOpened: Setter<boolean>;
 };
 
 export const ChatWithProduct = (props: Props) => {
-  const [showChat, setShowChat] = createSignal(false);
-
-  const handleChatClick = () => {
-    setShowChat(true);
-    // Add any logic to start or continue the chat
-  };
-
   return (
     <div>
       <style>{styles}</style>
@@ -25,7 +20,7 @@ export const ChatWithProduct = (props: Props) => {
         </p>
         <button
           class="bg-white border w-full p-3 rounded-full rounded-bl-none flex flex-row items-center"
-          onClick={handleChatClick}
+          onClick={props.setIsBotOpened}
           style={{
             'background-color': props.backgroundColor,
             color: props.textColor,
@@ -35,7 +30,6 @@ export const ChatWithProduct = (props: Props) => {
           <span class="mr-auto">Continue this conversation...</span>
           <SendButton color={props.textColor} />
         </button>
-        {showChat() && <p>Chat window will be opened here...</p>}
       </div>
     </div>
   );
