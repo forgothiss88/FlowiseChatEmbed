@@ -1,5 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const defaultTheme = require('tailwindcss/defaultTheme');
+import defaultTheme from 'tailwindcss/defaultTheme';
 
 function rem2px(input, fontSize = 16) {
   if (input == null) {
@@ -28,7 +28,7 @@ function rem2px(input, fontSize = 16) {
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ['./src/**/*.{js,jsx,ts,tsx}'],
-  // important: '.twini-base',
+  important: '.twini-base',
   theme: {
     ...rem2px(defaultTheme),
     extend: {

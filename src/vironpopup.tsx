@@ -1,11 +1,11 @@
 import * as Sentry from '@sentry/solid';
 import { createSignal } from 'solid-js';
 import { render } from 'solid-js/web';
+import styles from './assets/index.css';
 import ChatWithProduct from './components/ChatWithProduct';
 import { ShopifyProduct } from './components/types/product';
 import { brandColors, vironProps } from './customers/Viron';
 import { BubbleBot } from './features/bubble';
-
 const getChatbot = (): HTMLElement => document.getElementsByTagName('twini-chatbot')[0];
 const cb = getChatbot();
 if (!cb) {
@@ -56,7 +56,7 @@ Sentry.init({
 render(
   () => (
     <>
-      <style>styles</style>
+      <style>{{ styles }}</style>
       <BubbleBot {...props} getElement={getChatbot} isBotOpened={isBotOpened} setIsBotOpened={setIsBotOpened} product={product} question={question} />
     </>
   ),
@@ -70,14 +70,17 @@ if (!chatWithProductWidget) {
 } else {
   render(() => {
     return (
-      <ChatWithProduct
-        isBotOpened={isBotOpened}
-        setIsBotOpened={setIsBotOpened}
-        textColor={brandColors.actionPrimary}
-        backgroundColor={brandColors.secondary}
-        product={product}
-        askQuestion={askQuestion}
-      />
+      <>
+        <style>{{ styles }}</style>
+        <ChatWithProduct
+          isBotOpened={isBotOpened}
+          setIsBotOpened={setIsBotOpened}
+          textColor={brandColors.actionPrimary}
+          backgroundColor={brandColors.secondary}
+          product={product}
+          askQuestion={askQuestion}
+        />
+      </>
     );
   }, chatWithProductWidget);
 }
