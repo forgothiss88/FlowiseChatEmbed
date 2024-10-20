@@ -36,48 +36,52 @@ const servePlugins = () => [
 
 console.log('serveFiles', serveFiles);
 
-const indexConfig = {
-  plugins: [
-    resolve({ extensions, browser: true }),
-    commonjs(),
-    babel({
-      babelHelpers: 'bundled',
-      exclude: 'node_modules/**',
-      presets: ['solid', '@babel/preset-typescript'],
-      extensions,
-    }),
-    postcss({
-      plugins: [autoprefixer(), tailwindcss()],
-      extract: false,
-      modules: false,
-      autoModules: false,
-      minimize: true,
-      inject: false,
-    }),
-    // typescript({ sourceMap: true, inlineSources: false, tsconfig: './tsconfig.json' }),
-    typescript({ inlineSources: false, tsconfig: './tsconfig.json' }),
-    sourcemaps(),
-    typescriptPaths({ preserveExtensions: true }),
-    terser({ output: { comments: false } }),
-    // If you want to see the live app
-    ...(serveFiles ? servePlugins() : []),
-    sentryRollupPlugin({
-      authToken: process.env.SENTRY_AUTH_TOKEN,
-      org: 'twini-srl',
-      project: 'chatbot-fe',
-    }),
-  ],
-};
+const pluginsConfig = (serveFiles) => [
+  resolve({ extensions, browser: true }),
+  commonjs(),
+  babel({
+    babelHelpers: 'bundled',
+    exclude: 'node_modules/**',
+    presets: ['solid', '@babel/preset-typescript'],
+    extensions,
+  }),
+  postcss({
+    include: ['src/**/*.css', 'src/**/*.scss'],
+    plugins: [autoprefixer(), tailwindcss({ config: './tailwind.config.js' })],
+    extract: true,
+  }),
+  typescript({ inlineSources: false, tsconfig: './tsconfig.json' }),
+  ...(serveFiles ? sourcemaps() : []),
+  typescriptPaths({ preserveExtensions: true }),
+  terser({ output: { comments: false } }),
+  // If you want to see the live app
+  ...(serveFiles ? servePlugins() : []),
+  sentryRollupPlugin({
+    authToken: process.env.SENTRY_AUTH_TOKEN,
+    org: 'twini-srl',
+    project: 'chatbot-fe',
+    disable: true,
+  }),
+];
 
 const configs = [
   {
-    ...indexConfig,
     input: './src/vironpopup.tsx',
     output: {
       sourcemap: true,
       file: 'dist/vironpopup.js',
       format: 'es',
     },
+    plugins: pluginsConfig(serveFiles),
+  },
+  {
+    input: './src/glowipopup.tsx',
+    output: {
+      sourcemap: true,
+      file: 'dist/glowipopup.js',
+      format: 'es',
+    },
+    plugins: pluginsConfig(serveFiles),
   },
 ];
 
