@@ -1,115 +1,28 @@
-import { BotMessageTheme, TextInputTheme, UserMessageTheme } from '@/features/bubble/types';
 import { Popup } from '@/features/popup';
 import { MessageBE, RunInput } from '@/queries/sendMessageQuery';
 import { fetchEventSource } from '@microsoft/fetch-event-source';
-import { Accessor, For, Show, createSignal, onMount } from 'solid-js';
+import { Accessor, For, Show, createEffect, createSignal, onMount } from 'solid-js';
 import { v4 as uuidv4 } from 'uuid';
-import { Bottombar } from './Bottombar';
 import { Avatar } from './avatars/Avatar';
+import { Bottombar } from './Bottombar';
 import { BotBubble } from './bubbles/BotBubble';
 import { GuestBubble } from './bubbles/GuestBubble';
 import { HintBubble } from './bubbles/HintBubble';
 import { LoadingBubble } from './bubbles/LoadingBubble';
 import { XIcon } from './icons/XIcon';
+import { BotProps, MessageType, messageType } from './types/botprops';
+import { SourceContent, SourceProduct } from './types/documents';
+import {
+  AnswerEvent,
+  ContextEvent,
+  FourSuggestionsGeneratedEvent,
+  IncrementalAnswerEvent,
+  MetadataEvent,
+  NextQuestionsGeneratedEvent,
+  SuggestionGeneratedEvent,
+} from './types/events';
 
-type messageType = 'apiMessage' | 'userMessage' | 'usermessagewaiting';
-
-export type ContentMetadata = {
-  kind: 'ig-video' | 'youtube-video' | 'tiktok-video' | 'article';
-  pk: number;
-  resource_url: string;
-  media_url: string;
-  subtitles: string;
-  title?: string;
-  caption?: string;
-};
-
-export type ProductMetadata = {
-  kind: 'product';
-  name: string;
-  slug: string;
-  price: string;
-  item_url: string;
-  thumbnail_url: string;
-};
-
-// bind K to be of type ProductMetadata or InstagramMetadata
-export type SourceDocument<K extends ProductMetadata | ContentMetadata> = {
-  page_content: string;
-  metadata: K;
-  type: 'Document';
-};
-
-export type SourceProduct = SourceDocument<ProductMetadata>;
-export type SourceContent = SourceDocument<ContentMetadata>;
-
-export type ContextEvent = {
-  context: SourceDocument<ProductMetadata | ContentMetadata>[]; // JSON string of source documents
-};
-
-export type AnswerEvent = {
-  answer: string;
-};
-
-export type MetadataEvent = {
-  run_id: string;
-};
-
-export type ServerSentEvent = {
-  event_name: string;
-};
-
-export type IncrementalAnswerEvent = ServerSentEvent & {
-  message: string;
-};
-
-export type SuggestionGeneratedEvent = ServerSentEvent & {
-  suggestion_slug: string;
-};
-
-export type FourSuggestionsGeneratedEvent = ServerSentEvent & {
-  suggestion_slugs: string[];
-};
-
-export type NextQuestionsGeneratedEvent = ServerSentEvent & {
-  questions: string[];
-};
-
-export type MessageType = {
-  message: string;
-  type: messageType;
-  sourceProducts?: SourceProduct[];
-  sourceContents?: SourceContent[];
-  suggestedProduct?: SourceProduct;
-  nextQuestions?: string[];
-};
-
-export type StarterPromptsType = {
-  prompts: string[];
-  textColor: string;
-  actionColor: string;
-};
-
-export type BotProps = {
-  creatorName: string;
-  chatflowid: string;
-  apiUrl: string;
-  starterPrompts: StarterPromptsType;
-  welcomeMessage: string;
-  botMessage: BotMessageTheme;
-  userMessage: UserMessageTheme;
-  textInput: TextInputTheme;
-  poweredByTextColor?: string;
-  titleAvatarSrc?: string;
-  fontSize?: number;
-  isFullPage?: boolean;
-  getElement: () => HTMLElement;
-  closeBot: () => void;
-};
-
-const defaultWelcomeMessage = 'Hi there! How can I help?';
-
-export const Bot = (props: BotProps) => {
+export const Bot = (props: BotProps & { question: Accessor<string>; welcomeMessage: string }) => {
   let chatContainer: HTMLDivElement | undefined;
   let textareaRef: HTMLTextAreaElement | undefined;
 
@@ -123,7 +36,7 @@ export const Bot = (props: BotProps) => {
     [
       {
         type: 'apiMessage',
-        message: props.welcomeMessage ?? defaultWelcomeMessage,
+        message: props.welcomeMessage,
         nextQuestions: [...props.starterPrompts.prompts],
       },
     ],
@@ -157,14 +70,9 @@ export const Bot = (props: BotProps) => {
 
   const moveLastMessageToMessages = () => {
     const msg = lastBotResponse();
-    console.log('moveLastMessageToMessages', msg);
     if (msg == null) return;
     setMessages([...messages(), msg]);
     setLastBotResponse(null);
-  };
-
-  const addMessage = (msg: MessageType) => {
-    setMessages([...messages(), msg]);
   };
 
   const messageTypeFEtoBE = (msg: messageType) => {
@@ -182,7 +90,6 @@ export const Bot = (props: BotProps) => {
 
   // Handle form submission
   const handleSubmit = async (value: string) => {
-    console.log('handleSubmit', value);
     if (value.trim() === '') {
       return;
     }
@@ -192,7 +99,7 @@ export const Bot = (props: BotProps) => {
     setUserInput(value);
     setNextQuestions([]);
     scrollToBottom();
-    addMessage({ message: value, type: 'userMessage' });
+    setMessages([...messages(), { message: value, type: 'userMessage' }]);
     saveChatToLocalStorage();
 
     // Send user question and history to API
@@ -361,6 +268,13 @@ export const Bot = (props: BotProps) => {
     setUserInput('');
     setWaitingForResponse(false);
     setBusy(false);
+  });
+
+  createEffect(() => {
+    const question = props.question();
+    if (question.length > 0) {
+      handleSubmit(question);
+    }
   });
 
   const [bottomSpacerHeight, setBottomSpacerHeight] = createSignal(0);

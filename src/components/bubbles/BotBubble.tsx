@@ -1,7 +1,8 @@
 import { Marked } from '@ts-stack/markdown';
 import { Show } from 'solid-js';
-import { MessageType, SourceContent, SourceProduct } from '../Bot';
 import { ProductCarousel, PurchaseButtonAspect, SingleProductShowcase } from '../Carousel';
+import { MessageType } from '../types/botprops';
+import { SourceContent, SourceProduct } from '../types/documents';
 import { SourcesDropdown } from './SourcesDropdown';
 
 type Props = {

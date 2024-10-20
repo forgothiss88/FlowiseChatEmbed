@@ -1,81 +1,81 @@
+import * as Sentry from '@sentry/solid';
+import { createSignal } from 'solid-js';
 import { render } from 'solid-js/web';
-import { FullBotProps } from './components/props';
-import { DefaultBotProps, glowiProps } from './customers/Glowi';
+import ChatWithProduct from './components/ChatWithProduct';
+import { ShopifyProduct } from './components/types/product';
+import { brandColors, glowiProps } from './customers/Glowi';
 import { BubbleBot } from './features/bubble';
 
-const getFullProps = (props: DefaultBotProps): FullBotProps => {
-  return {
-    creatorName: props.creatorName,
-    chatflowid: `${props.creatorName}-twini`,
-    apiUrl: props.apiUrl,
-    starterPrompts: props.starterPrompts,
-    chatflowConfig: {},
-    theme: {
-      button: {
-        right: props.theme?.button?.right || 20,
-        bottom: props.theme?.button?.bottom || 20,
-        size: props.theme?.button?.size || 'medium',
-        iconColor: props.theme?.button?.iconColor || 'white',
-        bubbleButtonColor: props.theme?.button?.bubbleButtonColor || '#050a30',
-        topbarColor: props.theme?.button?.topbarColor,
-        customIconSrc: props.theme?.button?.customIconSrc || '',
-      },
-      chatWindow: {
-        welcomeMessage: props.theme?.chatWindow?.welcomeMessage,
-        backgroundColor: props.theme?.chatWindow?.backgroundColor,
-        fontSize: props.theme?.chatWindow?.fontSize || 16,
-        poweredByTextColor: props.theme?.chatWindow?.poweredByTextColor || '#283E4D',
-        title: props.theme?.chatWindow?.title || '',
-        titleAvatarSrc: props.theme?.chatWindow?.titleAvatarSrc || props.titleAvatarSrc,
-        titleColor: props.theme?.chatWindow?.titleColor || '#ffffff',
-        botMessage: {
-          backgroundColor: props.theme?.chatWindow?.botMessage?.backgroundColor || '#ffffff',
-          textColor: props.theme?.chatWindow?.botMessage?.textColor || '#283E4D',
-          avatarSrc: props.theme?.chatWindow?.botMessage?.avatarSrc || props.avatarSrc,
-          avatarPadding: props.theme?.chatWindow?.botMessage?.avatarPadding || '8px',
-          showAvatar: props.theme?.chatWindow?.botMessage?.showAvatar,
-          enableMultipricing: props.theme?.chatWindow?.botMessage?.enableMultipricing || false,
-          purchaseButtonText: props.theme?.chatWindow?.botMessage?.purchaseButtonText || 'Buy now',
-          purchaseButtonBackgroundColor: props.theme?.chatWindow?.botMessage?.purchaseButtonBackgroundColor || '#283E4D',
-          purchaseButtonTextColor: props.theme?.chatWindow?.botMessage?.purchaseButtonTextColor || '#ffffff',
-          faviconUrl: props.theme?.chatWindow?.botMessage?.faviconUrl || undefined,
-        },
-        userMessage: {
-          backgroundColor: props.theme?.chatWindow?.userMessage?.backgroundColor || '#202124',
-          textColor: props.theme?.chatWindow?.userMessage?.textColor || '#ffffff',
-        },
-        textInput: {
-          backgroundColor: props.theme?.chatWindow?.textInput?.backgroundColor || '#ffffff',
-          inputBackgroundColor: props.theme?.chatWindow?.textInput?.inputBackgroundColor || undefined,
-          textColor: props.theme?.chatWindow?.textInput?.textColor || '#283E4D',
-          placeholder: props.theme?.chatWindow?.textInput?.placeholder || 'Ask me (almost) anything...',
-          sendButtonColor: props.theme?.chatWindow?.textInput?.sendButtonColor || '#7f7970',
-          resetButtonColor: props.theme?.chatWindow?.textInput?.resetButtonColor || '#7f7970',
-        },
-        firstMessage: props.theme?.chatWindow?.firstMessage || {},
-      },
-    },
-  };
-};
+const getChatbot = (): HTMLElement => document.getElementsByTagName('twini-chatbot')[0];
+const cb = getChatbot();
+if (!cb) {
+  console.error('Element with id "twini-chatbot" not found.');
+}
+const props = glowiProps();
 
-render(() => {
-  const getChatbot = (): HTMLElement => document.getElementsByTagName('twini-chatbot')[0];
-  if (!getChatbot()) {
-    console.error('Element with id "twini-chatbot" not found.');
-    return;
-  }
-  const props = glowiProps({ apiUrl: 'http://localhost:8000/twini-stream/viron-agents' });
-  const avatarShopifyCdnUrl = getChatbot().getAttribute('data-avatar-shopify-cdn-url');
-  if (avatarShopifyCdnUrl) {
-    console.log('Shopify CDN URL:', avatarShopifyCdnUrl);
-    props.theme.chatWindow.titleAvatarSrc = avatarShopifyCdnUrl;
-    props.theme.chatWindow.botMessage.avatarSrc = avatarShopifyCdnUrl;
-    props.theme.chatWindow.botMessage.faviconUrl = avatarShopifyCdnUrl;
-  } else {
-    console.error('Attribute "data-shopify-cdn-url" not found.');
-  }
+// dev
+props.apiUrl = 'http://localhost:8000/twini-stream/viron-agents';
 
-  const botProps = getFullProps(props);
-  const bot = <BubbleBot {...botProps} getElement={getChatbot} />;
-  return bot;
-}, document.getElementsByTagName('twini-chatbot')[0]);
+const avatarShopifyCdnUrl = cb.getAttribute('data-avatar-shopify-cdn-url');
+if (avatarShopifyCdnUrl) {
+  console.log('Shopify CDN URL:', avatarShopifyCdnUrl);
+  props.theme.chatWindow.titleAvatarSrc = avatarShopifyCdnUrl;
+  props.theme.chatWindow.botMessage.avatarSrc = avatarShopifyCdnUrl;
+  props.theme.chatWindow.botMessage.faviconUrl = avatarShopifyCdnUrl;
+} else {
+  console.warn('Attribute "data-shopify-cdn-url" not found.');
+}
+const twiniApiUrl = cb.getAttribute('data-twini-api-url');
+if (twiniApiUrl) {
+  console.log('Twini API URL:', twiniApiUrl);
+  props.apiUrl = twiniApiUrl;
+} else {
+  console.warn('Attribute "data-twini-api-url" not found.');
+}
+let product: ShopifyProduct | undefined = undefined;
+if (cb.hasAttribute('data-product')) {
+  product = JSON.parse(cb.getAttribute('data-product'));
+} else {
+  console.warn('Attribute "data-product" not found. Not on product page?');
+}
+
+const [isBotOpened, setIsBotOpened] = createSignal(false);
+const [question, askQuestion] = createSignal<string>('');
+
+Sentry.init({
+  dsn: 'https://0e923b8b2f8f5f284443d82e730e5fd8@o4508080401088512.ingest.de.sentry.io/4508132557717584',
+  integrations: [Sentry.browserTracingIntegration(), Sentry.replayIntegration()],
+  // Tracing
+  tracesSampleRate: 1.0, //  Capture 100% of the transactions
+  // Set 'tracePropagationTargets' to control for which URLs distributed tracing should be enabled
+  tracePropagationTargets: ['localhost', /^https:\/\/twini-be-production\.up\.railway\.app/],
+  // Session Replay
+  replaysSessionSampleRate: 1.0, // This sets the sample rate at 10%. You may want to change it to 100% while in development and then sample at a lower rate in production.
+  replaysOnErrorSampleRate: 1.0, // If you're not already sampling the entire session, change the sample rate to 100% when sampling sessions where errors occur.
+});
+
+render(
+  () => (
+    <BubbleBot {...props} getElement={getChatbot} isBotOpened={isBotOpened} setIsBotOpened={setIsBotOpened} product={product} question={question} />
+  ),
+  cb,
+);
+
+const chatWithProductWidget = document.getElementsByTagName('twini-chat-with-product')[0];
+
+if (!chatWithProductWidget) {
+  console.warn('Element with id "twini-chat-with-product" not found.');
+} else {
+  render(() => {
+    return (
+      <ChatWithProduct
+        isBotOpened={isBotOpened}
+        setIsBotOpened={setIsBotOpened}
+        textColor={brandColors.actionPrimary}
+        backgroundColor={brandColors.secondary}
+        product={product}
+        askQuestion={askQuestion}
+      />
+    );
+  }, chatWithProductWidget);
+}

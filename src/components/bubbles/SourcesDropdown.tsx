@@ -1,7 +1,7 @@
 import { For, Show, createEffect, createSignal } from 'solid-js';
-import { SourceContent } from '../Bot';
 import { DownArrow, Hamburger } from '../icons/Arrow';
 import { InstagramIcon, TikTokIcon, YoutubeIcon } from '../icons/SocialNetwork';
+import { SourceContent } from '../types/documents';
 
 const getFavicon = (url: string) => {
   // Create a new URL object to easily extract components of the provided URL

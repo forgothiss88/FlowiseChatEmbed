@@ -1,6 +1,5 @@
 import { isNotDefined } from '@/utils/index';
 import { Show, createEffect, createSignal, splitProps } from 'solid-js';
-import styles from '../../../assets/index.css';
 
 export type PopupProps = {
   value?: any;
@@ -44,9 +43,7 @@ export const Popup = (props: PopupProps) => {
 
   return (
     <Show when={isBotOpened()}>
-      <style>{styles}</style>
       <div class="relative z-10" aria-labelledby="modal-title" role="dialog" aria-modal="true" style={{ 'z-index': 1100 }} on:click={closeBot}>
-        <style>{styles}</style>
         <div class="fixed inset-0 bg-black bg-opacity-50 transition-opacity animate-fade-in" />
         <div class="fixed inset-0 z-10 overflow-y-auto">
           <div class="flex min-h-full items-center justify-center p-3 text-center sm:p-0">

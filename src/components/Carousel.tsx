@@ -1,6 +1,6 @@
 import { Show, createSignal } from 'solid-js';
-import { ProductMetadata, SourceProduct } from './Bot';
 import { DownArrow, LeftArrow, RightArrow, UpArrow } from './icons/Arrow';
+import { ProductMetadata, SourceProduct } from './types/documents';
 
 const ProductCard = (props: { isPrimary: boolean; product: ProductMetadata; onClick?: () => null }) => {
   return props.isPrimary ? (

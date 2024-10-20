@@ -1,15 +1,4 @@
-import { FullBotProps } from '@/components/props';
-import { BubbleTheme } from '@/features/bubble/types';
-
-export type DefaultBotProps = {
-  apiUrl: string;
-  creatorName: string;
-  starterPrompts?: {
-    prompts: string[];
-    background: string;
-  };
-  theme: BubbleTheme;
-};
+import { FullBotProps } from '@/components/types/botprops';
 
 export const brandColors = {
   primary: 'black',
@@ -44,6 +33,7 @@ export const vironProps = (): FullBotProps => {
         titleAvatarSrc: '/public/avatars/viron.png',
         titleColor: brandColors.primary,
         welcomeMessage: 'Hey there! I’m here to help you with the <a class="text-black"><b>1970 Black Corn boots</b></a>. How can I assist?',
+        templateWelcomeMessageOnProductPage: 'Hey there I’m here to help you with the <a class="text-black"><b>{{product}}</b></a>. How can I assist?',
         backgroundColor: 'rgba(51, 51, 51, 0.75)',
         poweredByTextColor: 'black',
         firstMessage: undefined,

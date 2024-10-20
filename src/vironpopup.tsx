@@ -2,6 +2,7 @@ import * as Sentry from '@sentry/solid';
 import { createSignal } from 'solid-js';
 import { render } from 'solid-js/web';
 import ChatWithProduct from './components/ChatWithProduct';
+import { ShopifyProduct } from './components/types/product';
 import { brandColors, vironProps } from './customers/Viron';
 import { BubbleBot } from './features/bubble';
 
@@ -11,7 +12,6 @@ if (!cb) {
   console.error('Element with id "twini-chatbot" not found.');
 }
 const props = vironProps();
-
 // dev
 props.apiUrl = 'http://localhost:8000/twini-stream/viron-agents';
 
@@ -22,7 +22,7 @@ if (avatarShopifyCdnUrl) {
   props.theme.chatWindow.botMessage.avatarSrc = avatarShopifyCdnUrl;
   props.theme.chatWindow.botMessage.faviconUrl = avatarShopifyCdnUrl;
 } else {
-  console.error('Attribute "data-shopify-cdn-url" not found.');
+  console.warn('Attribute "data-shopify-cdn-url" not found.');
 }
 const twiniApiUrl = cb.getAttribute('data-twini-api-url');
 if (twiniApiUrl) {
@@ -31,9 +31,15 @@ if (twiniApiUrl) {
 } else {
   console.warn('Attribute "data-twini-api-url" not found.');
 }
+let product: ShopifyProduct | undefined = undefined;
+if (cb.hasAttribute('data-product')) {
+  product = JSON.parse(cb.getAttribute('data-product'));
+} else {
+  console.warn('Attribute "data-product" not found. Not on product page?');
+}
 
 const [isBotOpened, setIsBotOpened] = createSignal(false);
-const [product, setProduct] = createSignal(null);
+const [question, askQuestion] = createSignal<string>('');
 
 Sentry.init({
   dsn: 'https://0e923b8b2f8f5f284443d82e730e5fd8@o4508080401088512.ingest.de.sentry.io/4508132557717584',
@@ -48,17 +54,30 @@ Sentry.init({
 });
 
 render(
-  () => <BubbleBot {...props} getElement={getChatbot} isBotOpened={isBotOpened} setIsBotOpened={setIsBotOpened} />,
-  document.getElementsByTagName('twini-chatbot')[0],
+  () => (
+    <>
+      <style>styles</style>
+      <BubbleBot {...props} getElement={getChatbot} isBotOpened={isBotOpened} setIsBotOpened={setIsBotOpened} product={product} question={question} />
+    </>
+  ),
+  cb,
 );
 
-render(() => {
-  return (
-    <ChatWithProduct
-      isBotOpened={isBotOpened}
-      setIsBotOpened={setIsBotOpened}
-      textColor={brandColors.actionPrimary}
-      backgroundColor={brandColors.secondary}
-    />
-  );
-}, document.getElementsByTagName('twini-chat-with-product')[0]);
+const chatWithProductWidget = document.getElementsByTagName('twini-chat-with-product')[0];
+
+if (!chatWithProductWidget) {
+  console.warn('Element with id "twini-chat-with-product" not found.');
+} else {
+  render(() => {
+    return (
+      <ChatWithProduct
+        isBotOpened={isBotOpened}
+        setIsBotOpened={setIsBotOpened}
+        textColor={brandColors.actionPrimary}
+        backgroundColor={brandColors.secondary}
+        product={product}
+        askQuestion={askQuestion}
+      />
+    );
+  }, chatWithProductWidget);
+}

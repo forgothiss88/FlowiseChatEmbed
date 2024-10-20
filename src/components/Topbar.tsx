@@ -1,4 +1,4 @@
-import { Show, createSignal, onCleanup, onMount } from 'solid-js';
+import { Show } from 'solid-js';
 import { Avatar } from './avatars/Avatar';
 
 const Topbar = (props: {

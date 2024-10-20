@@ -47,29 +47,6 @@
   }
 }
 
-
-.text-input::-webkit-input-placeholder {
-  color: #9095a0 !important;
-  opacity: 1 !important;
-}
-
-.text-input::-moz-placeholder {
-  color: #9095a0 !important;
-  opacity: 1 !important;
-}
-
-.text-input::placeholder {
-  color: #9095a0 !important;
-  opacity: 1 !important;
-}
-
-input {
-  background-color: transparent;
-  border: none;
-  padding: 10px 10px;
-  font-family: 'Poppins', sans-serif;
-}
-
 .text-jost {
   font-family: "Jost";
 }
