@@ -1,33 +1,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Hide scrollbar for Chrome, Safari and Opera */
-.no-scrollbar-container::-webkit-scrollbar {
-  display: none;
-}
-
-/* Hide scrollbar for IE, Edge and Firefox */
-.no-scrollbar-container {
-  -ms-overflow-style: none;
-  /* IE and Edge */
-  scrollbar-width: none;
-  /* Firefox */
-}
-
-.bubble1 {
-  animation: chatBubbles 1s ease-in-out infinite;
-}
-
-.bubble2 {
-  animation: chatBubbles 1s ease-in-out infinite;
-  animation-delay: 0.3s;
-}
-
-.bubble3 {
-  animation: chatBubbles 1s ease-in-out infinite;
-  animation-delay: 0.5s;
-}
-
 @keyframes chatBubbles {
   0% {
     transform: translateY(0);
@@ -42,10 +15,45 @@
   }
 }
 
-.text-jost {
+.twini-base {
+  @tailwind base;
+}
+
+.twini-base a {
+  text-decoration: none;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.twini-base .no-scrollbar-container::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.twini-base .no-scrollbar-container {
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
+}
+
+.twini-base .bubble1 {
+  animation: chatBubbles 1s ease-in-out infinite;
+}
+
+.twini-base .bubble2 {
+  animation: chatBubbles 1s ease-in-out infinite;
+  animation-delay: 0.3s;
+}
+
+.twini-base .bubble3 {
+  animation: chatBubbles 1s ease-in-out infinite;
+  animation-delay: 0.5s;
+}
+
+.twini-base .text-jost {
   font-family: 'Jost';
 }
 
-.text-poppins {
+.twini-base .text-poppins {
   font-family: 'Poppins';
 }
