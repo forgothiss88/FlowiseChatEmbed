@@ -22,7 +22,7 @@ const servePlugins = () => [
   serve({
     open: true,
     verbose: true,
-    openPage: '/index.html',
+    openPage: '/chat_with_product.html',
     contentBase: '',
     host: '0.0.0.0',
     // host: 'localhost',
@@ -51,11 +51,11 @@ const pluginsConfig = (serveFiles) => [
     extract: true,
   }),
   typescript({ inlineSources: false, tsconfig: './tsconfig.json' }),
-  ...(serveFiles ? sourcemaps() : []),
+  ...(serveFiles ? [sourcemaps()] : []),
   typescriptPaths({ preserveExtensions: true }),
   terser({ output: { comments: false } }),
   // If you want to see the live app
-  ...(serveFiles ? servePlugins() : []),
+  ...(serveFiles ? [servePlugins()] : []),
   sentryRollupPlugin({
     authToken: process.env.SENTRY_AUTH_TOKEN,
     org: 'twini-srl',
