@@ -304,7 +304,7 @@ export const Bot = (props: BotConfig & BotProps) => {
         <div class="flex w-full items-center justify-center bg-token-main-surface-primary overflow-hidden"></div>
         <main class={'relative h-full w-full flex-1 overflow-hidden transition-width'}>
           <button
-            class="fixed top-6 right-6 rounded-full bg-white p-4 shadow-lg shadow-black z-10"
+            class="cursor-pointer fixed top-6 right-6 rounded-full bg-white p-4 shadow-lg shadow-black z-10"
             onClick={props.closeBot}
             style={{ 'line-height': 0 }}
           >

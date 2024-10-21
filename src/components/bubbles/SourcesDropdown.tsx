@@ -87,7 +87,7 @@ export const SourcesDropdown = (props: { sources: SourceContent[]; faviconUrl?: 
   return (
     <Show when={props.sources.length > 0}>
       <div class="inline-block w-full bg-gray-100 rounded-md">
-        <button tabIndex={2} class="inline-flex w-full px-2 py-1 text-sm font-medium" onClick={() => setIsOpen(!isOpen())}>
+        <button tabIndex={2} class="cursor-pointer inline-flex w-full px-2 py-1 text-sm font-medium" onClick={() => setIsOpen(!isOpen())}>
           <div class="w-4 h-4 my-auto">
             <Hamburger />
           </div>

@@ -55,7 +55,7 @@ export const MultiPriceButton = (props: { price: number; url: string; otherPrice
         <button
           tabindex="0"
           role="button"
-          class="height-full content-center px-1 z-10 border-inherit"
+          class="cursor-pointer height-full content-center px-1 z-10 border-inherit"
           classList={{
             'rounded-r-full': !isMenuOpen(),
             'rounded-tr-2xl border': isMenuOpen(),
@@ -227,10 +227,10 @@ export const ProductCarousel = (props: ProductCarouselProps) => {
         </div>
         <div class="w-2/5 flex flex-row justify-end pr-2">
           <div class="flex flex-row text-black">
-            <button class={isStart() ? 'opacity-30' : ''} disabled={isStart()} onClick={prevSlide}>
+            <button class={"cursor-pointer" + isStart() ? 'opacity-30' : ''} disabled={isStart()} onClick={prevSlide}>
               <LeftArrow></LeftArrow>
             </button>
-            <button class={isEnd() ? 'opacity-30' : ''} disabled={isEnd()} onClick={nextSlide}>
+            <button class={"cursor-pointer" + isEnd() ? 'opacity-30' : ''} disabled={isEnd()} onClick={nextSlide}>
               <RightArrow></RightArrow>
             </button>
           </div>

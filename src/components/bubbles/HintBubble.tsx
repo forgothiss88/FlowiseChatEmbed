@@ -12,7 +12,7 @@ export const HintBubble = (props: Props) => {
     <div class="flex justify-end guest-container py-1 w-full">
       <button
         class={
-          'flex items-center bg-transparent p-3 max-w-[80%] rounded-2xl rounded-tr-none whitespace-pre-wrap font-light text-sm text-poppins text-left border-dashed border'
+          'flex cursor-pointer items-center bg-transparent p-3 max-w-[80%] rounded-2xl rounded-tr-none whitespace-pre-wrap font-light text-sm text-poppins text-left border-dashed border'
         }
         onClick={props.onClick}
         style={{

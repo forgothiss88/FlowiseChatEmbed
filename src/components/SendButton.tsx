@@ -16,7 +16,7 @@ export const SendButton = (props: SendButtonProps) => {
     <button
       disabled={props.isDisabled || props.isLoading}
       class={
-        'justify-center focus:outline-none flex items-center disabled:opacity-50 disabled:cursor-not-allowed disabled:brightness-100 transition-all filter hover:brightness-90 active:brightness-75 ' +
+        'cursor-pointer justify-center focus:outline-none flex items-center disabled:opacity-50 disabled:cursor-not-allowed disabled:brightness-100 transition-all filter hover:brightness-90 active:brightness-75 ' +
         props.class
       }
       style={{ background: 'transparent', border: 'none' }}
@@ -34,7 +34,7 @@ export const DeleteButton = (props: SendButtonProps) => {
       disabled={props.isDisabled || props.isLoading}
       {...props}
       class={
-        'py-2 px-3 justify-center font-semibold text-white focus:outline-none flex items-center disabled:opacity-50 disabled:cursor-not-allowed disabled:brightness-100 transition-all filter hover:brightness-90 active:brightness-75 ' +
+        'cursor-pointer py-2 px-3 justify-center font-semibold text-white focus:outline-none flex items-center disabled:opacity-50 disabled:cursor-not-allowed disabled:brightness-100 transition-all filter hover:brightness-90 active:brightness-75 ' +
         props.class
       }
       style={{ background: 'transparent', border: 'none' }}

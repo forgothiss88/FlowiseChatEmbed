@@ -38,7 +38,7 @@ export const ChatWithProduct = (props: Props) => {
         )}
       </For>
       <button
-        class="bg-white border w-full p-3 mt-1 rounded-full flex flex-row items-center"
+        class="cursor-pointer bg-white border w-full p-3 mt-1 rounded-full flex flex-row items-center"
         onClick={props.setIsBotOpened}
         style={{
           'background-color': props.backgroundColor,
