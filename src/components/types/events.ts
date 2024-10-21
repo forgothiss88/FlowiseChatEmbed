@@ -20,6 +20,10 @@ export type IncrementalAnswerEvent = ServerSentEvent & {
   message: string;
 };
 
+export type MessageChunkGeneratedEvent = ServerSentEvent & {
+  chunk: string;
+};
+
 export type SuggestionGeneratedEvent = ServerSentEvent & {
   suggestion_slug: string;
 };
@@ -30,4 +34,8 @@ export type FourSuggestionsGeneratedEvent = ServerSentEvent & {
 
 export type NextQuestionsGeneratedEvent = ServerSentEvent & {
   questions: string[];
+};
+
+export type ChatSummaryGeneratedEvent = ServerSentEvent & {
+  summary: string;
 };

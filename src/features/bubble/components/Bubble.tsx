@@ -1,17 +1,16 @@
-import { FullBotProps } from '@/components/types/botprops';
+import { BotProps, FullBotProps } from '@/components/types/botprops';
 import { ShopifyProduct } from '@/components/types/product';
 import { Accessor, Setter, Show } from 'solid-js';
 import { Bot } from '../../../components/Bot';
 import { BubbleButton } from './BubbleButton';
 
 export const BubbleBot = (
-  props: FullBotProps & {
-    getElement: () => HTMLElement;
-    isBotOpened: Accessor<boolean>;
-    setIsBotOpened: Setter<boolean>;
-    product?: ShopifyProduct;
-    question: Accessor<string>;
-  },
+  props: FullBotProps &
+    Omit<BotProps, "welcomeMessage" | "closeBot"> & {
+      isBotOpened: Accessor<boolean>;
+      setIsBotOpened: Setter<boolean>;
+      product?: ShopifyProduct;
+    },
 ) => {
   let bodyOverflow = '';
 
@@ -70,6 +69,9 @@ export const BubbleBot = (
           creatorName={props.creatorName}
           closeBot={closeBot}
           question={props.question}
+          nextQuestions={props.nextQuestions}
+          setNextQuestions={props.setNextQuestions}
+          setSummary={props.setSummary}
         />
       </div>
     </>

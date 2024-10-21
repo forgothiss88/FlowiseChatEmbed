@@ -1,4 +1,5 @@
 import { BotMessageTheme, BubbleParams, TextInputTheme, UserMessageTheme } from '@/features/bubble/types';
+import { Accessor, Setter } from 'solid-js';
 import { SourceContent, SourceProduct } from './documents';
 
 type BrandProps = {
@@ -25,7 +26,7 @@ export type StarterPromptsType = {
   actionColor: string;
 };
 
-export type BotProps = {
+export type BotConfig = {
   creatorName: string;
   chatflowid: string;
   apiUrl: string;
@@ -37,8 +38,18 @@ export type BotProps = {
   titleAvatarSrc?: string;
   fontSize?: number;
   isFullPage?: boolean;
+};
+
+export type BotProps = {
+  question: Accessor<string>;
+  nextQuestions: Accessor<string[]>;
+  setNextQuestions: Setter<string[]>;
+  setSummary: Setter<string>;
+  welcomeMessage: string;
   getElement: () => HTMLElement;
   closeBot: () => void;
 };
 
-export type FullBotProps = BotProps & BubbleParams & BrandProps; export type messageType = 'apiMessage' | 'userMessage' | 'usermessagewaiting';
+export type FullBotProps = BotConfig & BubbleParams & BrandProps;
+
+export type messageType = 'apiMessage' | 'userMessage' | 'usermessagewaiting';

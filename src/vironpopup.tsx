@@ -40,6 +40,8 @@ if (cb.hasAttribute('data-product')) {
 
 const [isBotOpened, setIsBotOpened] = createSignal(false);
 const [question, askQuestion] = createSignal<string>('');
+const [nextQuestions, setNextQuestions] = createSignal<string[]>([...props.starterPrompts.prompts]);
+const [summary, setSummary] = createSignal<string>('');
 
 Sentry.init({
   dsn: 'https://0e923b8b2f8f5f284443d82e730e5fd8@o4508080401088512.ingest.de.sentry.io/4508132557717584',
@@ -57,7 +59,17 @@ render(
   () => (
     <>
       <style>{{ styles }}</style>
-      <BubbleBot {...props} getElement={getChatbot} isBotOpened={isBotOpened} setIsBotOpened={setIsBotOpened} product={product} question={question} />
+      <BubbleBot
+        {...props}
+        getElement={getChatbot}
+        isBotOpened={isBotOpened}
+        setIsBotOpened={setIsBotOpened}
+        product={product}
+        question={question}
+        nextQuestions={nextQuestions}
+        setNextQuestions={setNextQuestions}
+        setSummary={setSummary}
+      />
     </>
   ),
   cb,
@@ -79,6 +91,8 @@ if (!chatWithProductWidget) {
           backgroundColor={brandColors.secondary}
           product={product}
           askQuestion={askQuestion}
+          nextQuestions={nextQuestions}
+          summary={summary}
         />
       </>
     );

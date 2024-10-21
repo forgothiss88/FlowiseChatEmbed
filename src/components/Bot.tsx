@@ -1,7 +1,7 @@
 import { Popup } from '@/features/popup';
 import { MessageBE, RunInput } from '@/queries/sendMessageQuery';
 import { fetchEventSource } from '@microsoft/fetch-event-source';
-import { Accessor, For, Show, createEffect, createSignal, onMount } from 'solid-js';
+import { Accessor, For, Show, createEffect, createSignal, on, onMount } from 'solid-js';
 import { v4 as uuidv4 } from 'uuid';
 import { Avatar } from './avatars/Avatar';
 import { Bottombar } from './Bottombar';
@@ -10,19 +10,21 @@ import { GuestBubble } from './bubbles/GuestBubble';
 import { HintBubble } from './bubbles/HintBubble';
 import { LoadingBubble } from './bubbles/LoadingBubble';
 import { XIcon } from './icons/XIcon';
-import { BotProps, MessageType, messageType } from './types/botprops';
+import { BotConfig, BotProps, MessageType, messageType } from './types/botprops';
 import { SourceContent, SourceProduct } from './types/documents';
 import {
   AnswerEvent,
+  ChatSummaryGeneratedEvent,
   ContextEvent,
   FourSuggestionsGeneratedEvent,
   IncrementalAnswerEvent,
+  MessageChunkGeneratedEvent as MessageChunkStreamedEvent,
   MetadataEvent,
   NextQuestionsGeneratedEvent,
   SuggestionGeneratedEvent,
 } from './types/events';
 
-export const Bot = (props: BotProps & { question: Accessor<string>; welcomeMessage: string }) => {
+export const Bot = (props: BotConfig & BotProps) => {
   let chatContainer: HTMLDivElement | undefined;
   let textareaRef: HTMLTextAreaElement | undefined;
 
@@ -31,7 +33,6 @@ export const Bot = (props: BotProps & { question: Accessor<string>; welcomeMessa
   const [sourcePopupSrc, setSourcePopupSrc] = createSignal({});
 
   const [lastBotResponse, setLastBotResponse] = createSignal<MessageType | null>(null);
-  const [nextQuestions, setNextQuestions] = createSignal<string[]>([...props.starterPrompts.prompts]);
   const [messages, setMessages] = createSignal<MessageType[]>(
     [
       {
@@ -97,7 +98,7 @@ export const Bot = (props: BotProps & { question: Accessor<string>; welcomeMessa
     setWaitingForResponse(true);
     setBusy(true);
     setUserInput(value);
-    setNextQuestions([]);
+    props.setNextQuestions([]);
     scrollToBottom();
     setMessages([...messages(), { message: value, type: 'userMessage' }]);
     saveChatToLocalStorage();
@@ -152,14 +153,24 @@ export const Bot = (props: BotProps & { question: Accessor<string>; welcomeMessa
           suggestedProductSlugs = [data['suggestion_slug']];
         } else if (ev.event === 'four_suggestions_generated') {
           const data: FourSuggestionsGeneratedEvent = JSON.parse(ev.data);
-          suggestedProductSlugs = data['suggestion_slugs'];
+          suggestedProductSlugs = data.suggestion_slugs;
         } else if (ev.event === 'incremental_message_streamed') {
           setWaitingForResponse(false);
           const data: IncrementalAnswerEvent = JSON.parse(ev.data);
           setLastBotResponse({ type: 'apiMessage', message: data.message });
+        } else if (ev.event === 'message_chunk_streamed') {
+          setWaitingForResponse(false);
+          const data: MessageChunkStreamedEvent = JSON.parse(ev.data);
+          console.log('message_chunk_streamed', data);
+          const response = lastBotResponse() as MessageType;
+          const streamingAnswer = (response?.message || '') + data.chunk;
+          setLastBotResponse({ ...response, type: 'apiMessage', message: streamingAnswer });
         } else if (ev.event === 'next_questions_generated') {
           const data: NextQuestionsGeneratedEvent = JSON.parse(ev.data);
-          setNextQuestions(data.questions);
+          props.setNextQuestions(data.questions);
+        } else if (ev.event === 'chat_summary_generated') {
+          const data: ChatSummaryGeneratedEvent = JSON.parse(ev.data);
+          props.setSummary(data.summary);
         } else if (ev.event === 'message_context_streamed') {
           const data: ContextEvent = JSON.parse(ev.data);
           data.context.forEach((item) => {
@@ -178,6 +189,7 @@ export const Bot = (props: BotProps & { question: Accessor<string>; welcomeMessa
             setLastBotResponse({ ...response, type: 'apiMessage', message: streamingAnswer });
           }
         }
+        scrollToBottom();
       },
     }).catch((err) => {});
 
@@ -203,7 +215,7 @@ export const Bot = (props: BotProps & { question: Accessor<string>; welcomeMessa
         suggestedProduct: suggestedProducts[0],
         sourceProducts: [],
         sourceContents: sourceContents,
-        nextQuestions: nextQuestions(),
+        nextQuestions: props.nextQuestions(),
       });
     } else if (suggestedProducts?.length == 4) {
       setLastBotResponse({
@@ -211,7 +223,7 @@ export const Bot = (props: BotProps & { question: Accessor<string>; welcomeMessa
         suggestedProduct: undefined,
         sourceProducts: suggestedProducts,
         sourceContents: sourceContents,
-        nextQuestions: nextQuestions(),
+        nextQuestions: props.nextQuestions(),
       });
     } else {
       setLastBotResponse({
@@ -219,7 +231,7 @@ export const Bot = (props: BotProps & { question: Accessor<string>; welcomeMessa
         suggestedProduct: undefined,
         sourceProducts: [],
         sourceContents: sourceContents,
-        nextQuestions: nextQuestions(),
+        nextQuestions: props.nextQuestions(),
       });
     }
 
@@ -237,12 +249,12 @@ export const Bot = (props: BotProps & { question: Accessor<string>; welcomeMessa
       setChatRef(uuidv4());
       setMessages([
         {
-          message: props.welcomeMessage ?? defaultWelcomeMessage,
+          message: props.welcomeMessage,
           type: 'apiMessage',
           nextQuestions: [...props.starterPrompts.prompts],
         },
       ]);
-      setNextQuestions([...(props.starterPrompts.prompts ?? [])]);
+      props.setNextQuestions([...(props.starterPrompts.prompts ?? [])]);
       saveChatToLocalStorage();
     } catch (error: any) {
       const errorData = error.response.data || `${error.response.status}: ${error.response.statusText}`;
@@ -257,7 +269,7 @@ export const Bot = (props: BotProps & { question: Accessor<string>; welcomeMessa
       console.log('Restoring chats with chatRef', localChats.chatRef);
       setChatRef(localChats.chatRef);
       setMessages([...localChats.chatHistory]);
-      setNextQuestions(localChats.chatHistory[localChats.chatHistory.length - 1].nextQuestions ?? []);
+      props.setNextQuestions(localChats.chatHistory[localChats.chatHistory.length - 1].nextQuestions ?? []);
     } else {
       setChatRef(uuidv4());
     }
@@ -270,12 +282,17 @@ export const Bot = (props: BotProps & { question: Accessor<string>; welcomeMessa
     setBusy(false);
   });
 
-  createEffect(() => {
-    const question = props.question();
-    if (question.length > 0) {
-      handleSubmit(question);
-    }
-  });
+  createEffect(
+    on(
+      () => props.question(),
+      (question) => {
+        console.log('props.question', question);
+        if (question != '') {
+          handleSubmit(question);
+        }
+      },
+    ),
+  );
 
   const [bottomSpacerHeight, setBottomSpacerHeight] = createSignal(0);
   const focusOnTextarea = () => {
@@ -287,9 +304,13 @@ export const Bot = (props: BotProps & { question: Accessor<string>; welcomeMessa
       <div class="relative flex max-h-full flex-1 flex-col overflow-hidden">
         <div class="flex w-full items-center justify-center bg-token-main-surface-primary overflow-hidden"></div>
         <main class={'relative h-full w-full flex-1 overflow-hidden transition-width'}>
-          <div class="fixed top-4 right-4 rounded-full bg-white p-4 shadow-lg shadow-black z-10" onClick={props.closeBot}>
+          <button
+            class="fixed top-6 right-6 rounded-full bg-white p-4 shadow-lg shadow-black z-10"
+            onClick={props.closeBot}
+            style={{ 'line-height': 0 }}
+          >
             <XIcon color="black" width={16} height={16}></XIcon>
-          </div>
+          </button>
           <div role="presentation" tabindex="0" class="flex h-full flex-col focus-visible:outline-0 overflow-hidden">
             <div ref={chatContainer} class="flex-1 overflow-auto scroll-smooth no-scrollbar-container">
               <div class="w-full h-16" style={{ display: 'block' }}></div>
@@ -348,7 +369,7 @@ export const Bot = (props: BotProps & { question: Accessor<string>; welcomeMessa
                   />
                 </Show>
                 <Show when={!isBusy()}>
-                  <For each={nextQuestions()}>
+                  <For each={props.nextQuestions()}>
                     {(prompt, _) => (
                       <HintBubble
                         actionColor={props.starterPrompts.actionColor}
