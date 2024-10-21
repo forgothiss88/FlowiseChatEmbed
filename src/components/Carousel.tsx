@@ -35,7 +35,6 @@ export type ProductCarouselProps = {
 
 export const MultiPriceButton = (props: { price: number; url: string; otherPricesUrl: string } & PurchaseButtonAspect) => {
   const [isMenuOpen, setIsMenuOpen] = createSignal(false);
-  console.debug(props);
   return (
     <div class="ml-4 flex flex-col">
       <div

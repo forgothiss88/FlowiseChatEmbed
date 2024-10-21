@@ -286,7 +286,6 @@ export const Bot = (props: BotConfig & BotProps) => {
     on(
       () => props.question(),
       (question) => {
-        console.log('props.question', question);
         if (question != '') {
           handleSubmit(question);
         }

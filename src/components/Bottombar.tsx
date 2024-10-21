@@ -91,9 +91,6 @@ export const Bottombar = (props: Props) => {
   onMount(() => {
     createEffect(() => {
       textareaHeight();
-      console.log('textareaHeight', textareaHeight());
-      console.log('bb.getBoundingClientRect().height', bb.getBoundingClientRect().height);
-      console.log('bb.clientHeight', bb.clientHeight);
       props.setBottomSpacerHeight(bb.getBoundingClientRect().height || bb.clientHeight);
     });
   });
