@@ -61,7 +61,7 @@ const SourceCard = (props: { index: number; faviconUrl?: string; source: SourceC
   return (
     <a class="bg-white rounded-lg p-4 shadow-sm border flex flex-col w-full" href={url} target="_blank">
       <p
-        class="text-sm font-medium text-gray-900 grid"
+        class="text-sm font-medium text-gray-900 w-full"
         style={{
           display: '-webkit-box',
           '-webkit-line-clamp': 2,
@@ -103,15 +103,15 @@ export const SourcesDropdown = (props: { sources: SourceContent[]; faviconUrl?: 
             classList={{ hidden: !isOpen(), 'ease-out': isOpen(), 'duration-100': isOpen(), 'ease-in': !isOpen(), 'duration-75': !isOpen() }}
             onFocusOut={() => setIsOpen(false)}
           >
-            <ul class="no-scrollbar-container inline-flex">
+            <div class="no-scrollbar-container inline-flex">
               <For each={props.sources}>
                 {(source, index) => (
-                  <li class="mx-2 mb-2 w-40">
+                  <div class="mx-2 mb-2 w-40">
                     <SourceCard index={index()} source={source} faviconUrl={props.faviconUrl}></SourceCard>
-                  </li>
+                  </div>
                 )}
               </For>
-            </ul>
+            </div>
           </div>
         </Show>
       </div>
