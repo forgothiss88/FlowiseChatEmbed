@@ -16,7 +16,7 @@ export type Props = {
 
 export const ChatWithProduct = (props: Props) => {
   return (
-    <div class="text-sm text-poppins" style={{ color: props.textColor, 'max-width': '44rem' }}>
+    <div class="text-sm text-poppins" style={{ color: props.textColor }}>
       <p class="mb-2">(based on your recent chat)</p>
       <p class="mb-2">
         {props.summary() ||
