@@ -12,6 +12,7 @@ export type RunBody = {
   chat_history: MessageBE[];
   username: string;
   chat_ref: string;
+  cart_token: string;
 };
 
 export type RunInput = {

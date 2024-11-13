@@ -26,14 +26,14 @@ export const vironProps = (): FullBotProps => {
         topbarColor: brandColors.primary,
         size: 'medium',
         iconColor: brandColors.actionSecondary, // color inside the icon
-        bubbleButtonColor: brandColors.actionPrimary,
+        bubbleButtonColor: "white",
       },
       chatWindow: {
         title: '',
         titleAvatarSrc: '/public/avatars/viron.png',
         titleColor: brandColors.primary,
-        welcomeMessage: 'Hey there! I’m here to help you with the <a class="text-black"><b>1970 Black Corn boots</b></a>. How can I assist?',
-        templateWelcomeMessageOnProductPage: 'Hey there I’m here to help you with the <a class="text-black"><b>{{product}}</b></a>. How can I assist?',
+        welcomeMessage: 'Hey there! I’m here to help you with the **1970 Black Corn boots**. How can I assist?',
+        templateWelcomeMessageOnProductPage: 'Hey there I’m here to help you with the **{{product}}**. How can I assist?',
         backgroundColor: 'rgba(51, 51, 51, 0.75)',
         poweredByTextColor: 'black',
         firstMessage: undefined,

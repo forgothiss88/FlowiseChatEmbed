@@ -15,6 +15,22 @@
   }
 }
 
+@keyframes enterFromBottom {
+  0% {
+    transform: translate(-50%, 140px);
+  }
+
+  75% {
+    transform: translate(-50%, -16px);
+  }
+  90% {
+    transform: translate(-50%, 4px);
+  }
+  100% {
+    transform: translate(-50%, 0);
+  }
+}
+
 .twini-base {
   @tailwind base;
 }
@@ -48,6 +64,11 @@
 .twini-base .bubble3 {
   animation: chatBubbles 1s ease-in-out infinite;
   animation-delay: 0.5s;
+}
+
+.twini-base .bubble-widget {
+  animation: enterFromBottom 0.5s ease-in-out;
+  animation-delay: 0s;
 }
 
 .twini-base .text-jost {

@@ -1,5 +1,6 @@
 import { BotMessageTheme, BubbleParams, TextInputTheme, UserMessageTheme } from '@/features/bubble/types';
 import { Accessor, Setter } from 'solid-js';
+import { ShopifyCart } from './cart';
 import { SourceContent, SourceProduct } from './documents';
 
 type BrandProps = {
@@ -46,6 +47,7 @@ export type BotProps = {
   setNextQuestions: Setter<string[]>;
   setSummary: Setter<string>;
   welcomeMessage: string;
+  cart?: ShopifyCart;
   getElement: () => HTMLElement;
   closeBot: () => void;
 };

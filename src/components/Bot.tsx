@@ -48,6 +48,7 @@ export const Bot = (props: BotConfig & BotProps) => {
   const [isWaitingForResponse, setWaitingForResponse] = createSignal(false);
 
   const [chatRef, setChatRef] = createSignal<string | null>(null);
+  const [cartToken, setCartToken] = createSignal<string | null>(null);
 
   const scrollToBottom = (timeout?: number) => {
     setTimeout(() => {
@@ -107,12 +108,22 @@ export const Bot = (props: BotConfig & BotProps) => {
     const messageList: MessageBE[] = messages().map((message) => {
       return { content: message.message, type: messageTypeFEtoBE(message.type) };
     });
+
+    if (chatRef() == null) {
+      console.error('chatRef is null');
+      return;
+    } else if (cartToken() == null) {
+      console.error('cartToken is null');
+      return;
+    }
+
     const body: RunInput = {
       input: {
         input: value,
         chat_history: messageList,
         username: props.creatorName,
         chat_ref: chatRef(),
+        cart_token: cartToken(),
       },
       config: {},
     };
@@ -280,6 +291,13 @@ export const Bot = (props: BotConfig & BotProps) => {
     setUserInput('');
     setWaitingForResponse(false);
     setBusy(false);
+  });
+
+  onMount(async () => {
+    const cartToken = await fetch("/cart.js").then(async (res) => await res.json()).then((data) => data.token);
+    if (cartToken != null) {
+      setCartToken(cartToken);
+    }
   });
 
   createEffect(

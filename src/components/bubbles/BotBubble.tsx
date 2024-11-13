@@ -1,5 +1,5 @@
 import { Marked } from '@ts-stack/markdown';
-import { Show } from 'solid-js';
+import { onMount, Show } from 'solid-js';
 import { ProductCarousel, PurchaseButtonAspect, SingleProductShowcase } from '../Carousel';
 import { MessageType } from '../types/botprops';
 import { SourceContent, SourceProduct } from '../types/documents';
@@ -23,6 +23,12 @@ Marked.setOptions({ isNoP: true });
 
 export const BotBubble = (props: Props) => {
   let msgRef: HTMLDivElement | undefined;
+
+  onMount(() => {
+    if (msgRef) {
+      msgRef.innerHTML = Marked.parse(props.getMessage().message);
+    }
+  });
 
   return (
     <div class="flex flex-row justify-start items-start host-container text-poppins w-11/12">

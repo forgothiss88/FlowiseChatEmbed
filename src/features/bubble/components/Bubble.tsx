@@ -2,11 +2,11 @@ import { BotProps, FullBotProps } from '@/components/types/botprops';
 import { ShopifyProduct } from '@/components/types/product';
 import { Accessor, Setter, Show } from 'solid-js';
 import { Bot } from '../../../components/Bot';
-import { BubbleButton } from './BubbleButton';
+import { BubbleWidget } from './BubbleWidget';
 
 export const BubbleBot = (
   props: FullBotProps &
-    Omit<BotProps, "welcomeMessage" | "closeBot"> & {
+    Omit<BotProps, 'welcomeMessage' | 'closeBot'> & {
       isBotOpened: Accessor<boolean>;
       setIsBotOpened: Setter<boolean>;
       product?: ShopifyProduct;
@@ -37,7 +37,15 @@ export const BubbleBot = (
   return (
     <>
       <Show when={!props.isBotOpened()}>
-        <BubbleButton {...props.theme?.button} toggleBot={toggleBot} isBotOpened={props.isBotOpened} />
+        {/* <BubbleButton {...props.theme?.button} toggleBot={toggleBot} isBotOpened={props.isBotOpened} /> */}
+        <span
+          class="bubble-widget left-1/2 bottom-0 fixed animate-fade-in z-50"
+          style={{
+            transform: 'translateX(-50%)', // Center the button horizontally and vertically
+          }}
+        >
+          <BubbleWidget toggleBot={toggleBot} isBotOpened={props.isBotOpened}></BubbleWidget>
+        </span>
       </Show>
       <div
         part="bot"

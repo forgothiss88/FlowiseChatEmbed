@@ -3,6 +3,7 @@ import { createSignal } from 'solid-js';
 import { render } from 'solid-js/web';
 import styles from './assets/index.css';
 import ChatWithProduct from './components/ChatWithProduct';
+import { ShopifyCart } from './components/types/cart';
 import { ShopifyProduct } from './components/types/product';
 import { brandColors, vironProps } from './customers/Viron';
 import { BubbleBot } from './features/bubble';
@@ -38,6 +39,13 @@ if (cb.hasAttribute('data-product')) {
   console.warn('Attribute "data-product" not found. Not on product page?');
 }
 
+let cart: ShopifyCart | undefined = undefined;
+if (cb.hasAttribute('data-cart')) {
+  cart = JSON.parse(cb.getAttribute('data-cart'));
+} else {
+  console.warn('Attribute "data-cart" not found. Not on cart page?');
+}
+
 const [isBotOpened, setIsBotOpened] = createSignal(false);
 const [question, askQuestion] = createSignal<string>('');
 const [nextQuestions, setNextQuestions] = createSignal<string[]>([...props.starterPrompts.prompts]);
@@ -69,6 +77,7 @@ render(
         nextQuestions={nextQuestions}
         setNextQuestions={setNextQuestions}
         setSummary={setSummary}
+        cart={cart}
       />
     </>
   ),
