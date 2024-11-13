@@ -24,10 +24,10 @@ export const GuestBubble = (props: Props) => {
   });
 
   return (
-    <div class="flex justify-end items-end guest-container text-poppins">
+    <div class="twi-flex twi-justify-end twi-items-end twi-guest-container twi-text-poppins">
       <span
         ref={userMessageEl}
-        class="p-3 rounded-2xl rounded-tr-none whitespace-pre-wrap max-w-full chatbot-guest-bubble text-sm font-light"
+        class="twi-p-3 twi-rounded-2xl twi-rounded-tr-none twi-whitespace-pre-wrap twi-max-w-full twi-chatbot-guest-bubble twi-text-sm twi-font-light"
         data-testid="guest-bubble"
         style={{
           'background-color': props.backgroundColor ?? defaultBackgroundColor,

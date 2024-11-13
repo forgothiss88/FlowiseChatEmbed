@@ -8,11 +8,11 @@ export const StarterPromptBubble = (props: Props) => (
     <div
       data-modal-target="defaultModal"
       data-modal-toggle="defaultModal"
-      class="flex border border-black border-solid justify-start mb-2 ml-2 items-start animate-fade-in host-container hover:brightness-90 active:brightness-75 rounded-2xl"
+      class="twi-flex twi-border twi-border-black twi-border-solid twi-justify-start twi-mb-2 twi-ml-2 twi-items-start twi-animate-fade-in twi-host-container hover:twi-brightness-90 active:twi-brightness-75 rounded-2xl"
       onClick={() => props.onPromptClick?.()}
     >
       <span
-        class="py-1 pr-2 pl-3 whitespace-pre-wrap max-w-full chatbot-host-bubble text-jost text-base font-normal rounded-full w-max cursor-pointer"
+        class="twi-py-1 twi-pr-2 twi-pl-3 twi-whitespace-pre-wrap twi-max-w-full twi-chatbot-host-bubble twi-text-jost twi-text-base twi-font-normal twi-rounded-full twi-w-max twi-cursor-pointer"
         data-testid="host-bubble"
         style={{ 'background-color': props.bg }}
       >

@@ -5,18 +5,22 @@ import { ProductMetadata, SourceProduct } from './types/documents';
 const ProductCard = (props: { isPrimary: boolean; product: ProductMetadata; onClick?: () => null }) => {
   return props.isPrimary ? (
     <div>
-      <img class="w-full rounded-2xl aspect-auto object-cover bg-white animate-fade-in" src={props.product.thumbnail_url} alt="" />
-      <p class="text-xs font-normal text-start p-1">{props.product.name}</p>
-      <p class="text-base font-normal text-start p-1">{Math.round(props.product.price)}€</p>
-    </div>
-  ) : (
-    <div class="content-center h-full" onClick={props.onClick}>
       <img
-        class="w-full rounded-2xl aspect-auto object-cover bg-white opacity-30 grayscale animate-fade-in"
+        class="twi-w-full twi-rounded-2xl twi-aspect-auto twi-object-cover twi-bg-white twi-animate-fade-in"
         src={props.product.thumbnail_url}
         alt=""
       />
-      <p class="m-2 text-xs opacity-30 text-start">{props.product.name}</p>
+      <p class="twi-text-xs twi-font-normal twi-text-start twi-p-1">{props.product.name}</p>
+      <p class="twi-text-base twi-font-normal twi-text-start twi-p-1">{Math.round(props.product.price)}€</p>
+    </div>
+  ) : (
+    <div class="twi-content-center twi-h-full" onClick={props.onClick}>
+      <img
+        class="twi-w-full twi-rounded-2xl twi-aspect-auto twi-object-cover twi-bg-white twi-opacity-30 twi-grayscale twi-animate-fade-in"
+        src={props.product.thumbnail_url}
+        alt=""
+      />
+      <p class="twi-m-2 twi-text-xs twi-opacity-30 twi-text-start">{props.product.name}</p>
     </div>
   );
 };
@@ -36,29 +40,36 @@ export type ProductCarouselProps = {
 export const MultiPriceButton = (props: { price: number; url: string; otherPricesUrl: string } & PurchaseButtonAspect) => {
   const [isMenuOpen, setIsMenuOpen] = createSignal(false);
   return (
-    <div class="ml-4 flex flex-col">
+    <div class="twi-ml-4 twi-flex twi-flex-col">
       <div
-        class="flex flex-row"
-        classList={{ 'rounded-2xl': !isMenuOpen(), 'rounded-tl-2xl rounded-tr-2xl': isMenuOpen() }}
+        class="twi-flex twi-flex-row"
+        classList={{ 'twi-rounded-2xl': !isMenuOpen(), 'twi-rounded-tl-2xl twi-rounded-tr-2xl': isMenuOpen() }}
         style={{
           background: props.purchaseButtonBackgroundColor,
           color: props.purchaseButtonTextColor,
           'border-color': props.purchaseButtonBackgroundColor,
         }}
       >
-        <a class="bg-white rounded-2xl w-6 h-6 ml-2 my-auto">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Amazon_icon.svg/240px-Amazon_icon.svg.png" class="w-6 h-6 p-1"></img>
+        <a class="twi-bg-white twi-rounded-2xl twi-w-6 twi-h-6 twi-ml-2 twi-my-auto">
+          <img
+            src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Amazon_icon.svg/240px-Amazon_icon.svg.png"
+            class="twi-w-6 twi-h-6 twi-p-1"
+          ></img>
         </a>
-        <a href={props.url} target="_blank" class="text-sm text-inherit font-normal pl-3 pr-1 py-2 whitespace-nowrap self-center">
+        <a
+          href={props.url}
+          target="_blank"
+          class="twi-text-sm twi-text-inherit twi-font-normal twi-pl-3 twi-pr-1 twi-py-2 twi-whitespace-nowrap twi-self-center"
+        >
           {props.purchaseButtonText} {Math.round(props.price)}€
         </a>
         <button
           tabindex="0"
           role="button"
-          class="cursor-pointer height-full content-center px-1 z-10 border-inherit"
+          class="twi-cursor-pointer twi-height-full twi-content-center twi-px-1 twi-z-10 twi-border-inherit"
           classList={{
-            'rounded-r-full': !isMenuOpen(),
-            'rounded-tr-2xl border': isMenuOpen(),
+            'twi-rounded-r-full': !isMenuOpen(),
+            'twi-rounded-tr-2xl twi-border': isMenuOpen(),
           }}
           onClick={() => setIsMenuOpen(!isMenuOpen())}
           style={
@@ -73,7 +84,7 @@ export const MultiPriceButton = (props: { price: number; url: string; otherPrice
                 }
           }
         >
-          <div class="h-6 w-6">
+          <div class="twi-h-6 twi-w-6">
             <Show when={!isMenuOpen()}>
               <DownArrow></DownArrow>
             </Show>
@@ -84,8 +95,8 @@ export const MultiPriceButton = (props: { price: number; url: string; otherPrice
         </button>
       </div>
       <div
-        classList={{ hidden: !isMenuOpen() }}
-        class="flex-1 border border-inherit rounded-b-xl"
+        classList={{ 'twi-hidden': !isMenuOpen() }}
+        class="twi-flex-1 twi-border twi-border-inherit twi-rounded-b-xl"
         style={
           isMenuOpen()
             ? {
@@ -100,17 +111,23 @@ export const MultiPriceButton = (props: { price: number; url: string; otherPrice
               }
         }
       >
-        <a role="button" class="text-center text-inherit bg-transparent px-2 border-b border-inherit py-1 block text-sm font-normal">
+        <a
+          role="button"
+          class="twi-text-center twi-text-inherit twi-bg-transparent twi-px-2 twi-border-b twi-border-inherit twi-py-1 twi-block twi-text-sm twi-font-normal"
+        >
           ePRICE - {Math.round(props.price + 10)}€
         </a>
-        <a role="button" class="text-center text-inherit bg-transparent px-2 border-b border-inherit py-1 block text-sm font-normal">
+        <a
+          role="button"
+          class="twi-text-center twi-text-inherit twi-bg-transparent twi-px-2 twi-border-b twi-border-inherit twi-py-1 twi-block twi-text-sm twi-font-normal"
+        >
           eBay - {Math.round(props.price + 12)}€
         </a>
         <a
           role="button"
           href={props.otherPricesUrl} // TODO: make this dynamic
           target="_blank"
-          class="text-center text-inherit bg-transparent px-2 py-1 block text-sm font-normal"
+          class="twi-text-center twi-text-inherit twi-bg-transparent twi-px-2 twi-py-1 twi-block twi-text-sm twi-font-normal"
         >
           Vedi altri prezzi
         </a>
@@ -121,16 +138,19 @@ export const MultiPriceButton = (props: { price: number; url: string; otherPrice
 
 export const SinglePriceButton = (props: { purchaseButtonText: string; price: number; url: string } & PurchaseButtonAspect) => {
   return (
-    <div class="flex flex-row w-full pr-3">
+    <div class="twi-flex twi-flex-row twi-w-full twi-pr-3">
       <Show when={props.url.includes('amazon') || props.url.includes('amzn')}>
-        <a class="bg-white rounded-2xl w-6 h-6 my-auto">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Amazon_icon.svg/240px-Amazon_icon.svg.png" class="w-6 h-6 p-1"></img>
+        <a class="twi-bg-white twi-rounded-2xl twi-w-6 twi-h-6 twi-my-auto">
+          <img
+            src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Amazon_icon.svg/240px-Amazon_icon.svg.png"
+            class="twi-w-6 twi-h-6 twi-p-1"
+          ></img>
         </a>
       </Show>
       <a
         href={props.url}
         target="_blank"
-        class="w-full text-sm font-normal px-4 py-2 whitespace-nowrap self-center block text-center"
+        class="twi-w-full twi-text-sm twi-font-normal twi-px-4 twi-py-2 twi-whitespace-nowrap twi-self-center twi-block twi-text-center"
         style={{
           background: props.purchaseButtonBackgroundColor,
           color: props.purchaseButtonTextColor,
@@ -145,20 +165,20 @@ export const SinglePriceButton = (props: { purchaseButtonText: string; price: nu
 
 export const SingleProductShowcase = (props: { product: SourceProduct } & PurchaseButtonAspect) => {
   return (
-    <div class="text-poppins overflow-hidden flex flex-col p-3" style={{ 'max-width': '208px' }}>
-      <div class="flex flex-col pt-4 w-full" style={{ flex: '0 0 auto' }}>
+    <div class="twi-text-poppins twi-overflow-hidden twi-flex twi-flex-col twi-p-3" style={{ 'max-width': '208px' }}>
+      <div class="twi-flex twi-flex-col twi-pt-4 twi-w-full" style={{ flex: '0 0 auto' }}>
         <img
-          class="aspect-auto object-cover bg-white animate-fade-in rounded-lg border-gray-500 bottom-1"
+          class="twi-aspect-auto twi-object-cover twi-bg-white twi-animate-fade-in twi-rounded-lg twi-border-gray-500 twi-bottom-1"
           src={props.product.metadata.thumbnail_url}
           alt=""
         />
-        <p class="text-xs font-normal text-start p-1">{props.product.metadata.name}</p>
-        <p class="text-base font-normal text-start p-1">{Math.round(props.product.metadata.price)}€</p>
-        <div class="pb-3 pt-1">
+        <p class="twi-text-xs twi-font-normal twi-text-start twi-p-1">{props.product.metadata.name}</p>
+        <p class="twi-text-base twi-font-normal twi-text-start twi-p-1">{Math.round(props.product.metadata.price)}€</p>
+        <div class="twi-pb-3 twi-pt-1">
           <a
             href={props.product.metadata.item_url}
             target="_blank"
-            class="w-full text-sm font-normal px-4 py-2 whitespace-nowrap self-center block text-center"
+            class="twi-w-full twi-text-sm twi-font-normal twi-px-4 twi-py-2 twi-whitespace-nowrap twi-self-center twi-block twi-text-center"
             style={{
               background: props.purchaseButtonBackgroundColor,
               color: props.purchaseButtonTextColor,
@@ -189,22 +209,22 @@ export const ProductCarousel = (props: ProductCarouselProps) => {
   const isEnd = () => currentSlide() + 1 === numProducts;
   return (
     <>
-      <div class="text-poppins overflow-hidden w-full" style={{ background: props.backgroundColor }}>
-        <div ref={carousel} class="flex flex-row overflow-hidden w-full p-3">
+      <div class="twi-text-poppins twi-overflow-hidden twi-w-full" style={{ background: props.backgroundColor }}>
+        <div ref={carousel} class="twi-flex twi-flex-row twi-overflow-hidden twi-w-full twi-p-3">
           <Show when={numProducts > 0}>
-            <div class="w-3/5 pr-3">
+            <div class="twi-w-3/5 pr-3">
               <ProductCard isPrimary={true} product={props.products[currentSlide()].metadata} />
             </div>
           </Show>
           <Show when={numProducts > 1 && currentSlide() + 1 < numProducts}>
-            <div class="w-2/5">
+            <div class="twi-w-2/5">
               <ProductCard isPrimary={false} product={props.products[currentSlide() + 1].metadata} onClick={nextSlide} />
             </div>
           </Show>
         </div>
       </div>
-      <div class="pb-3 px-3 pt-2 flex flex-row w-full">
-        <div class="w-3/5">
+      <div class="twi-pb-3 twi-px-3 twi-pt-2 twi-flex twi-flex-row twi-w-full">
+        <div class="twi-w-3/5">
           <Show when={props.enableMultipricing}>
             <MultiPriceButton
               purchaseButtonText={props.purchaseButtonText}
@@ -225,12 +245,12 @@ export const ProductCarousel = (props: ProductCarouselProps) => {
             />
           </Show>
         </div>
-        <div class="w-2/5 flex flex-row justify-end pr-2">
-          <div class="flex flex-row text-black">
-            <button class={"cursor-pointer" + isStart() ? 'opacity-30' : ''} disabled={isStart()} onClick={prevSlide}>
+        <div class="twi-w-2/5 twi-flex twi-flex-row twi-justify-end twi-pr-2">
+          <div class="twi-flex twi-flex-row twi-text-black">
+            <button class={'twi-cursor-pointer' + isStart() ? 'twi-opacity-30' : ''} disabled={isStart()} onClick={prevSlide}>
               <LeftArrow></LeftArrow>
             </button>
-            <button class={"cursor-pointer" + isEnd() ? 'opacity-30' : ''} disabled={isEnd()} onClick={nextSlide}>
+            <button class={'twi-cursor-pointer' + isEnd() ? 'twi-opacity-30' : ''} disabled={isEnd()} onClick={nextSlide}>
               <RightArrow></RightArrow>
             </button>
           </div>

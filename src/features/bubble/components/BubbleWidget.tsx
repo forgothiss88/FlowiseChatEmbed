@@ -49,7 +49,7 @@ export const BubbleWidget = (props: { isBotOpened: () => boolean; toggleBot: () 
       </clipPath>
     </defs>
     {/* Invisible clickable circle area   */}
-    <g onClick={props.toggleBot} class="cursor-pointer outline-none" role="button" aria-label="Open Bot" tabIndex={0}>
+    <g onClick={props.toggleBot} class="twi-cursor-pointer twi-outline-none" twi-role="button" twi-aria-label="Open Bot" tabIndex={0}>
       <circle cx="86.5" cy="82" r="30" fill="transparent" />
     </g>
   </svg>

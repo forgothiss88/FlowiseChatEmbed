@@ -53,11 +53,11 @@ export const Bottombar = (props: Props) => {
   const bb: HTMLDivElement = (
     <div>
       <div
-        class={'shadow-sm' + (props.isFullPage ? '' : ' md:rounded-b-3xl')}
+        class={'twi-shadow-sm' + (props.isFullPage ? '' : ' md:twi-rounded-b-3xl')}
         style={{ 'background-color': props.backgroundColor ?? defaultBackgroundColor, 'border-top': '1px solid #eeeeee' }}
       >
         <div
-          class={'w-full flex flex-row pt-2 px-2'}
+          class={'twi-w-full twi-flex twi-flex-row twi-pt-2 twi-px-2'}
           data-testid="input"
           style={{
             color: props.textColor ?? defaultTextColor,
@@ -65,7 +65,7 @@ export const Bottombar = (props: Props) => {
           onKeyDown={submitWhenEnter}
         >
           <DeleteButton color={props.resetButtonColor} type="reset" isDisabled={!props.isDeleteEnabled} onClick={props.clearChat} />
-          <div class="mr-2 w-full">
+          <div class="twi-mr-2 twi-w-full">
             <AutoGrowTextArea
               ref={props.ref}
               setInputValue={props.setInputValue}
@@ -82,7 +82,7 @@ export const Bottombar = (props: Props) => {
             />
           </div>
         </div>
-        <div class={'w-full text-center py-1'}>
+        <div class="twi-w-full twi-text-center twi-py-1">
           <Badge poweredByTextColor={props.poweredByTextColor}></Badge>
         </div>
       </div>
@@ -95,5 +95,5 @@ export const Bottombar = (props: Props) => {
     });
   });
 
-  return <div class="fixed bottom-0 w-full h-fit z-50">{bb}</div>;
+  return <div class="twi-fixed twi-bottom-0 twi-w-full twi-h-fit twi-z-50">{bb}</div>;
 };

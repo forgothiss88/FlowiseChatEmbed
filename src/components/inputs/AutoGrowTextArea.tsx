@@ -22,7 +22,7 @@ export const AutoGrowTextArea = (props: Props) => {
   const textarea: HTMLTextAreaElement = (
     <textarea
       ref={local.ref}
-      class="overflow-hidden resize-none bg-transparent w-full my-auto text-poppins text-base font-normal placeholder:italic placeholder:font-light disabled:opacity-50 disabled:cursor-not-allowed disabled:brightness-100 outline-none focus:ring-0 focus:animate-fade-in"
+      class="twi-overflow-hidden twi-resize-none twi-bg-transparent twi-w-full twi-my-auto twi-text-poppins twi-text-base twi-font-normal placeholder:twi-italic placeholder:twi-font-light disabled:twi-opacity-50 disabled:twi-cursor-not-allowed disabled:twi-brightness-100 twi-outline-none focus:twi-ring-0 focus:twi-animate-fade-in"
       aria-placeholder={local.placeholder}
       placeholder={local.placeholder}
       rows="1"
@@ -49,11 +49,11 @@ export const AutoGrowTextArea = (props: Props) => {
 
   return (
     <div
-      class="flex flex-row pl-3 py-1 rounded-2xl bg-gray-200 border"
+      class="twi-flex twi-flex-row twi-pl-3 twi-py-1 twi-rounded-2xl twi-bg-gray-200 twi-border"
       style={{ 'background-color': props.inputBackgroundColor, 'border-color': props.inputBorderColor }}
     >
       {textarea}
-      <div class="my-auto py-2 pr-3">
+      <div class="twi-my-auto twi-py-2 twi-pr-3">
         <SendButton
           color={props.sendButtonColor}
           type="button"

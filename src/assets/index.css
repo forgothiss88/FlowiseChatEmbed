@@ -40,41 +40,41 @@
 }
 
 /* Hide scrollbar for Chrome, Safari and Opera */
-.twini-base .no-scrollbar-container::-webkit-scrollbar {
+.twini-base .twi-no-scrollbar-container::-webkit-scrollbar {
   display: none;
 }
 
 /* Hide scrollbar for IE, Edge and Firefox */
-.twini-base .no-scrollbar-container {
+.twini-base .twi-no-scrollbar-container {
   -ms-overflow-style: none;
   /* IE and Edge */
   scrollbar-width: none;
   /* Firefox */
 }
 
-.twini-base .bubble1 {
+.twini-base .twi-bubble1 {
   animation: chatBubbles 1s ease-in-out infinite;
 }
 
-.twini-base .bubble2 {
+.twini-base .twi-bubble2 {
   animation: chatBubbles 1s ease-in-out infinite;
   animation-delay: 0.3s;
 }
 
-.twini-base .bubble3 {
+.twini-base .twi-bubble3 {
   animation: chatBubbles 1s ease-in-out infinite;
   animation-delay: 0.5s;
 }
 
-.twini-base .bubble-widget {
+.twini-base .twi-bubble-widget {
   animation: enterFromBottom 0.5s ease-in-out;
   animation-delay: 0s;
 }
 
-.twini-base .text-jost {
+.twini-base .twi-text-jost {
   font-family: 'Jost';
 }
 
-.twini-base .text-poppins {
+.twini-base .twi-text-poppins {
   font-family: 'Poppins';
 }

@@ -31,18 +31,18 @@ export const BotBubble = (props: Props) => {
   });
 
   return (
-    <div class="flex flex-row justify-start items-start host-container text-poppins w-11/12">
+    <div class="twi-flex twi-flex-row twi-justify-start twi-items-start twi-host-container twi-text-poppins twi-w-11/12">
       <div
-        class="overflow-hidden whitespace-pre-wrap rounded-2xl rounded-tl-none chatbot-host-bubble text-sm font-light max-w-full"
+        class="twi-overflow-hidden twi-whitespace-pre-wrap twi-rounded-2xl rounded-tl-none twi-chatbot-host-bubble twi-text-sm twi-font-light twi-max-w-full"
         data-testid="host-bubble"
         style={{
           'background-color': props.backgroundColor ?? defaultBackgroundColor,
           color: props.textColor ?? defaultTextColor,
         }}
       >
-        <div class="p-3">
+        <div class="twi-p-3">
           <Show when={props.sourceContent != null && props.sourceContent?.length > 0}>
-            <div class="w-full mb-3">
+            <div class="twi-w-full twi-mb-3">
               <SourcesDropdown sources={props.sourceContent} faviconUrl={props?.faviconUrl} />
             </div>
           </Show>

@@ -4,9 +4,9 @@ type Props = {
 
 export const Badge = (props: Props) => {
   return (
-    <span class="text-jost text-xs" style={{ color: props.poweredByTextColor }}>
+    <span class="twi-text-jost twi-text-xs" style={{ color: props.poweredByTextColor }}>
       Powered by
-      <span class="font-semibold"> @Twini</span>
+      <span class="twi-font-semibold"> @Twini</span>
     </span>
   );
 };

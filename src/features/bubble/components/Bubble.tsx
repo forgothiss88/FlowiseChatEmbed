@@ -39,7 +39,7 @@ export const BubbleBot = (
       <Show when={!props.isBotOpened()}>
         {/* <BubbleButton {...props.theme?.button} toggleBot={toggleBot} isBotOpened={props.isBotOpened} /> */}
         <span
-          class="bubble-widget left-1/2 bottom-0 fixed animate-fade-in z-50"
+          class="twi-bubble-widget twi-left-1/2 twi-bottom-0 twi-fixed twi-animate-fade-in twi-z-50"
           style={{
             transform: 'translateX(-50%)', // Center the button horizontally and vertically
           }}
@@ -58,8 +58,8 @@ export const BubbleBot = (
           background: props.theme.chatWindow.backgroundColor + ' fixed',
         }}
         class={
-          'fixed z-50 right-0 bottom-0 backdrop-blur md:rounded-3xl lg:right-4 lg:bottom-4 w-full lg:max-w-md top-0 lg:top-auto lg:h-[704px]' +
-          (props.isBotOpened() ? ' opacity-1' : ' opacity-0 pointer-events-none')
+          'twi-fixed twi-z-50 twi-right-0 twi-bottom-0 twi-backdrop-blur md:twi-rounded-3xl lg:twi-right-4 lg:twi-bottom-4 twi-w-full lg:twi-max-w-md twi-top-0 lg:twi-top-auto lg:twi-h-[704px]' +
+          (props.isBotOpened() ? ' twi-opacity-1' : ' twi-opacity-0 twi-pointer-events-none')
         }
       >
         <Bot

@@ -12,7 +12,7 @@ export const DefaultAvatar = () => {
         viewBox="0 0 75 75"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        class={'absolute top-0 left-0 ' + (isMobile() ? ' w-6 h-6 text-sm' : 'w-full h-full text-xl')}
+        class={'twi-absolute twi-top-0 twi-left-0 ' + (isMobile() ? ' twi-w-6 twi-h-6 twi-text-sm' : 'twi-w-full twi-h-full twi-text-xl')}
       >
         <mask id="mask0" x="0" y="0" mask-type="alpha">
           <circle cx="37.5" cy="37.5" r="37.5" fill="#0042DA" />

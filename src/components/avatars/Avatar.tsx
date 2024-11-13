@@ -15,9 +15,9 @@ export const Avatar = (props: { src?: string; padding?: string; classList?: stri
     <Show when={isNotEmpty(avatarSrc())} keyed fallback={<DefaultAvatar />}>
       <figure
         class={
-          'flex justify-center items-center rounded-full relative flex-shrink-0' +
+          'twi-flex twi-justify-center twi-items-center twi-rounded-full twi-relative twi-flex-shrink-0' +
           ' ' +
-          (isMobile() ? 'text-sm' : 'text-xl') +
+          (isMobile() ? 'twi-text-sm' : 'twi-text-xl') +
           ' ' +
           classList.join(' ')
         }
@@ -28,9 +28,9 @@ export const Avatar = (props: { src?: string; padding?: string; classList?: stri
         <img
           src={avatarSrc()}
           alt="Bot avatar"
-          class="object-cover w-auto h-full"
+          class="twi-object-cover twi-w-auto twi-h-full"
           classList={{
-            'rounded-full': props.isImgRounded,
+            'twi-rounded-full': props.isImgRounded,
           }}
         />
       </figure>

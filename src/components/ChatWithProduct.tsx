@@ -16,9 +16,9 @@ export type Props = {
 
 export const ChatWithProduct = (props: Props) => {
   return (
-    <div class="text-sm text-poppins" style={{ color: props.textColor }}>
-      <p class="mb-2">(based on your recent chat)</p>
-      <p class="mb-2">
+    <div class="twi-text-sm twi-text-poppins" style={{ color: props.textColor }}>
+      <p class="twi-mb-2">(based on your recent chat)</p>
+      <p class="twi-mb-2">
         {props.summary() ||
           'Lorem ipsum dolor sit amet consectetur adipisicing elit. Facere possimus laudantium similique, tempore inventore necessitatibus nihil?'}
       </p>
@@ -38,7 +38,7 @@ export const ChatWithProduct = (props: Props) => {
         )}
       </For>
       <button
-        class="cursor-pointer bg-white border w-full p-3 mt-1 rounded-full flex flex-row items-center"
+        class="twi-cursor-pointer twi-bg-white twi-border twi-w-full twi-p-3 twi-mt-1 twi-rounded-full twi-flex twi-flex-row twi-items-center"
         onClick={props.setIsBotOpened}
         style={{
           'background-color': props.backgroundColor,
@@ -46,7 +46,7 @@ export const ChatWithProduct = (props: Props) => {
           'border-color': props.textColor,
         }}
       >
-        <span class="mr-auto">Continue this conversation...</span>
+        <span class="twi-mr-auto">Continue this conversation...</span>
         <SendButton color={props.textColor} />
       </button>
     </div>

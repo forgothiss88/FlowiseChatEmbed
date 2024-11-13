@@ -17,16 +17,23 @@ const Topbar = (props: {
         color: props.bubbleTextColor,
         'border-bottom-color': props.bubbleButtonColor,
       }}
-      class={(props.isFullPage ? 'fixed' : 'absolute rounded-t-3xl') + ' flex flex-row items-center top-0 w-full z-50 h-16'}
+      class={
+        (props.isFullPage ? 'twi-fixed' : 'twi-absolute twi-rounded-t-3xl') +
+        ' twi-flex twi-flex-row twi-items-center twi-top-0 twi-w-full twi-z-50 twi-h-16'
+      }
     >
       <Show when={props.titleAvatarSrc}>
-        <div class="grow-0 ml-4">
-          <Avatar src={props.titleAvatarSrc} classList={['h-8']} />
+        <div class="twi-grow-0 twi-ml-4">
+          <Avatar src={props.titleAvatarSrc} classList={['twi-h-8']} />
         </div>
       </Show>
-      <div class="grow"></div>
-      <div class="grow-0 order-last mr-4  bg-white rounded-full h-8 flex">
-        <a href="https://www.twini.ai" target="_blank" class="px-4 whitespace-pre-wrap font-semibold text-sm max-w-full text-black text-jost my-auto">
+      <div class="twi-grow"></div>
+      <div class="twi-grow-0 twi-order-last twi-mr-4  twi-bg-white twi-rounded-full twi-h-8 twi-flex">
+        <a
+          href="https://www.twini.ai"
+          target="_blank"
+          class="twi-px-4 twi-whitespace-pre-wrap twi-font-semibold twi-text-sm twi-max-w-full twi-text-black twi-text-jost twi-my-auto"
+        >
           Create your @Twini
         </a>
       </div>

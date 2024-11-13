@@ -9,21 +9,19 @@ type Props = {
 
 export const HintBubble = (props: Props) => {
   return (
-    <div class="flex justify-end guest-container py-1 w-full">
+    <div class="twi-flex twi-justify-end twi-guest-container twi-py-1 twi-w-full">
       <button
-        class={
-          'flex cursor-pointer items-center bg-transparent p-3 max-w-[80%] rounded-2xl rounded-tr-none whitespace-pre-wrap font-light text-sm text-poppins text-left border-dashed border'
-        }
+        class="twi-flex twi-cursor-pointer twi-items-center twi-bg-transparent twi-p-3 twi-max-w-[80%] twi-rounded-2xl twi-rounded-tr-none twi-whitespace-pre-wrap twi-font-light twi-text-sm twi-text-poppins twi-text-left twi-border-dashed twi-border"
         onClick={props.onClick}
         style={{
           'border-color': props.textColor,
         }}
       >
-        <span class="mr-2">
+        <span class="twi-mr-2">
           <HintStars color={props.actionColor} width={18} height={18} />
         </span>
         <span
-          class="text-justify text-sm"
+          class="twi-text-justify twi-text-sm"
           style={{
             'text-align-last': 'left',
             color: props.textColor,

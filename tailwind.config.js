@@ -29,6 +29,7 @@ function rem2px(input, fontSize = 16) {
 module.exports = {
   content: ['./src/**/*.{js,jsx,ts,tsx}'],
   important: '.twini-base',
+  prefix: 'twi-',
   theme: {
     ...rem2px(defaultTheme),
     extend: {

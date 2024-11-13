@@ -294,7 +294,9 @@ export const Bot = (props: BotConfig & BotProps) => {
   });
 
   onMount(async () => {
-    const cartToken = await fetch("/cart.js").then(async (res) => await res.json()).then((data) => data.token);
+    const cartToken = await fetch('/cart.js')
+      .then(async (res) => await res.json())
+      .then((data) => data.token);
     if (cartToken != null) {
       setCartToken(cartToken);
     }
@@ -317,28 +319,28 @@ export const Bot = (props: BotConfig & BotProps) => {
   };
 
   return (
-    <div class="relative flex flex-col z-0 h-full w-full overflow-hidden">
-      <div class="relative flex max-h-full flex-1 flex-col overflow-hidden">
-        <div class="flex w-full items-center justify-center bg-token-main-surface-primary overflow-hidden"></div>
-        <main class={'relative h-full w-full flex-1 overflow-hidden transition-width'}>
+    <div class="twi-relative twi-flex twi-flex-col twi-z-0 twi-h-full twi-w-full twi-overflow-hidden">
+      <div class="twi-relative twi-flex twi-max-h-full twi-flex-1 twi-flex-col twi-overflow-hidden">
+        <div class="twi-flex twi-w-full twi-items-center twi-justify-center twi-bg-token-main-surface-primary twi-overflow-hidden"></div>
+        <main class="twi-relative twi-h-full twi-w-full twi-flex-1 twi-overflow-hidden twi-transition-width">
           <button
-            class="cursor-pointer fixed top-6 right-6 rounded-full bg-white p-4 shadow-lg shadow-black z-10"
+            class="twi-cursor-pointer twi-fixed twi-top-6 twi-right-6 twi-rounded-full twi-bg-white twi-p-4 twi-shadow-lg twi-shadow-black twi-z-10"
             onClick={props.closeBot}
             style={{ 'line-height': 0 }}
           >
             <XIcon color="black" width={16} height={16}></XIcon>
           </button>
-          <div role="presentation" tabindex="0" class="flex h-full flex-col focus-visible:outline-0 overflow-hidden">
-            <div ref={chatContainer} class="flex-1 overflow-auto scroll-smooth no-scrollbar-container">
-              <div class="w-full h-16" style={{ display: 'block' }}></div>
-              <div class="overflow-hidden px-3">
-                <div class="flex justify-center py-10">
-                  <Avatar src={props.titleAvatarSrc} classList={['h-1/4', 'w-1/4', 'shadow-lg', 'shadow-black']} />
+          <div role="presentation" tabindex="0" class="twi-flex twi-h-full twi-flex-col twi-focus-visible:outline-0 overflow-hidden">
+            <div ref={chatContainer} class="twi-flex-1 twi-overflow-auto twi-scroll-smooth twi-no-scrollbar-container">
+              <div class="twi-w-full twi-h-16" style={{ display: 'block' }}></div>
+              <div class="twi-overflow-hidden twi-px-3">
+                <div class="twi-flex twi-justify-center twi-py-10">
+                  <Avatar src={props.titleAvatarSrc} classList={['twi-h-1/4', 'twi-w-1/4', 'twi-shadow-lg', 'twi-shadow-black']} />
                 </div>
                 <For each={messages()}>
                   {(message, _) => {
                     return (
-                      <div class="w-full my-4">
+                      <div class="twi-w-full twi-my-4">
                         {message.type === 'userMessage' && (
                           <GuestBubble
                             message={message.message}
@@ -398,7 +400,7 @@ export const Bot = (props: BotConfig & BotProps) => {
                   </For>
                 </Show>
               </div>
-              <div class="w-full" style={{ display: 'block', height: bottomSpacerHeight() + 'px' }}></div>
+              <div class="twi-w-full" style={{ display: 'block', height: bottomSpacerHeight() + 'px' }}></div>
             </div>
           </div>
           <Bottombar

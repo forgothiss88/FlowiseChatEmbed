@@ -15,7 +15,7 @@ export const FullBot = (props: FullBotProps & { getElement: () => HTMLElement })
     <>
       <Show when={isBotDisplayed()}>
         <div
-          class="w-full h-full z-50 backdrop-blur"
+          class="twi-w-full twi-h-full twi-z-50 twi-backdrop-blur"
           id="twini-chatbot"
           style={{
             background: props.theme?.chatWindow?.backgroundColor + ' fixed',

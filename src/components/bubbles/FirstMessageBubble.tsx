@@ -2,7 +2,7 @@ import { For, JSXElement } from 'solid-js';
 
 const cartIcon = () => {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="twi-w-6 twi-h-6">
       <path
         stroke-linecap="round"
         stroke-linejoin="round"
@@ -14,7 +14,7 @@ const cartIcon = () => {
 
 const DiscountIcon = () => {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="twi-w-6 twi-h-6">
       <path
         stroke-linecap="round"
         stroke-linejoin="round"
@@ -26,7 +26,7 @@ const DiscountIcon = () => {
 
 const MoreContentIcon = () => {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="twi-w-6 twi-h-6">
       <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
       <path
         stroke-linecap="round"
@@ -52,24 +52,24 @@ const MessagePart = (props: {
   };
   return (
     <button
-      class="rounded-2xl flex flex-row p-4 mt-3 w-full"
+      class="twi-rounded-2xl twi-flex twi-flex-row twi-p-4 twi-mt-3 twi-w-full"
       onClick={scrollAndSetUserInput}
       style={{
         background: props.background,
       }}
     >
       <div>
-        <div class="flex flex-row pb-2 items-center">
-          <div class="flex items-center flex-nowrap space-x-1">
-            <p class="font-medium text-start text-base break-words">{props.title}</p>
-            <div class="my-auto">{props.getIcon() || ''}</div>
+        <div class="twi-flex twi-flex-row twi-pb-2 twi-items-center">
+          <div class="twi-flex twi-items-center twi-flex-nowrap twi-space-x-1">
+            <p class="twi-font-medium twi-text-start twi-text-base twi-break-words">{props.title}</p>
+            <div class="twi-my-auto">{props.getIcon() || ''}</div>
           </div>
         </div>
-        <p class="font-light text-start text-sm text-gray-700">{props.subtitle}</p>
+        <p class="twi-font-light twi-text-start twi-text-sm twi-text-gray-700">{props.subtitle}</p>
       </div>
-      <div class="flex-grow" />
-      <div class="p-4 content-center">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+      <div class="twi-flex-grow" />
+      <div class="twi-p-4 twi-content-center">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="twi-w-6 twi-h-6">
           <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3" />
         </svg>
       </div>
@@ -110,16 +110,16 @@ const FirstMessageBubble = (
   },
 ) => {
   return (
-    <div class="my-5 text-jost">
+    <div class="twi-my-5 twi-text-jost">
       <div
-        class="p-3 whitespace-pre-wrap max-w-full rounded-3xl chatbot-host-bubble"
+        class="twi-p-3 twi-whitespace-pre-wrap twi-max-w-full twi-rounded-3xl twi-chatbot-host-bubble"
         data-testid="host-bubble"
         style={{
           background: props.background,
           color: props.textColor,
         }}
       >
-        <span class="font-bold text-lg pl-2">{props.text}</span>
+        <span class="twi-font-bold twi-text-lg twi-pl-2">{props.text}</span>
         <div class="">
           <For each={props.actions}>
             {(action, index) => (
