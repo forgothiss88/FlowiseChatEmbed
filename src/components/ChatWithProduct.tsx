@@ -18,10 +18,8 @@ export type Props = {
 export const ChatWithProduct = (props: Props) => {
   return (
     <div>
-      <p class="twi-mb-2" style={{ color: props.textColor }}>
-        (based on your recent chat)
-      </p>
-      <p class="twi-mb-2" style={{ color: props.textColor }}>
+      <p style={{ color: props.textColor, 'font-family': 'unset', 'font-size': 'unset' }}>(based on your recent chat)</p>
+      <p style={{ color: props.textColor, 'font-family': 'unset', 'font-size': 'unset' }}>
         {props.summary() ||
           'Lorem ipsum dolor sit amet consectetur adipisicing elit. Facere possimus laudantium similique, tempore inventore necessitatibus nihil?'}
       </p>

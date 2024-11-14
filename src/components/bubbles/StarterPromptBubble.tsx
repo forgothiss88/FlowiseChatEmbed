@@ -12,7 +12,7 @@ export const StarterPromptBubble = (props: Props) => (
       onClick={() => props.onPromptClick?.()}
     >
       <span
-        class="twi-py-1 twi-pr-2 twi-pl-3 twi-whitespace-pre-wrap twi-max-w-full twi-chatbot-host-bubble twi-text-jost twi-text-base twi-font-normal twi-rounded-full twi-w-max twi-cursor-pointer"
+        class="twi-py-1 twi-pr-2 twi-pl-3 twi-whitespace-pre-wrap twi-max-w-full twi-chatbot-host-bubble twi-text-base twi-font-normal twi-rounded-full twi-w-max twi-cursor-pointer"
         data-testid="host-bubble"
         style={{ 'background-color': props.bg }}
       >

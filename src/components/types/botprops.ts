@@ -2,6 +2,7 @@ import { BotMessageTheme, BubbleParams, TextInputTheme, UserMessageTheme } from 
 import { Accessor, Setter } from 'solid-js';
 import { ShopifyCart } from './cart';
 import { SourceContent, SourceProduct } from './documents';
+import { ShopifyProduct } from './product';
 
 type BrandProps = {
   brandColors: {
@@ -48,7 +49,8 @@ export type BotProps = {
   setNextQuestions: Setter<string[]>;
   setSummary: Setter<string>;
   welcomeMessage: string;
-  cart?: ShopifyCart;
+  shopifyCart?: ShopifyCart;
+  shopifyProduct?: ShopifyProduct;
   getElement: () => HTMLElement;
   closeBot: () => void;
 };

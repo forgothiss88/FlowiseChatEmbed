@@ -22,7 +22,7 @@ export const BotBubble = (props: Props) => {
   let msgRef: HTMLDivElement | undefined;
 
   return (
-    <div class="twi-flex twi-flex-row twi-justify-start twi-items-start twi-host-container twi-text-poppins twi-w-11/12">
+    <div class="twi-flex twi-flex-row twi-justify-start twi-items-start twi-host-container  twi-w-11/12">
       <div
         class="twi-whitespace-pre-wrap twi-rounded-2xl rounded-tl-none twi-chatbot-host-bubble twi-text-sm twi-font-light twi-max-w-full"
         data-testid="host-bubble"

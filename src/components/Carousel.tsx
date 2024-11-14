@@ -166,7 +166,7 @@ export const SinglePriceButton = (props: { purchaseButtonText: string; price: nu
 
 export const SingleProductShowcase = (props: { product: SourceProduct } & PurchaseButtonAspect) => {
   return (
-    <div class="twi-text-poppins twi-flex twi-flex-row twi-p-3 twi-overflow-visible">
+    <div class=" twi-flex twi-flex-row twi-p-3 twi-overflow-visible">
       <div
         class="twi-flex twi-flex-col twi-rounded-lg -twi-rotate-3 twi-max-w-36"
         style={{
@@ -231,7 +231,7 @@ export const ProductCarousel = (props: ProductCarouselProps) => {
   const isEnd = () => currentSlide() + 1 === numProducts;
   return (
     <>
-      <div class="twi-text-poppins twi-overflow-hidden twi-w-full" style={{ background: props.backgroundColor }}>
+      <div class=" twi-overflow-hidden twi-w-full" style={{ background: props.backgroundColor }}>
         <div ref={carousel} class="twi-flex twi-flex-row twi-overflow-hidden twi-w-full twi-p-3">
           <Show when={numProducts > 0}>
             <div class="twi-w-3/5 pr-3">

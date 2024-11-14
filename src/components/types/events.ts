@@ -1,4 +1,4 @@
-import { ContentMetadata, ProductMetadata, SourceDocument } from "./documents";
+import { ContentMetadata, ProductMetadata, SourceDocument } from './documents';
 
 export type ContextEvent = {
   context: SourceDocument<ProductMetadata | ContentMetadata>[]; // JSON string of source documents

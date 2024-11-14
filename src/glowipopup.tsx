@@ -56,7 +56,14 @@ Sentry.init({
 
 render(
   () => (
-    <BubbleBot {...props} getElement={getChatbot} isBotOpened={isBotOpened} setIsBotOpened={setIsBotOpened} product={product} question={question} />
+    <BubbleBot
+      {...props}
+      getElement={getChatbot}
+      isBotOpened={isBotOpened}
+      setIsBotOpened={setIsBotOpened}
+      shopifyProduct={product}
+      question={question}
+    />
   ),
   cb,
 );

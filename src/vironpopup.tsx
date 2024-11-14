@@ -1,12 +1,13 @@
 import * as Sentry from '@sentry/solid';
 import { createSignal } from 'solid-js';
 import { render } from 'solid-js/web';
-import styles from './assets/index.css';
+import './assets/index.css';
 import ChatWithProduct from './components/ChatWithProduct';
 import { ShopifyCart } from './components/types/cart';
 import { ShopifyProduct } from './components/types/product';
 import { brandColors, vironProps } from './customers/Viron';
 import { BubbleBot } from './features/bubble';
+
 const getChatbot = (): HTMLElement => document.getElementsByTagName('twini-chatbot')[0];
 const cb = getChatbot();
 if (!cb) {
@@ -51,36 +52,35 @@ const [question, askQuestion] = createSignal<string>('');
 const [nextQuestions, setNextQuestions] = createSignal<string[]>([...props.starterPrompts.prompts]);
 const [summary, setSummary] = createSignal<string>('');
 
-Sentry.init({
-  dsn: 'https://0e923b8b2f8f5f284443d82e730e5fd8@o4508080401088512.ingest.de.sentry.io/4508132557717584',
-  environment: process.env.NODE_ENV,
-  integrations: [Sentry.browserTracingIntegration(), Sentry.replayIntegration()],
-  // Tracing
-  tracesSampleRate: 1.0, //  Capture 100% of the transactions
-  // Set 'tracePropagationTargets' to control for which URLs distributed tracing should be enabled
-  tracePropagationTargets: ['localhost', /^https:\/\/twini-be-production\.up\.railway\.app/],
-  // Session Replay
-  replaysSessionSampleRate: 1.0, // This sets the sample rate at 10%. You may want to change it to 100% while in development and then sample at a lower rate in production.
-  replaysOnErrorSampleRate: 1.0, // If you're not already sampling the entire session, change the sample rate to 100% when sampling sessions where errors occur.
-});
+if (process.env.NODE_ENV == 'production') {
+  Sentry.init({
+    dsn: 'https://0e923b8b2f8f5f284443d82e730e5fd8@o4508080401088512.ingest.de.sentry.io/4508132557717584',
+    environment: process.env.NODE_ENV,
+    integrations: [Sentry.browserTracingIntegration(), Sentry.replayIntegration()],
+    // Tracing
+    tracesSampleRate: 1.0, //  Capture 100% of the transactions
+    // Set 'tracePropagationTargets' to control for which URLs distributed tracing should be enabled
+    tracePropagationTargets: ['localhost', /^https:\/\/twini-be-production\.up\.railway\.app/],
+    // Session Replay
+    replaysSessionSampleRate: 1.0, // This sets the sample rate at 10%. You may want to change it to 100% while in development and then sample at a lower rate in production.
+    replaysOnErrorSampleRate: 1.0, // If you're not already sampling the entire session, change the sample rate to 100% when sampling sessions where errors occur.
+  });
+}
 
 render(
   () => (
-    <>
-      <style>{{ styles }}</style>
-      <BubbleBot
-        {...props}
-        getElement={getChatbot}
-        isBotOpened={isBotOpened}
-        setIsBotOpened={setIsBotOpened}
-        product={product}
-        question={question}
-        nextQuestions={nextQuestions}
-        setNextQuestions={setNextQuestions}
-        setSummary={setSummary}
-        cart={cart}
-      />
-    </>
+    <BubbleBot
+      {...props}
+      getElement={getChatbot}
+      isBotOpened={isBotOpened}
+      setIsBotOpened={setIsBotOpened}
+      question={question}
+      nextQuestions={nextQuestions}
+      setNextQuestions={setNextQuestions}
+      setSummary={setSummary}
+      shopifyProduct={product}
+      shopifyCart={cart}
+    />
   ),
   cb,
 );
@@ -92,20 +92,17 @@ if (!chatWithProductWidget) {
 } else {
   render(() => {
     return (
-      <>
-        <style>{{ styles }}</style>
-        <ChatWithProduct
-          isBotOpened={isBotOpened}
-          setIsBotOpened={setIsBotOpened}
-          textColor={brandColors.actionPrimary}
-          backgroundColor={brandColors.secondary}
-          hintsBackgroundColor={brandColors.hintsBackgroundColor}
-          product={product}
-          askQuestion={askQuestion}
-          nextQuestions={nextQuestions}
-          summary={summary}
-        />
-      </>
+      <ChatWithProduct
+        isBotOpened={isBotOpened}
+        setIsBotOpened={setIsBotOpened}
+        textColor={brandColors.actionPrimary}
+        backgroundColor={brandColors.secondary}
+        hintsBackgroundColor={brandColors.hintsBackgroundColor}
+        product={product}
+        askQuestion={askQuestion}
+        nextQuestions={nextQuestions}
+        summary={summary}
+      />
     );
   }, chatWithProductWidget);
 }

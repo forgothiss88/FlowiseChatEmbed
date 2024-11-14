@@ -10,11 +10,11 @@ export const brandColors = {
   actionSecondary: 'black',
   actionSecondaryTextColor: 'white',
   hintsBackgroundColor: 'rgb(0 123 75 / 10%)',
-}
+};
 
 export const vironProps = (): FullBotProps => {
   return {
-    apiUrl: "http://localhost:8000/twini-stream/viron-agents",
+    apiUrl: 'http://localhost:8000/twini-stream/viron-agents',
     creatorName: 'viron',
     chatflowid: 'viron',
     starterPrompts: {
@@ -28,7 +28,7 @@ export const vironProps = (): FullBotProps => {
         topbarColor: brandColors.primary,
         size: 'medium',
         iconColor: brandColors.actionSecondary, // color inside the icon
-        bubbleButtonColor: "white",
+        bubbleButtonColor: 'white',
       },
       chatWindow: {
         title: '',
@@ -49,7 +49,7 @@ export const vironProps = (): FullBotProps => {
           resetButtonColor: brandColors.actionPrimary,
         },
         botMessage: {
-          backgroundColor: "transparent",
+          backgroundColor: 'transparent',
           textColor: brandColors.primary,
           showAvatar: false,
           enableMultipricing: false,
@@ -64,7 +64,7 @@ export const vironProps = (): FullBotProps => {
         },
       },
     },
-    brandColors: brandColors
+    brandColors: brandColors,
   };
 };
 

@@ -32,7 +32,7 @@ const Topbar = (props: {
         <a
           href="https://www.twini.ai"
           target="_blank"
-          class="twi-px-4 twi-whitespace-pre-wrap twi-font-semibold twi-text-sm twi-max-w-full twi-text-black twi-text-jost twi-my-auto"
+          class="twi-px-4 twi-whitespace-pre-wrap twi-font-semibold twi-text-sm twi-max-w-full twi-text-black  twi-my-auto"
         >
           Create your @Twini
         </a>

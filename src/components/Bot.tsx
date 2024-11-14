@@ -5,6 +5,7 @@ import { Accessor, For, Show, createEffect, createSignal, on, onMount } from 'so
 import { v4 as uuidv4 } from 'uuid';
 import { StarsAvatar } from './avatars/StarsAvatar';
 import { Bottombar } from './Bottombar';
+import { AskMoreAboutProductBubble } from './bubbles/AskAboutProductBubble';
 import { BotBubble } from './bubbles/BotBubble';
 import { GuestBubble } from './bubbles/GuestBubble';
 import { HintBubble } from './bubbles/HintBubble';
@@ -326,7 +327,12 @@ export const Bot = (props: BotConfig & BotProps) => {
   };
 
   return (
-    <div class="twi-relative twi-flex twi-flex-col twi-z-0 twi-h-full twi-w-full twi-overflow-hidden">
+    <div
+      class="twi-relative twi-flex twi-flex-col twi-z-0 twi-h-full twi-w-full twi-overflow-hidden"
+      style={{
+        'font-family': 'Poppins, sans-serif',
+      }}
+    >
       <div class="twi-relative twi-flex twi-max-h-full twi-flex-1 twi-flex-col twi-overflow-hidden">
         <div class="twi-flex twi-w-full twi-items-center twi-justify-center twi-bg-token-main-surface-primary twi-overflow-hidden"></div>
         <main class="twi-relative twi-h-full twi-w-full twi-flex-1 twi-overflow-hidden twi-transition-width">
@@ -344,7 +350,7 @@ export const Bot = (props: BotConfig & BotProps) => {
                   <StarsAvatar />
                 </div>
                 <For each={messages()}>
-                  {(message, _) => {
+                  {(message, i) => {
                     return (
                       <div class="twi-w-full twi-my-4">
                         {message.type === 'userMessage' && (
@@ -356,7 +362,7 @@ export const Bot = (props: BotConfig & BotProps) => {
                             avatarSrc={undefined}
                           />
                         )}
-                        {message.type === 'apiMessage' && (
+                        {message.type === 'apiMessage' && (i() != 0 || props.shopifyProduct == null) && (
                           <BotBubble
                             getMessage={() => message}
                             backgroundColor={props.botMessage?.backgroundColor || 'black'}
@@ -369,6 +375,14 @@ export const Bot = (props: BotConfig & BotProps) => {
                             purchaseButtonText={props.botMessage?.purchaseButtonText}
                             purchaseButtonBackgroundColor={props.botMessage?.purchaseButtonBackgroundColor}
                             purchaseButtonTextColor={props.botMessage?.purchaseButtonTextColor}
+                          />
+                        )}
+                        {message.type === 'apiMessage' && i() == 0 && props.shopifyProduct != null && (
+                          <AskMoreAboutProductBubble
+                            productHandle={props.shopifyProduct.handle} // TODO: use handle from Ask more about product
+                            product={props.shopifyProduct}
+                            backgroundColor={props.botMessage?.backgroundColor || 'black'}
+                            textColor={props.botMessage?.textColor}
                           />
                         )}
                       </div>

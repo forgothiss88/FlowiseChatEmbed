@@ -110,7 +110,7 @@ const FirstMessageBubble = (
   },
 ) => {
   return (
-    <div class="twi-my-5 twi-text-jost">
+    <div class="twi-my-5 ">
       <div
         class="twi-p-3 twi-whitespace-pre-wrap twi-max-w-full twi-rounded-3xl twi-chatbot-host-bubble"
         data-testid="host-bubble"
