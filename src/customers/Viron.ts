@@ -9,6 +9,7 @@ export const brandColors = {
   actionPrimaryTextColor: 'black',
   actionSecondary: 'black',
   actionSecondaryTextColor: 'white',
+  hintsBackgroundColor: 'rgb(0 123 75 / 10%)',
 }
 
 export const vironProps = (): FullBotProps => {
@@ -18,8 +19,9 @@ export const vironProps = (): FullBotProps => {
     chatflowid: 'viron',
     starterPrompts: {
       prompts: ["What's special about the materials used?", 'Can you tell me more about the fit?', 'Are they good for a trip?'],
-      textColor: 'white',
-      actionColor: brandColors.actionPrimary
+      textColor: 'black',
+      actionColor: brandColors.actionPrimary,
+      backgroundColor: 'rgb(0 123 75 / 10%)',
     },
     theme: {
       button: {
@@ -32,9 +34,9 @@ export const vironProps = (): FullBotProps => {
         title: '',
         titleAvatarSrc: '/public/avatars/viron.png',
         titleColor: brandColors.primary,
-        welcomeMessage: 'Hey there! I’m here to help you with the **1970 Black Corn boots**. How can I assist?',
-        templateWelcomeMessageOnProductPage: 'Hey there I’m here to help you with the **{{product}}**. How can I assist?',
-        backgroundColor: 'rgba(51, 51, 51, 0.75)',
+        welcomeMessage: 'Hey there!\nI’m your personal shopper from Virón 🌱',
+        templateWelcomeMessageOnProductPage: 'Hey there 🌱\nI’m here to help you with the **{{product}}**. How can I help you?',
+        backgroundColor: 'rgba(255, 255, 255, 0.65)',
         poweredByTextColor: 'black',
         firstMessage: undefined,
         textInput: {
@@ -47,17 +49,17 @@ export const vironProps = (): FullBotProps => {
           resetButtonColor: brandColors.actionPrimary,
         },
         botMessage: {
-          backgroundColor: brandColors.secondary,
+          backgroundColor: "transparent",
           textColor: brandColors.primary,
           showAvatar: false,
           enableMultipricing: false,
           purchaseButtonText: 'View product',
           purchaseButtonBackgroundColor: brandColors.actionPrimary,
-          purchaseButtonTextColor: brandColors.primary,
+          purchaseButtonTextColor: brandColors.primaryTextColor,
           faviconUrl: '/public/avatars/viron.png',
         },
         userMessage: {
-          backgroundColor: brandColors.primary,
+          backgroundColor: brandColors.actionPrimary,
           textColor: brandColors.primaryTextColor,
         },
       },

@@ -1,5 +1,5 @@
 import { SendButton } from '@/components/SendButton';
-import { createEffect, splitProps } from 'solid-js';
+import { Accessor, createEffect, splitProps } from 'solid-js';
 import { JSX } from 'solid-js/jsx-runtime';
 
 export type Props = {
@@ -12,6 +12,7 @@ export type Props = {
   setHeight: (height: number) => void;
   scrollToBottom: () => void;
   onSubmit: () => void;
+  isLoading: Accessor<boolean>;
   sendButtonColor: string;
   inputBackgroundColor: string;
   inputBorderColor: string;
@@ -48,15 +49,19 @@ export const AutoGrowTextArea = (props: Props) => {
   createEffect(resizeTextarea);
 
   return (
-    <div
-      class="twi-flex twi-flex-row twi-pl-3 twi-py-1 twi-rounded-2xl twi-bg-gray-200 twi-border"
-      style={{ 'background-color': props.inputBackgroundColor, 'border-color': props.inputBorderColor }}
-    >
-      {textarea}
-      <div class="twi-my-auto twi-py-2 twi-pr-3">
+    <div class="twi-inline-flex twi-w-full">
+      <div
+        class="twi-flex-1 twi-flex twi-flex-row twi-pl-3 twi-py-1 twi-rounded-full twi-bg-gray-200 twi-border twi-w-full"
+        style={{ 'background-color': props.inputBackgroundColor, 'border-color': props.inputBorderColor }}
+      >
+        {textarea}
+      </div>
+      <div class="twi-my-auto twi-pl-3">
         <SendButton
           color={props.sendButtonColor}
+          arrowColor="white"
           type="button"
+          isLoading={props.isLoading}
           isDisabled={props.disabled || props.getInputValue() === ''}
           onClick={props.onSubmit}
         />

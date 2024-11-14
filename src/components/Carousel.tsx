@@ -1,5 +1,6 @@
 import { Show, createSignal } from 'solid-js';
 import { DownArrow, LeftArrow, RightArrow, UpArrow } from './icons/Arrow';
+import { HintStars } from './icons/HintStars';
 import { ProductMetadata, SourceProduct } from './types/documents';
 
 const ProductCard = (props: { isPrimary: boolean; product: ProductMetadata; onClick?: () => null }) => {
@@ -165,29 +166,50 @@ export const SinglePriceButton = (props: { purchaseButtonText: string; price: nu
 
 export const SingleProductShowcase = (props: { product: SourceProduct } & PurchaseButtonAspect) => {
   return (
-    <div class="twi-text-poppins twi-overflow-hidden twi-flex twi-flex-col twi-p-3" style={{ 'max-width': '208px' }}>
-      <div class="twi-flex twi-flex-col twi-pt-4 twi-w-full" style={{ flex: '0 0 auto' }}>
+    <div class="twi-text-poppins twi-flex twi-flex-row twi-p-3 twi-overflow-visible">
+      <div
+        class="twi-flex twi-flex-col twi-rounded-lg -twi-rotate-3 twi-max-w-36"
+        style={{
+          flex: '0 0 auto',
+          'box-shadow': '0px 4px 50px 5px rgba(0, 123, 75, 0.4), 0px 10px 20px 5px rgba(0, 191, 125, 0.2)',
+        }}
+      >
         <img
-          class="twi-aspect-auto twi-object-cover twi-bg-white twi-animate-fade-in twi-rounded-lg twi-border-gray-500 twi-bottom-1"
+          class="twi-aspect-auto twi-object-cover twi-bg-white twi-animate-fade-in twi-rounded-t-lg twi-border-gray-500 twi-bottom-1"
           src={props.product.metadata.thumbnail_url}
-          alt=""
+          alt="" // TODO: add alt text
         />
-        <p class="twi-text-xs twi-font-normal twi-text-start twi-p-1">{props.product.metadata.name}</p>
-        <p class="twi-text-base twi-font-normal twi-text-start twi-p-1">{Math.round(props.product.metadata.price)}€</p>
-        <div class="twi-pb-3 twi-pt-1">
-          <a
-            href={props.product.metadata.item_url}
-            target="_blank"
-            class="twi-w-full twi-text-sm twi-font-normal twi-px-4 twi-py-2 twi-whitespace-nowrap twi-self-center twi-block twi-text-center"
-            style={{
-              background: props.purchaseButtonBackgroundColor,
-              color: props.purchaseButtonTextColor,
-              'border-color': props.purchaseButtonBackgroundColor,
-            }}
-          >
-            {props.purchaseButtonText}
-          </a>
+        <div class="twi-px-4 twi-py-3">
+          <span class="twi-text-base twi-font-normal twi-text-start twi-block">{props.product.metadata.name}</span>
+          <span class="twi-text-xs twi-font-light twi-text-start twi-mt-2 twi-block">{Math.round(props.product.metadata.price)}€</span>
         </div>
+      </div>
+      <div class="twi-flex twi-flex-col twi-self-center twi-h-full twi-ml-7">
+        <a
+          href={props.product.metadata.item_url}
+          target="_blank"
+          class="twi-w-full twi-rounded-md twi-my-2 twi-text-sm twi-font-light twi-px-4 twi-py-2 twi-whitespace-nowrap twi-self-center twi-block twi-text-center"
+          style={{
+            background: props.purchaseButtonBackgroundColor,
+            color: props.purchaseButtonTextColor,
+            'border-color': props.purchaseButtonBackgroundColor,
+          }}
+        >
+          {props.purchaseButtonText}
+        </a>
+        <a
+          href={props.product.metadata.item_url}
+          target="_blank"
+          class="twi-w-full twi-rounded-md twi-my-2 twi-text-sm twi-font-light twi-px-4 twi-py-2 twi-whitespace-nowrap twi-self-center twi-block twi-text-center"
+          style={{
+            background: props.purchaseButtonTextColor,
+            color: props.purchaseButtonBackgroundColor,
+            'border-color': props.purchaseButtonTextColor,
+          }}
+        >
+          <HintStars color={props.purchaseButtonBackgroundColor} class="twi-mr-1" />
+          Ask more...
+        </a>
       </div>
     </div>
   );

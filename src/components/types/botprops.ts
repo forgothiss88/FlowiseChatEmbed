@@ -25,6 +25,7 @@ export type StarterPromptsType = {
   prompts: string[];
   textColor: string;
   actionColor: string;
+  backgroundColor: string;
 };
 
 export type BotConfig = {

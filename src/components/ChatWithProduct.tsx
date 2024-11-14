@@ -6,6 +6,7 @@ import { ShopifyProduct } from './types/product';
 export type Props = {
   textColor: string;
   backgroundColor: string;
+  hintsBackgroundColor: string;
   isBotOpened: Accessor<boolean>;
   setIsBotOpened: Setter<boolean>;
   product?: ShopifyProduct;
@@ -16,9 +17,11 @@ export type Props = {
 
 export const ChatWithProduct = (props: Props) => {
   return (
-    <div class="twi-text-sm twi-text-poppins" style={{ color: props.textColor }}>
-      <p class="twi-mb-2">(based on your recent chat)</p>
-      <p class="twi-mb-2">
+    <div>
+      <p class="twi-mb-2" style={{ color: props.textColor }}>
+        (based on your recent chat)
+      </p>
+      <p class="twi-mb-2" style={{ color: props.textColor }}>
         {props.summary() ||
           'Lorem ipsum dolor sit amet consectetur adipisicing elit. Facere possimus laudantium similique, tempore inventore necessitatibus nihil?'}
       </p>
@@ -28,6 +31,7 @@ export const ChatWithProduct = (props: Props) => {
             actionColor={props.textColor}
             message={prompt}
             textColor={props.textColor}
+            backgroundColor={props.hintsBackgroundColor}
             onClick={() => {
               props.setIsBotOpened(true);
               setTimeout(() => {
@@ -38,7 +42,7 @@ export const ChatWithProduct = (props: Props) => {
         )}
       </For>
       <button
-        class="twi-cursor-pointer twi-bg-white twi-border twi-w-full twi-p-3 twi-mt-1 twi-rounded-full twi-flex twi-flex-row twi-items-center"
+        class="twi-cursor-pointer twi-bg-white twi-border twi-w-full twi-px-3 twi-py-1 twi-mt-1 twi-rounded-full twi-flex twi-flex-row twi-items-center"
         onClick={props.setIsBotOpened}
         style={{
           'background-color': props.backgroundColor,
@@ -47,7 +51,7 @@ export const ChatWithProduct = (props: Props) => {
         }}
       >
         <span class="twi-mr-auto">Continue this conversation...</span>
-        <SendButton color={props.textColor} />
+        <SendButton arrowColor={props.textColor} color="white" isDisabled={false} isLoading={() => false} />
       </button>
     </div>
   );

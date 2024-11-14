@@ -3,7 +3,7 @@ import { MessageBE, RunInput } from '@/queries/sendMessageQuery';
 import { fetchEventSource } from '@microsoft/fetch-event-source';
 import { Accessor, For, Show, createEffect, createSignal, on, onMount } from 'solid-js';
 import { v4 as uuidv4 } from 'uuid';
-import { Avatar } from './avatars/Avatar';
+import { StarsAvatar } from './avatars/StarsAvatar';
 import { Bottombar } from './Bottombar';
 import { BotBubble } from './bubbles/BotBubble';
 import { GuestBubble } from './bubbles/GuestBubble';
@@ -43,6 +43,9 @@ export const Bot = (props: BotConfig & BotProps) => {
     ],
     { equals: false },
   );
+
+  console.log(props.welcomeMessage);
+  console.log(messages());
 
   const [isBusy, setBusy] = createSignal(true);
   const [isWaitingForResponse, setWaitingForResponse] = createSignal(false);
@@ -112,10 +115,11 @@ export const Bot = (props: BotConfig & BotProps) => {
     if (chatRef() == null) {
       console.error('chatRef is null');
       return;
-    } else if (cartToken() == null) {
-      console.error('cartToken is null');
-      return;
     }
+    // if (cartToken() == null) {
+    //   console.error('cartToken is null');
+    //   return;
+    // }
 
     const body: RunInput = {
       input: {
@@ -123,7 +127,7 @@ export const Bot = (props: BotConfig & BotProps) => {
         chat_history: messageList,
         username: props.creatorName,
         chat_ref: chatRef(),
-        cart_token: cartToken(),
+        cart_token: cartToken() || 'fake_cart_token',
       },
       config: {},
     };
@@ -299,6 +303,9 @@ export const Bot = (props: BotConfig & BotProps) => {
       .then((data) => data.token);
     if (cartToken != null) {
       setCartToken(cartToken);
+    } else {
+      console.error('cartToken is null');
+      setCartToken('fake_cart_token');
     }
   });
 
@@ -324,18 +331,17 @@ export const Bot = (props: BotConfig & BotProps) => {
         <div class="twi-flex twi-w-full twi-items-center twi-justify-center twi-bg-token-main-surface-primary twi-overflow-hidden"></div>
         <main class="twi-relative twi-h-full twi-w-full twi-flex-1 twi-overflow-hidden twi-transition-width">
           <button
-            class="twi-cursor-pointer twi-fixed twi-top-6 twi-right-6 twi-rounded-full twi-bg-white twi-p-4 twi-shadow-lg twi-shadow-black twi-z-10"
+            class="twi-cursor-pointer twi-fixed twi-top-6 twi-left-6 twi-rounded-full twi-bg-transparent twi-p-4 twi-z-10"
             onClick={props.closeBot}
             style={{ 'line-height': 0 }}
           >
-            <XIcon color="black" width={16} height={16}></XIcon>
+            <XIcon color="black" width={24} height={24}></XIcon>
           </button>
           <div role="presentation" tabindex="0" class="twi-flex twi-h-full twi-flex-col twi-focus-visible:outline-0 overflow-hidden">
             <div ref={chatContainer} class="twi-flex-1 twi-overflow-auto twi-scroll-smooth twi-no-scrollbar-container">
-              <div class="twi-w-full twi-h-16" style={{ display: 'block' }}></div>
               <div class="twi-overflow-hidden twi-px-3">
                 <div class="twi-flex twi-justify-center twi-py-10">
-                  <Avatar src={props.titleAvatarSrc} classList={['twi-h-1/4', 'twi-w-1/4', 'twi-shadow-lg', 'twi-shadow-black']} />
+                  <StarsAvatar />
                 </div>
                 <For each={messages()}>
                   {(message, _) => {
@@ -394,6 +400,7 @@ export const Bot = (props: BotConfig & BotProps) => {
                         actionColor={props.starterPrompts.actionColor}
                         message={prompt}
                         textColor={props.starterPrompts.textColor}
+                        backgroundColor={props.starterPrompts.backgroundColor}
                         onClick={() => handleSubmit(prompt)}
                       />
                     )}
@@ -423,6 +430,7 @@ export const Bot = (props: BotConfig & BotProps) => {
             poweredByTextColor={props.poweredByTextColor ?? 'black'}
             inputBorderColor={props.textInput.inputBorderColor}
             scrollToBottom={scrollToBottom}
+            isLoading={isBusy}
           />
         </main>
         {sourcePopupOpen() && <Popup isOpen={sourcePopupOpen()} value={sourcePopupSrc()} onClose={() => setSourcePopupOpen(false)} />}

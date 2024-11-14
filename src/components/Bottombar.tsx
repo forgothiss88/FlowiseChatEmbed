@@ -1,4 +1,4 @@
-import { createEffect, createSignal, onMount } from 'solid-js';
+import { Accessor, createEffect, createSignal, onMount } from 'solid-js';
 import { Badge } from './Badge';
 import { DeleteButton } from './SendButton';
 import { AutoGrowTextArea } from './inputs/AutoGrowTextArea';
@@ -24,6 +24,7 @@ export type Props = {
   disabled?: boolean;
   isFullPage?: boolean;
   isDeleteEnabled: boolean;
+  isLoading: Accessor<boolean>;
   onSubmit: (value: string) => void;
   clearChat: () => void;
   getInputValue: () => string;
@@ -57,15 +58,21 @@ export const Bottombar = (props: Props) => {
         style={{ 'background-color': props.backgroundColor ?? defaultBackgroundColor, 'border-top': '1px solid #eeeeee' }}
       >
         <div
-          class={'twi-w-full twi-flex twi-flex-row twi-pt-2 twi-px-2'}
+          class={'twi-w-full twi-flex twi-flex-row twi-pt-3 twi-px-2'}
           data-testid="input"
           style={{
             color: props.textColor ?? defaultTextColor,
           }}
           onKeyDown={submitWhenEnter}
         >
-          <DeleteButton color={props.resetButtonColor} type="reset" isDisabled={!props.isDeleteEnabled} onClick={props.clearChat} />
-          <div class="twi-mr-2 twi-w-full">
+          <DeleteButton
+            isLoading={props.isLoading}
+            color={props.resetButtonColor}
+            type="reset"
+            isDisabled={!props.isDeleteEnabled}
+            onClick={props.clearChat}
+          />
+          <div class="twi-mx-2 twi-w-full">
             <AutoGrowTextArea
               ref={props.ref}
               setInputValue={props.setInputValue}
@@ -79,6 +86,7 @@ export const Bottombar = (props: Props) => {
               scrollToBottom={props.scrollToBottom}
               inputBackgroundColor={props.inputBackgroundColor}
               inputBorderColor={props.inputBorderColor}
+              isLoading={props.isLoading}
             />
           </div>
         </div>

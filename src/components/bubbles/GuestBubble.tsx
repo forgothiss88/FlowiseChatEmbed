@@ -1,5 +1,4 @@
 import { Marked } from '@ts-stack/markdown';
-import { onMount } from 'solid-js';
 
 type Props = {
   message: string;
@@ -12,16 +11,8 @@ type Props = {
 const defaultBackgroundColor = '#3B81F6';
 const defaultTextColor = '#ffffff';
 
-Marked.setOptions({ isNoP: true });
-
 export const GuestBubble = (props: Props) => {
   let userMessageEl: HTMLDivElement | undefined;
-
-  onMount(() => {
-    if (userMessageEl) {
-      userMessageEl.innerHTML = Marked.parse(props.message);
-    }
-  });
 
   return (
     <div class="twi-flex twi-justify-end twi-items-end twi-guest-container twi-text-poppins">
@@ -33,6 +24,7 @@ export const GuestBubble = (props: Props) => {
           'background-color': props.backgroundColor ?? defaultBackgroundColor,
           color: props.textColor ?? defaultTextColor,
         }}
+        innerHTML={Marked.parse(props.message, { isNoP: true })}
       />
     </div>
   );

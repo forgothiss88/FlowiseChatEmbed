@@ -34,6 +34,8 @@ export const BubbleBot = (
       ? props.theme.chatWindow.templateWelcomeMessageOnProductPage.replace('{{product}}', props.product.title)
       : props.theme.chatWindow.welcomeMessage;
 
+  console.log(welcomeMessage);
+
   return (
     <>
       <Show when={!props.isBotOpened()}>
@@ -56,6 +58,7 @@ export const BubbleBot = (
           transform: props.isBotOpened() ? 'scale3d(1, 1, 1)' : 'scale3d(0, 0, 1)',
           'box-shadow': 'rgb(0 0 0 / 16%) 0px 5px 40px',
           background: props.theme.chatWindow.backgroundColor + ' fixed',
+          'z-index': 9999,
         }}
         class={
           'twi-fixed twi-z-50 twi-right-0 twi-bottom-0 twi-backdrop-blur md:twi-rounded-3xl lg:twi-right-4 lg:twi-bottom-4 twi-w-full lg:twi-max-w-md twi-top-0 lg:twi-top-auto lg:twi-h-[704px]' +

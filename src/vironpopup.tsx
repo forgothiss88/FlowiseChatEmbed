@@ -14,7 +14,7 @@ if (!cb) {
 }
 const props = vironProps();
 // dev
-props.apiUrl = 'http://localhost:8000/twini-stream/viron-agents';
+props.apiUrl = 'http://localhost:8001/twini-stream/viron-agents';
 
 const avatarShopifyCdnUrl = cb.getAttribute('data-avatar-shopify-cdn-url');
 if (avatarShopifyCdnUrl) {
@@ -53,6 +53,7 @@ const [summary, setSummary] = createSignal<string>('');
 
 Sentry.init({
   dsn: 'https://0e923b8b2f8f5f284443d82e730e5fd8@o4508080401088512.ingest.de.sentry.io/4508132557717584',
+  environment: process.env.NODE_ENV,
   integrations: [Sentry.browserTracingIntegration(), Sentry.replayIntegration()],
   // Tracing
   tracesSampleRate: 1.0, //  Capture 100% of the transactions
@@ -98,6 +99,7 @@ if (!chatWithProductWidget) {
           setIsBotOpened={setIsBotOpened}
           textColor={brandColors.actionPrimary}
           backgroundColor={brandColors.secondary}
+          hintsBackgroundColor={brandColors.hintsBackgroundColor}
           product={product}
           askQuestion={askQuestion}
           nextQuestions={nextQuestions}

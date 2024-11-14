@@ -2,8 +2,9 @@ import { HintStars } from '../icons/HintStars';
 
 type Props = {
   message: string;
-  textColor?: string;
-  actionColor?: string;
+  textColor: string;
+  actionColor: string;
+  backgroundColor: string;
   onClick: () => void;
 };
 
@@ -11,10 +12,11 @@ export const HintBubble = (props: Props) => {
   return (
     <div class="twi-flex twi-justify-end twi-guest-container twi-py-1 twi-w-full">
       <button
-        class="twi-flex twi-cursor-pointer twi-items-center twi-bg-transparent twi-p-3 twi-max-w-[80%] twi-rounded-2xl twi-rounded-tr-none twi-whitespace-pre-wrap twi-font-light twi-text-sm twi-text-poppins twi-text-left twi-border-dashed twi-border"
+        class="twi-flex twi-cursor-pointer twi-items-center twi-bg-transparent twi-p-2 twi-pr-3 twi-max-w-[80%] twi-rounded-2xl twi-rounded-tr-none twi-whitespace-pre-wrap twi-font-light twi-text-sm twi-text-poppins twi-text-left twi-border-dashed twi-border"
         onClick={props.onClick}
         style={{
-          'border-color': props.textColor,
+          'border-color': props.actionColor,
+          'background-color': props.backgroundColor,
         }}
       >
         <span class="twi-mr-2">

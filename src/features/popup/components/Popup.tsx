@@ -48,7 +48,7 @@ export const Popup = (props: PopupProps) => {
         aria-labelledby="modal-title"
         role="dialog"
         aria-modal="true"
-        style={{ 'z-index': 1100 }}
+        style={{ 'z-index': 9999999999 }}
         on:click={closeBot}
       >
         <div class="twi-fixed twi-inset-0 twi-bg-black twi-bg-opacity-50 twi-transition-opacity twi-animate-fade-in" />

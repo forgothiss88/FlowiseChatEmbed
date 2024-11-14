@@ -1,9 +1,8 @@
 import { Marked } from '@ts-stack/markdown';
-import { onMount, Show } from 'solid-js';
+import { Show } from 'solid-js';
 import { ProductCarousel, PurchaseButtonAspect, SingleProductShowcase } from '../Carousel';
 import { MessageType } from '../types/botprops';
 import { SourceContent, SourceProduct } from '../types/documents';
-import { SourcesDropdown } from './SourcesDropdown';
 
 type Props = {
   getMessage: () => MessageType;
@@ -19,21 +18,13 @@ type Props = {
 const defaultBackgroundColor = '#f7f8ff';
 const defaultTextColor = '#303235';
 
-Marked.setOptions({ isNoP: true });
-
 export const BotBubble = (props: Props) => {
   let msgRef: HTMLDivElement | undefined;
-
-  onMount(() => {
-    if (msgRef) {
-      msgRef.innerHTML = Marked.parse(props.getMessage().message);
-    }
-  });
 
   return (
     <div class="twi-flex twi-flex-row twi-justify-start twi-items-start twi-host-container twi-text-poppins twi-w-11/12">
       <div
-        class="twi-overflow-hidden twi-whitespace-pre-wrap twi-rounded-2xl rounded-tl-none twi-chatbot-host-bubble twi-text-sm twi-font-light twi-max-w-full"
+        class="twi-whitespace-pre-wrap twi-rounded-2xl rounded-tl-none twi-chatbot-host-bubble twi-text-sm twi-font-light twi-max-w-full"
         data-testid="host-bubble"
         style={{
           'background-color': props.backgroundColor ?? defaultBackgroundColor,
@@ -41,12 +32,7 @@ export const BotBubble = (props: Props) => {
         }}
       >
         <div class="twi-p-3">
-          <Show when={props.sourceContent != null && props.sourceContent?.length > 0}>
-            <div class="twi-w-full twi-mb-3">
-              <SourcesDropdown sources={props.sourceContent} faviconUrl={props?.faviconUrl} />
-            </div>
-          </Show>
-          <span ref={msgRef} innerHTML={props.getMessage().message} />
+          <span ref={msgRef} innerHTML={Marked.parse(props.getMessage().message, { isNoP: true })}></span>
         </div>
         <Show when={props.suggestedProduct != null}>
           <SingleProductShowcase

@@ -78,3 +78,7 @@
 .twini-base .twi-text-poppins {
   font-family: 'Poppins';
 }
+
+.twini-base .twi-text-15 {
+  font-size: 15px;
+}
