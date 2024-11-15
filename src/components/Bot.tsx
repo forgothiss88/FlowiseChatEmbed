@@ -1,7 +1,7 @@
 import { Popup } from '@/features/popup';
 import { MessageBE, RunInput } from '@/queries/sendMessageQuery';
 import { fetchEventSource } from '@microsoft/fetch-event-source';
-import { Accessor, For, Show, createEffect, createSignal, on, onMount } from 'solid-js';
+import { Accessor, For, Setter, Show, createEffect, createSignal, on, onMount } from 'solid-js';
 import { v4 as uuidv4 } from 'uuid';
 import { StarsAvatar } from './avatars/StarsAvatar';
 import { Bottombar } from './Bottombar';
@@ -12,6 +12,7 @@ import { HintBubble } from './bubbles/HintBubble';
 import { LoadingBubble } from './bubbles/LoadingBubble';
 import { XIcon } from './icons/XIcon';
 import { BotConfig, BotProps, MessageType, messageType } from './types/botprops';
+import { storedChat } from './types/chat';
 import { SourceContent, SourceProduct } from './types/documents';
 import {
   AnswerEvent,
@@ -40,6 +41,7 @@ export const Bot = (props: BotConfig & BotProps) => {
         type: 'apiMessage',
         message: props.welcomeMessage,
         nextQuestions: [...props.starterPrompts.prompts],
+        productHandle: props.shopifyProduct?.handle,
       },
     ],
     { equals: false },
@@ -53,6 +55,9 @@ export const Bot = (props: BotConfig & BotProps) => {
 
   const [chatRef, setChatRef] = createSignal<string | null>(null);
   const [cartToken, setCartToken] = createSignal<string | null>(null);
+  const [newProductHandle, setNewProductHandle] = createSignal<string | null>(null);
+
+  const storageKey = `twini-${props.shopRef}`;
 
   const scrollToBottom = (timeout?: number) => {
     setTimeout(() => {
@@ -71,7 +76,21 @@ export const Bot = (props: BotConfig & BotProps) => {
    * Add each chat message into localStorage
    */
   const saveChatToLocalStorage = () => {
-    localStorage.setItem(`${props.chatflowid}_EXTERNAL`, JSON.stringify({ chatRef: chatRef(), chatHistory: messages() }));
+    localStorage.setItem(storageKey, JSON.stringify({ chatRef: chatRef(), chatHistory: messages() }));
+  };
+
+  const restoreChatFromStorage = (): boolean => {
+    const data = localStorage.getItem(storageKey) as string;
+    if (data == null) {
+      console.warn('No chat data found in storage for key ', storageKey);
+      return false;
+    }
+    const localChats: storedChat = JSON.parse(data);
+    console.log('Restoring chats with chatRef', localChats.chatRef);
+    setChatRef(localChats.chatRef);
+    setMessages([...localChats.chatHistory]);
+    props.setNextQuestions(localChats.chatHistory[localChats.chatHistory.length - 1].nextQuestions ?? []);
+    return true;
   };
 
   const moveLastMessageToMessages = () => {
@@ -126,9 +145,10 @@ export const Bot = (props: BotConfig & BotProps) => {
       input: {
         input: value,
         chat_history: messageList,
-        username: props.creatorName,
+        username: props.shopRef,
         chat_ref: chatRef(),
         cart_token: cartToken() || 'fake_cart_token',
+        // TODO: product: props.shopifyProduct,
       },
       config: {},
     };
@@ -261,13 +281,14 @@ export const Bot = (props: BotConfig & BotProps) => {
 
   const clearChat = () => {
     try {
-      localStorage.removeItem(`${props.chatflowid}_EXTERNAL`);
+      localStorage.removeItem(`twini-${props.shopRef}`);
       setChatRef(uuidv4());
       setMessages([
         {
           message: props.welcomeMessage,
           type: 'apiMessage',
           nextQuestions: [...props.starterPrompts.prompts],
+          productHandle: props.shopifyProduct?.handle,
         },
       ]);
       props.setNextQuestions([...(props.starterPrompts.prompts ?? [])]);
@@ -278,15 +299,18 @@ export const Bot = (props: BotConfig & BotProps) => {
     }
   };
 
-  onMount(async () => {
-    const localChatsData = localStorage.getItem(`${props.chatflowid}_EXTERNAL`);
-    if (localChatsData != null) {
-      const localChats: { chatHistory: MessageType[]; chatRef: string } = JSON.parse(localChatsData);
-      console.log('Restoring chats with chatRef', localChats.chatRef);
-      setChatRef(localChats.chatRef);
-      setMessages([...localChats.chatHistory]);
-      props.setNextQuestions(localChats.chatHistory[localChats.chatHistory.length - 1].nextQuestions ?? []);
+  const onStorageChange = (event: StorageEvent) => {
+    if (event.storageArea !== localStorage) {
+      return;
+    } else if (props.shopifyProduct !== null && event.key === storageKey) {
+      restoreChatFromStorage();
     } else {
+      return;
+    }
+  };
+
+  onMount(async () => {
+    if (!restoreChatFromStorage()) {
       setChatRef(uuidv4());
     }
 
@@ -321,6 +345,27 @@ export const Bot = (props: BotConfig & BotProps) => {
     ),
   );
 
+  createEffect(
+    on(
+      () => newProductHandle(),
+      (handle) => {
+        if (handle == null) return;
+        setMessages([
+          ...messages(),
+          {
+            type: 'apiMessage',
+            message: "Let's talk about this product",
+            nextQuestions: [...props.starterPrompts.prompts],
+            productHandle: handle,
+          },
+        ]);
+        console.debug('bot client height', props.bot.clientHeight);
+        setBottomSpacerHeight(props.bot.clientHeight);
+        scrollToBottom();
+      },
+    ),
+  );
+
   const [bottomSpacerHeight, setBottomSpacerHeight] = createSignal(0);
   const focusOnTextarea = () => {
     textareaRef?.focus();
@@ -336,19 +381,25 @@ export const Bot = (props: BotConfig & BotProps) => {
       <div class="twi-relative twi-flex twi-max-h-full twi-flex-1 twi-flex-col twi-overflow-hidden">
         <div class="twi-flex twi-w-full twi-items-center twi-justify-center twi-bg-token-main-surface-primary twi-overflow-hidden"></div>
         <main class="twi-relative twi-h-full twi-w-full twi-flex-1 twi-overflow-hidden twi-transition-width">
-          <button
-            class="twi-cursor-pointer twi-fixed twi-top-6 twi-left-6 twi-rounded-full twi-bg-transparent twi-p-4 twi-z-10"
-            onClick={props.closeBot}
-            style={{ 'line-height': 0 }}
-          >
-            <XIcon color="black" width={24} height={24}></XIcon>
-          </button>
-          <div role="presentation" tabindex="0" class="twi-flex twi-h-full twi-flex-col twi-focus-visible:outline-0 overflow-hidden">
+          <div class="twi-fixed twi-top-0 twi-left-0 twi-w-full">
+            <div class="twi-absolute twi-inset-0 twi-blur-lg"></div>
+            <div class="twi-relative twi-flex twi-items-center twi-bg-gradient-to-t twi-from-transparent twi-via-white/70 twi-to-white">
+              <button
+                class="twi-cursor-pointer twi-absolute twi-pl-7 twi-py-7 twi-rounded-full twi-bg-transparent twi-z-10"
+                onClick={props.closeBot}
+                style={{ 'line-height': 0 }}
+              >
+                <XIcon fill="black" width={24} height={24}></XIcon>
+              </button>
+              <div class="twi-flex-1 twi-flex twi-py-7 twi-justify-center">
+                <StarsAvatar width={24} height={24} />
+              </div>
+            </div>
+          </div>
+          <div role="presentation" tabindex="0" class="twi-flex twi-h-full twi-flex-col twi-focus-visible:outline-0 twi-overflow-hidden">
             <div ref={chatContainer} class="twi-flex-1 twi-overflow-auto twi-scroll-smooth twi-no-scrollbar-container">
               <div class="twi-overflow-hidden twi-px-3">
-                <div class="twi-flex twi-justify-center twi-py-10">
-                  <StarsAvatar />
-                </div>
+                <div class="twi-py-10 twi-block"></div>
                 <For each={messages()}>
                   {(message, i) => {
                     return (
@@ -362,7 +413,7 @@ export const Bot = (props: BotConfig & BotProps) => {
                             avatarSrc={undefined}
                           />
                         )}
-                        {message.type === 'apiMessage' && (i() != 0 || props.shopifyProduct == null) && (
+                        {message.type === 'apiMessage' && message.productHandle == null && (
                           <BotBubble
                             getMessage={() => message}
                             backgroundColor={props.botMessage?.backgroundColor || 'black'}
@@ -375,12 +426,13 @@ export const Bot = (props: BotConfig & BotProps) => {
                             purchaseButtonText={props.botMessage?.purchaseButtonText}
                             purchaseButtonBackgroundColor={props.botMessage?.purchaseButtonBackgroundColor}
                             purchaseButtonTextColor={props.botMessage?.purchaseButtonTextColor}
+                            setNewProductHandle={setNewProductHandle as Setter<string>}
                           />
                         )}
-                        {message.type === 'apiMessage' && i() == 0 && props.shopifyProduct != null && (
+                        {message.type === 'apiMessage' && message.productHandle != null && (
                           <AskMoreAboutProductBubble
-                            productHandle={props.shopifyProduct.handle} // TODO: use handle from Ask more about product
-                            product={props.shopifyProduct}
+                            productHandle={message.productHandle} // TODO: use handle from Ask more about product
+                            product={message.productHandle == props.shopifyProduct?.handle ? props.shopifyProduct : undefined} // if NOT on product page will be undefined
                             backgroundColor={props.botMessage?.backgroundColor || 'black'}
                             textColor={props.botMessage?.textColor}
                           />
@@ -405,6 +457,7 @@ export const Bot = (props: BotConfig & BotProps) => {
                     purchaseButtonText={props.botMessage?.purchaseButtonText}
                     purchaseButtonBackgroundColor={props.botMessage?.purchaseButtonBackgroundColor}
                     purchaseButtonTextColor={props.botMessage?.purchaseButtonTextColor}
+                    setNewProductHandle={setNewProductHandle as Setter<string>}
                   />
                 </Show>
                 <Show when={!isBusy()}>

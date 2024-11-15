@@ -1,4 +1,4 @@
-import { Show, createSignal } from 'solid-js';
+import { Setter, Show, createSignal } from 'solid-js';
 import { DownArrow, LeftArrow, RightArrow, UpArrow } from './icons/Arrow';
 import { HintStars } from './icons/HintStars';
 import { ProductMetadata, SourceProduct } from './types/documents';
@@ -164,7 +164,9 @@ export const SinglePriceButton = (props: { purchaseButtonText: string; price: nu
   );
 };
 
-export const SingleProductShowcase = (props: { product: SourceProduct } & PurchaseButtonAspect) => {
+export const SingleProductShowcase = (props: { setNewProductHandle: Setter<string>; product: SourceProduct } & PurchaseButtonAspect) => {
+  console.debug('SingleProductShowcase', props);
+  console.debug('setNewProductHandle', props.setNewProductHandle);
   return (
     <div class=" twi-flex twi-flex-row twi-p-3 twi-overflow-visible">
       <div
@@ -197,19 +199,18 @@ export const SingleProductShowcase = (props: { product: SourceProduct } & Purcha
         >
           {props.purchaseButtonText}
         </a>
-        <a
-          href={props.product.metadata.item_url}
-          target="_blank"
-          class="twi-w-full twi-rounded-md twi-my-2 twi-text-sm twi-font-light twi-px-4 twi-py-2 twi-whitespace-nowrap twi-self-center twi-block twi-text-center"
+        <button
+          class="twi-w-full twi-rounded-md twi-my-2 twi-text-sm twi-font-light twi-px-4 twi-py-2 twi-whitespace-nowrap twi-self-center twi-block twi-text-center twi-cursor-pointer"
           style={{
             background: props.purchaseButtonTextColor,
             color: props.purchaseButtonBackgroundColor,
             'border-color': props.purchaseButtonTextColor,
           }}
+          onClick={() => props.setNewProductHandle(props.product.metadata.slug)}
         >
           <HintStars color={props.purchaseButtonBackgroundColor} class="twi-mr-1" />
           Ask more...
-        </a>
+        </button>
       </div>
     </div>
   );

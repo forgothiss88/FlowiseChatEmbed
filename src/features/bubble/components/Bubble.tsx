@@ -32,8 +32,7 @@ export const BubbleBot = (
       ? props.theme.chatWindow.templateWelcomeMessageOnProductPage.replace('{{product}}', props.shopifyProduct.title)
       : props.theme.chatWindow.welcomeMessage;
 
-  console.log(welcomeMessage);
-
+  let botRef: HTMLDivElement | undefined;
   return (
     <>
       <Show when={!props.isBotOpened()}>
@@ -49,6 +48,7 @@ export const BubbleBot = (
       </Show>
       <div
         part="bot"
+        ref={botRef}
         style={{
           height: props.theme.chatWindow.height ? `${props.theme.chatWindow.height.toString()}px` : '',
           transition: 'transform 200ms cubic-bezier(0, 1.2, 1, 1), opacity 150ms ease-out',
@@ -59,11 +59,12 @@ export const BubbleBot = (
           'z-index': 9999999999,
         }}
         class={
-          'twi-fixed twi-z-50 twi-right-0 twi-bottom-0 twi-backdrop-blur md:twi-rounded-3xl lg:twi-right-4 lg:twi-bottom-4 twi-w-full lg:twi-max-w-md twi-top-0 lg:twi-top-auto lg:twi-h-[704px]' +
+          'twi-fixed twi-overflow-hidden twi-z-50 twi-right-0 twi-bottom-0 twi-backdrop-blur md:twi-rounded-3xl md:twi-right-4 md:twi-bottom-4 twi-w-full md:twi-max-w-md twi-top-0 md:twi-top-auto md:twi-h-[704px]' +
           (props.isBotOpened() ? ' twi-opacity-1' : ' twi-opacity-0 twi-pointer-events-none')
         }
       >
         <Bot
+          bot={botRef}
           getElement={props.getElement}
           titleAvatarSrc={props.theme.chatWindow.titleAvatarSrc}
           welcomeMessage={welcomeMessage}
@@ -72,10 +73,9 @@ export const BubbleBot = (
           botMessage={props.theme.chatWindow.botMessage}
           userMessage={props.theme.chatWindow.userMessage}
           fontSize={props.theme.chatWindow.fontSize}
-          chatflowid={props.chatflowid}
+          shopRef={props.shopRef}
           apiUrl={props.apiUrl}
           starterPrompts={props.starterPrompts || {}}
-          creatorName={props.creatorName}
           closeBot={closeBot}
           question={props.question}
           nextQuestions={props.nextQuestions}

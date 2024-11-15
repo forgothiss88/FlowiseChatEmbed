@@ -11,9 +11,9 @@
     "dist"
   ],
   "scripts": {
-    "dev": "rollup --watch --config rollup.config.js",
-    "live": "ROLLUP_SERVE=1 rollup --watch --config rollup.config.js",
-    "build": "rollup --config rollup.config.js",
+    "dev": "NODE_ENV=local rollup --watch --config rollup.config.js",
+    "live": "SERVE=true NODE_ENV=local rollup --watch --config rollup.config.js",
+    "build": "NODE_ENV=production rollup --config rollup.config.js",
     "lint": "eslint \"src/**/*.ts*\"",
     "lint-fix": "eslint --fix \"src/**/*.ts*\"",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,md,mdx}\"",
@@ -56,6 +56,7 @@
     "postcss-nested": "^6.2.0",
     "prettier": "^3.1.0",
     "rollup": "3.23.0",
+    "rollup-plugin-inject-process-env": "^1.3.1",
     "rollup-plugin-livereload": "^2.0.5",
     "rollup-plugin-postcss": "^4.0.2",
     "rollup-plugin-serve": "^1.1.1",

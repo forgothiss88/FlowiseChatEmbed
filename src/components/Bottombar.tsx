@@ -53,10 +53,7 @@ export const Bottombar = (props: Props) => {
 
   const bb: HTMLDivElement = (
     <div>
-      <div
-        class={'twi-shadow-sm' + (props.isFullPage ? '' : ' md:twi-rounded-b-3xl')}
-        style={{ 'background-color': props.backgroundColor ?? defaultBackgroundColor, 'border-top': '1px solid #eeeeee' }}
-      >
+      <div class="twi-shadow-sm" style={{ 'background-color': props.backgroundColor ?? defaultBackgroundColor, 'border-top': '1px solid #eeeeee' }}>
         <div
           class={'twi-w-full twi-flex twi-flex-row twi-pt-3 twi-px-2'}
           data-testid="input"

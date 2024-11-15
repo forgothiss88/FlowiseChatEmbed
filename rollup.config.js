@@ -3,8 +3,8 @@ import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
 import terser from '@rollup/plugin-terser';
 import typescript from '@rollup/plugin-typescript';
-import { sentryRollupPlugin } from '@sentry/rollup-plugin';
 import autoprefixer from 'autoprefixer';
+import injectProcessEnv from 'rollup-plugin-inject-process-env';
 import livereload from 'rollup-plugin-livereload';
 import postcss from 'rollup-plugin-postcss';
 import serve from 'rollup-plugin-serve';
@@ -14,9 +14,13 @@ import tailwindcss from 'tailwindcss';
 
 const extensions = ['.ts', '.tsx'];
 
-const serveFiles = process.env.ROLLUP_SERVE == 1;
+const serveFiles = process.env.SERVE == 'true';
+const env = process.env.NODE_ENV || 'local';
 
-const randomPort = Math.floor(Math.random() * 10000) + 10000;
+console.log('serveFiles', serveFiles);
+console.log('env', env);
+
+const randomPort = 12345;
 
 const servePlugins = () => [
   serve({
@@ -25,7 +29,6 @@ const servePlugins = () => [
     openPage: '/chat_with_product.html',
     contentBase: '',
     host: '0.0.0.0',
-    // host: 'localhost',
     port: randomPort,
     headers: {
       'Content-Type': 'text/html; charset=utf-8',
@@ -33,8 +36,6 @@ const servePlugins = () => [
   }),
   livereload('dist'),
 ];
-
-console.log('serveFiles', serveFiles);
 
 const pluginsConfig = (serveFiles) => [
   resolve({ extensions, browser: true }),
@@ -56,11 +57,8 @@ const pluginsConfig = (serveFiles) => [
   terser({ output: { comments: false } }),
   // If you want to see the live app
   ...(serveFiles ? [servePlugins()] : []),
-  sentryRollupPlugin({
-    authToken: process.env.SENTRY_AUTH_TOKEN,
-    org: 'twini-srl',
-    project: 'chatbot-fe',
-    disable: true,
+  injectProcessEnv({
+    NODE_ENV: env,
   }),
 ];
 
@@ -70,15 +68,6 @@ const configs = [
     output: {
       sourcemap: true,
       file: 'dist/vironpopup.js',
-      format: 'es',
-    },
-    plugins: pluginsConfig(serveFiles),
-  },
-  {
-    input: './src/glowipopup.tsx',
-    output: {
-      sourcemap: true,
-      file: 'dist/glowipopup.js',
       format: 'es',
     },
     plugins: pluginsConfig(serveFiles),

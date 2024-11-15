@@ -1,15 +1,8 @@
-import { createEffect, createSignal } from 'solid-js';
+import { JSX } from 'solid-js';
 
-export const StarsAvatar = (props: { src?: string; padding?: string; classList?: string[]; isImgRounded?: boolean }) => {
-  const [avatarSrc, setAvatarSrc] = createSignal(props.src);
-  const classList = props.classList || [];
-
-  createEffect(() => {
-    if (avatarSrc()?.startsWith('{{') && props.src?.startsWith('http')) setAvatarSrc(props.src);
-  });
-
+export const StarsAvatar = (props: JSX.SvgSVGAttributes<SVGSVGElement>) => {
   return (
-    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg width={props.width || '24'} height={props.height || '24'} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         fill-rule="evenodd"
         clip-rule="evenodd"

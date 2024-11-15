@@ -35,11 +35,10 @@ export const FullBot = (props: FullBotProps & { getElement: () => HTMLElement })
             botMessage={props.theme?.chatWindow?.botMessage}
             userMessage={props.theme?.chatWindow?.userMessage}
             fontSize={props.theme?.chatWindow?.fontSize}
-            chatflowid={props.chatflowid}
+            shopRef={props.shopRef}
             apiUrl={props.apiUrl}
             isFullPage={true}
             starterPrompts={props.starterPrompts || {}}
-            creatorName={props.creatorName}
             firstMessage={props.theme?.chatWindow?.firstMessage}
             closeBot={() => null} // closeBot is not needed in full mode
           />

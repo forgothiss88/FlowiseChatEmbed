@@ -16,6 +16,7 @@ type BrandProps = {
 export type MessageType = {
   message: string;
   type: messageType;
+  productHandle?: string; // if the message starts a new product conversation
   sourceProducts?: SourceProduct[];
   sourceContents?: SourceContent[];
   suggestedProduct?: SourceProduct;
@@ -30,8 +31,7 @@ export type StarterPromptsType = {
 };
 
 export type BotConfig = {
-  creatorName: string;
-  chatflowid: string;
+  shopRef: string;
   apiUrl: string;
   starterPrompts: StarterPromptsType;
   botMessage: BotMessageTheme;
@@ -51,6 +51,7 @@ export type BotProps = {
   welcomeMessage: string;
   shopifyCart?: ShopifyCart;
   shopifyProduct?: ShopifyProduct;
+  bot: HTMLDivElement;
   getElement: () => HTMLElement;
   closeBot: () => void;
 };

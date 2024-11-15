@@ -1,4 +1,4 @@
-import { Accessor, createSignal, onMount } from 'solid-js';
+import { Accessor, createSignal, Index, onMount, Show } from 'solid-js';
 import { HintStars } from '../icons/HintStars';
 import { ShopifyProduct } from '../types/product';
 
@@ -11,15 +11,19 @@ type Product = {
   price: number;
 };
 
-export const ProductCarousel = (props: { product: Accessor<Product | undefined> }) => {
+const ImagePlaceholder = () => <Index each={Array(5)}>{() => <div class="twi-w-32 twi-h-32 twi-bg-gray-200 twi-animate-pulse" />}</Index>;
+
+const ProductCarousel = (props: { product: Accessor<Product | undefined> }) => {
   return (
     <div>
       <div class="twi-flex twi-overflow-x-auto twi-space-x-2 twi-rounded-l-lg twi-no-scrollbar-container">
-        {props
-          .product()
-          ?.images?.map((image) => (
-            <img src={image} alt={props.product()?.name || 'Product Image Placeholder'} class="twi-w-32 twi-h-32 twi-object-cover" />
-          ))}
+        <Show when={props.product() != null} fallback={<ImagePlaceholder />}>
+          {props
+            .product()
+            ?.images?.map((image) => (
+              <img src={image} alt={props.product()?.name || 'Product Image Placeholder'} class="twi-w-32 twi-h-32 twi-object-cover" loading="lazy" />
+            ))}
+        </Show>
       </div>
       <div class="twi-pt-4">
         <span class="twi-text-base twi-font-normal twi-text-start twi-block">{props.product()?.name || 'Title'}</span>
@@ -46,6 +50,9 @@ export const AskMoreAboutProductBubble = (props: {
   );
 
   onMount(() => {
+    if (props.product != null) {
+      return;
+    }
     fetch(`/products/${props.productHandle}.js`)
       .then((res) => {
         if (!res.ok) {

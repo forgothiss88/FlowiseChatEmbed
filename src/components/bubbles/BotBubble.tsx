@@ -1,5 +1,5 @@
 import { Marked } from '@ts-stack/markdown';
-import { Show } from 'solid-js';
+import { Setter, Show } from 'solid-js';
 import { ProductCarousel, PurchaseButtonAspect, SingleProductShowcase } from '../Carousel';
 import { MessageType } from '../types/botprops';
 import { SourceContent, SourceProduct } from '../types/documents';
@@ -13,6 +13,7 @@ type Props = {
   enableMultipricing: boolean;
   faviconUrl?: string;
   suggestedProduct?: SourceProduct;
+  setNewProductHandle: Setter<string>;
 } & PurchaseButtonAspect;
 
 const defaultBackgroundColor = '#f7f8ff';
@@ -40,6 +41,7 @@ export const BotBubble = (props: Props) => {
             purchaseButtonBackgroundColor={props.purchaseButtonBackgroundColor}
             purchaseButtonTextColor={props.purchaseButtonTextColor}
             product={props.suggestedProduct as SourceProduct}
+            setNewProductHandle={props.setNewProductHandle}
           />
         </Show>
         <Show when={props.suggestedProduct == null && props.sourceProducts?.length > 0}>
