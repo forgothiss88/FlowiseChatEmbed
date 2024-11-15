@@ -18,8 +18,7 @@ const Topbar = (props: {
         'border-bottom-color': props.bubbleButtonColor,
       }}
       class={
-        (props.isFullPage ? 'twi-fixed' : 'twi-absolute twi-rounded-t-3xl') +
-        ' twi-flex twi-flex-row twi-items-center twi-top-0 twi-w-full twi-z-50 twi-h-16'
+        (props.isFullPage ? '' : 'twi-rounded-t-3xl ') + 'twi-absolute twi-flex twi-flex-row twi-items-center twi-top-0 twi-w-full twi-z-50 twi-h-16'
       }
     >
       <Show when={props.titleAvatarSrc}>

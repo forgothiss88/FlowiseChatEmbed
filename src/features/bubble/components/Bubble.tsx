@@ -59,7 +59,7 @@ export const BubbleBot = (
           'z-index': 9999999999,
         }}
         class={
-          'twi-fixed twi-overflow-hidden twi-z-50 twi-right-0 twi-bottom-0 twi-backdrop-blur md:twi-rounded-3xl md:twi-right-4 md:twi-bottom-4 twi-w-full md:twi-max-w-md twi-top-0 md:twi-top-auto md:twi-h-[704px]' +
+          'twi-fixed twi-overflow-hidden twi-z-50 twi-right-0 twi-bottom-0 twi-backdrop-blur md:twi-rounded-3xl md:twi-right-4 md:twi-bottom-4 twi-w-full md:twi-max-w-md twi-h-full md:twi-top-auto md:twi-h-[704px]' +
           (props.isBotOpened() ? ' twi-opacity-1' : ' twi-opacity-0 twi-pointer-events-none')
         }
       >

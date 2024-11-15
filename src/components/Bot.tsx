@@ -378,10 +378,10 @@ export const Bot = (props: BotConfig & BotProps) => {
         'font-family': 'Poppins, sans-serif',
       }}
     >
-      <div class="twi-relative twi-flex twi-max-h-full twi-flex-1 twi-flex-col twi-overflow-hidden">
-        <div class="twi-flex twi-w-full twi-items-center twi-justify-center twi-bg-token-main-surface-primary twi-overflow-hidden"></div>
+      <div class="twi-relative twi-flex twi-h-full twi-w-full twi-flex-1 twi-flex-col twi-overflow-hidden">
+        <div class="twi-flex twi-w-full twi-items-center twi-justify-center twi-overflow-hidden"></div>
         <main class="twi-relative twi-h-full twi-w-full twi-flex-1 twi-overflow-hidden twi-transition-width">
-          <div class="twi-fixed twi-top-0 twi-left-0 twi-w-full">
+          <div id="twini-topbar" class="twi-absolute twi-top-0 twi-left-0 twi-w-full">
             <div class="twi-absolute twi-inset-0 twi-blur-lg"></div>
             <div class="twi-relative twi-flex twi-items-center twi-bg-gradient-to-t twi-from-transparent twi-via-white/70 twi-to-white">
               <button
@@ -477,6 +477,7 @@ export const Bot = (props: BotConfig & BotProps) => {
               <div class="twi-w-full" style={{ display: 'block', height: bottomSpacerHeight() + 'px' }}></div>
             </div>
           </div>
+
           <Bottombar
             ref={textareaRef}
             backgroundColor={props.textInput.backgroundColor}

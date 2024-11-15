@@ -23,7 +23,8 @@ export const AutoGrowTextArea = (props: Props) => {
   const textarea: HTMLTextAreaElement = (
     <textarea
       ref={local.ref}
-      class="twi-overflow-hidden twi-resize-none twi-bg-transparent twi-w-full twi-my-auto  twi-text-base twi-font-normal placeholder:twi-italic placeholder:twi-font-light disabled:twi-opacity-50 disabled:twi-cursor-not-allowed disabled:twi-brightness-100 twi-outline-none focus:twi-ring-0 focus:twi-animate-fade-in"
+      //class="twi-overflow-hidden twi-resize-none twi-bg-transparent twi-w-full twi-my-auto twi-text-base twi-font-normal placeholder:twi-italic placeholder:twi-font-light disabled:twi-opacity-50 disabled:twi-cursor-not-allowed disabled:twi-brightness-100 twi-outline-none focus:twi-ring-0 focus:twi-animate-fade-in"
+      class="twi-overflow-hidden twi-resize-none twi-bg-transparent twi-w-full twi-my-auto twi-text-base twi-font-normal placeholder:twi-italic placeholder:twi-font-light disabled:twi-opacity-50 disabled:twi-cursor-not-allowed disabled:twi-brightness-100 twi-outline-none focus:twi-ring-0"
       aria-placeholder={local.placeholder}
       placeholder={local.placeholder}
       rows="1"
