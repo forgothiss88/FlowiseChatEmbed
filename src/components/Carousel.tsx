@@ -170,10 +170,9 @@ export const SingleProductShowcase = (props: { setNewProductHandle: Setter<strin
   return (
     <div class=" twi-flex twi-flex-row twi-p-3 twi-overflow-visible">
       <div
-        class="twi-flex twi-flex-col twi-rounded-lg -twi-rotate-3 twi-max-w-36"
+        class="twi-flex twi-flex-col twi-rounded-lg -twi-rotate-3 twi-max-w-36 twi-ai-shadow"
         style={{
           flex: '0 0 auto',
-          'box-shadow': '0px 4px 50px 5px rgba(0, 123, 75, 0.4), 0px 10px 20px 5px rgba(0, 191, 125, 0.2)',
         }}
       >
         <img
@@ -208,7 +207,7 @@ export const SingleProductShowcase = (props: { setNewProductHandle: Setter<strin
           }}
           onClick={() => props.setNewProductHandle(props.product.metadata.slug)}
         >
-          <HintStars color={props.purchaseButtonBackgroundColor} class="twi-mr-1" />
+          <HintStars fill={props.purchaseButtonBackgroundColor} class="twi-mr-1" />
           Ask more...
         </button>
       </div>

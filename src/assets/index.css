@@ -95,7 +95,22 @@
   font-family: 'Poppins';
 }
 
+.twini-base a,
+.twini-base p,
+.twini-base span,
+.twini-base button,
+.twini-base textarea {
+  font-weight: 400;
+  margin: 0;
+}
+
 .twini-base .twi-text-sm {
   font-size: 12px;
   line-height: 18px;
+}
+
+.twini-base .twi-ai-shadow {
+  box-shadow:
+    0px 4px 50px 5px rgba(0, 123, 75, 0.4),
+    0px 10px 20px 5px rgba(0, 191, 125, 0.2);
 }

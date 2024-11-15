@@ -75,17 +75,20 @@ export const AskMoreAboutProductBubble = (props: {
   return (
     <div class="twi-flex twi-flex-row twi-justify-start twi-items-start twi-host-container twi-w-11/12">
       <div
-        class="twi-p-4 twi-whitespace-pre-wrap twi-rounded-2xl twi-rounded-bl-none twi-chatbot-host-bubble twi-text-sm twi-font-light twi-max-w-full"
+        class="twi-p-4 twi-whitespace-pre-wrap twi-rounded-2xl twi-rounded-bl-none twi-chatbot-host-bubble twi-text-sm twi-font-light twi-max-w-full twi-ai-shadow"
         data-testid="host-bubble"
         style={{
           'background-color': 'white',
           color: props.textColor ?? defaultTextColor,
-          'box-shadow': '0px 4px 50px 5px rgba(0, 123, 75, 0.4), 0px 10px 20px 5px rgba(0, 191, 125, 0.2)',
         }}
       >
         <div class="twi-pb-4">
-          <span>
-            <HintStars color="green" class="twi-mr-1" />
+          <span
+            style={{
+              color: '#007B4B',
+            }}
+          >
+            <HintStars class="twi-mr-1" fill="#007B4B" />
             Asking more about...
           </span>
         </div>

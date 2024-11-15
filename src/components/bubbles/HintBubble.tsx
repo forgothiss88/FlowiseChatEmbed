@@ -20,7 +20,7 @@ export const HintBubble = (props: Props) => {
         }}
       >
         <span class="twi-mr-2">
-          <HintStars color={props.actionColor} width={18} height={18} />
+          <HintStars fill={props.actionColor} width={18} height={18} />
         </span>
         <span class="twi-text-left twi-text-sm" style={{ color: props.textColor }}>
           {props.message}

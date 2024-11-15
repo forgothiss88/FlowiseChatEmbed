@@ -1,5 +1,7 @@
-import { Accessor, For, Setter } from 'solid-js';
+import { Accessor, createEffect, For, Setter } from 'solid-js';
+import { render } from 'solid-js/web';
 import { HintBubble } from './bubbles/HintBubble';
+import { HintStars } from './icons/HintStars';
 import { SendButton } from './SendButton';
 import { ShopifyProduct } from './types/product';
 
@@ -16,13 +18,44 @@ export type Props = {
 };
 
 export const ChatWithProduct = (props: Props) => {
+  createEffect(() => {
+    const descElement: HTMLParagraphElement | null = document.querySelector('p[id="twini-product-description"]');
+    if (descElement) {
+      descElement.style.color = props.textColor;
+      const text =
+        props.summary() ||
+        'Lorem ipsum dolor sit amet consectetur adipisicing elit. Facere possimus laudantium similique, tempore inventore necessitatibus nihil?';
+      render(
+        () => (
+          <>
+            <br />
+            <p
+              style={{
+                color: props.textColor,
+              }}
+            >
+              {text}
+            </p>
+            <br />
+          </>
+        ),
+        descElement,
+      );
+    }
+  });
+
   return (
     <div>
-      <p style={{ color: props.textColor, 'font-family': 'unset', 'font-size': 'unset' }}>(based on your recent chat)</p>
-      <p style={{ color: props.textColor, 'font-family': 'unset', 'font-size': 'unset' }}>
-        {props.summary() ||
-          'Lorem ipsum dolor sit amet consectetur adipisicing elit. Facere possimus laudantium similique, tempore inventore necessitatibus nihil?'}
+      <p
+        class="twi-text-center twi-w-full twi-text-sm twi-font-light"
+        style={{
+          color: props.textColor,
+        }}
+      >
+        <HintStars class="twi-mr-1" fill={props.textColor} />
+        Summary of your recent chat
       </p>
+      <br />
       <For each={props.nextQuestions()}>
         {(prompt) => (
           <HintBubble

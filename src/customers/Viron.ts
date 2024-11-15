@@ -39,7 +39,7 @@ export const vironProps = (): FullBotProps => {
         poweredByTextColor: 'black',
         firstMessage: undefined,
         textInput: {
-          placeholder: 'Chat with AI...',
+          placeholder: 'Ask me anything...',
           inputBackgroundColor: '#F9F9F9',
           inputBorderColor: '#e5e5e5',
           backgroundColor: 'white',

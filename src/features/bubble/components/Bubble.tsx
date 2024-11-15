@@ -5,7 +5,7 @@ import { BubbleWidget } from './BubbleWidget';
 
 export const BubbleBot = (
   props: FullBotProps &
-    Omit<BotProps, 'welcomeMessage' | 'closeBot'> & {
+    Omit<BotProps, 'welcomeMessage' | 'closeBot' | 'bot'> & {
       isBotOpened: Accessor<boolean>;
       setIsBotOpened: Setter<boolean>;
     },

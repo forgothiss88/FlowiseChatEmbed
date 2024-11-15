@@ -47,6 +47,8 @@ if (cb.hasAttribute('data-cart')) {
   console.warn('Attribute "data-cart" not found. Not on cart page?');
 }
 
+// const img = document.querySelector('.page-container .swiper-container');
+
 const [isBotOpened, setIsBotOpened] = createSignal(false);
 const [question, askQuestion] = createSignal<string>('');
 const [nextQuestions, setNextQuestions] = createSignal<string[]>([...props.starterPrompts.prompts]);
