@@ -1,5 +1,4 @@
 import { Accessor, createEffect, createSignal, onMount } from 'solid-js';
-import { Badge } from './Badge';
 import { DeleteButton } from './SendButton';
 import { AutoGrowTextArea } from './inputs/AutoGrowTextArea';
 
@@ -86,9 +85,6 @@ export const Bottombar = (props: Props) => {
               isLoading={props.isLoading}
             />
           </div>
-        </div>
-        <div class="twi-w-full twi-text-center twi-py-1">
-          <Badge poweredByTextColor={props.poweredByTextColor}></Badge>
         </div>
       </div>
     </div>
