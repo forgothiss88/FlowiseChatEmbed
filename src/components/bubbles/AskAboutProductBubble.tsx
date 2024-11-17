@@ -1,4 +1,4 @@
-import { Accessor, createSignal, Index, onMount, Show } from 'solid-js';
+import { Accessor, createEffect, createSignal, Index, JSX, on, onMount, Show, splitProps } from 'solid-js';
 import { HintStars } from '../icons/HintStars';
 import { ShopifyProduct } from '../types/product';
 
@@ -11,19 +11,55 @@ type Product = {
   price: number;
 };
 
-const ImagePlaceholder = () => <Index each={Array(5)}>{() => <div class="twi-w-32 twi-h-32 twi-bg-gray-200 twi-animate-pulse" />}</Index>;
+const ImagesPlaceholder = (props: { n: number } & JSX.HTMLAttributes<HTMLDivElement>) => {
+  const [n, otherProps] = splitProps(props, ['n']);
+  return <Index each={Array(n.n)}>{() => <div class="twi-block twi-w-32 twi-h-32 twi-bg-gray-200 twi-animate-pulse" {...otherProps} />}</Index>;
+};
 
 const ProductCarousel = (props: { product: Accessor<Product | undefined> }) => {
+  const [loadedImg, setLoadedImg] = createSignal<boolean[]>([]);
+
+  createEffect(
+    on(
+      () => props.product(),
+      (product) => {
+        if (product == null) {
+          return;
+        }
+        setLoadedImg(product.images.map(() => false));
+      },
+    ),
+  );
+
+  const onLoaded = (index: number) => {
+    return () => {
+      const l = loadedImg();
+      l[index] = true;
+      setLoadedImg(l);
+    };
+  };
+
   return (
     <div>
-      <div class="twi-flex twi-overflow-x-auto twi-space-x-2 twi-rounded-l-lg twi-no-scrollbar-container">
-        <Show when={props.product() != null} fallback={<ImagePlaceholder />}>
-          {props
-            .product()
-            ?.images?.map((image) => (
-              <img src={image} alt={props.product()?.name || 'Product Image Placeholder'} class="twi-w-32 twi-h-32 twi-object-cover" loading="lazy" />
-            ))}
-        </Show>
+      <div class="twi-w-full twi-overflow-x-scroll twi-no-scrollbar-container">
+        <div class="twi-flex twi-flex-row twi-w-fit twi-overflow-x-auto twi-space-x-2 twi-rounded-l-lg twi-no-scrollbar-container">
+          <Show when={props.product() != null} fallback={<ImagesPlaceholder n={5} />}>
+            <Index each={loadedImg()}>
+              {(isLoaded, index) => (
+                <>
+                  {/* {!isLoaded() && <ImagesPlaceholder n={1} id={`image-placeholder-${index}`} />} */}
+                  <img
+                    onLoad={onLoaded(index)}
+                    src={props.product()?.images[index]}
+                    alt={props.product()?.name || 'Product Image Placeholder'}
+                    class="twi-w-32 twi-h-32 twi-object-cover"
+                    loading="lazy"
+                  />
+                </>
+              )}
+            </Index>
+          </Show>
+        </div>
       </div>
       <div class="twi-pt-4">
         <span class="twi-text-base twi-font-normal twi-text-start twi-block">{props.product()?.name || 'Title'}</span>

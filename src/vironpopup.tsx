@@ -53,6 +53,7 @@ const [isBotOpened, setIsBotOpened] = createSignal(false);
 const [question, askQuestion] = createSignal<string>('');
 const [nextQuestions, setNextQuestions] = createSignal<string[]>([...props.starterPrompts.prompts]);
 const [summary, setSummary] = createSignal<string>('');
+const [productHandle, setProductHandle] = createSignal<string>('');
 
 if (process.env.NODE_ENV == 'production') {
   Sentry.init({
@@ -80,6 +81,8 @@ render(
       nextQuestions={nextQuestions}
       setNextQuestions={setNextQuestions}
       setSummary={setSummary}
+      productHandle={productHandle}
+      setProductHandle={setProductHandle}
       shopifyProduct={product}
       shopifyCart={cart}
     />
@@ -101,9 +104,12 @@ if (!chatWithProductWidget) {
         backgroundColor={brandColors.secondary}
         hintsBackgroundColor={brandColors.hintsBackgroundColor}
         product={product}
+        setProductHandle={setProductHandle}
         askQuestion={askQuestion}
         nextQuestions={nextQuestions}
         summary={summary}
+        setSummary={setSummary}
+        shopRef={props.shopRef}
       />
     );
   }, chatWithProductWidget);

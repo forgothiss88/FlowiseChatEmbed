@@ -1,5 +1,5 @@
 import { BotProps, FullBotProps } from '@/components/types/botprops';
-import { Accessor, Setter, Show } from 'solid-js';
+import { Accessor, onMount, Setter, Show } from 'solid-js';
 import { Bot } from '../../../components/Bot';
 import { BubbleWidget } from './BubbleWidget';
 
@@ -10,17 +10,19 @@ export const BubbleBot = (
       setIsBotOpened: Setter<boolean>;
     },
 ) => {
-  let bodyOverflow = '';
+  let bodyOverflowY = '';
 
   const openBot = () => {
     props.setIsBotOpened(true);
-    bodyOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
+    props.setProductHandle(props.shopifyProduct?.handle || '');
+    // screen md
+    if (window.innerWidth < 768) document.body.style.overflowY = 'hidden';
   };
 
   const closeBot = () => {
     props.setIsBotOpened(false);
-    document.body.style.overflow = bodyOverflow;
+    // screen md
+    if (window.innerWidth < 768) document.body.style.overflowY = bodyOverflowY;
   };
 
   const toggleBot = () => {
@@ -31,6 +33,10 @@ export const BubbleBot = (
     props.shopifyProduct != null
       ? props.theme.chatWindow.templateWelcomeMessageOnProductPage.replace('{{product}}', props.shopifyProduct.title)
       : props.theme.chatWindow.welcomeMessage;
+
+  onMount(() => {
+    bodyOverflowY = document.body.style.overflowY;
+  });
 
   let botRef: HTMLDivElement | undefined;
   return (
@@ -43,7 +49,7 @@ export const BubbleBot = (
             transform: 'translateX(-50%)', // Center the button horizontally and vertically
           }}
         >
-          <BubbleWidget toggleBot={toggleBot} isBotOpened={props.isBotOpened}></BubbleWidget>
+          <BubbleWidget toggleBot={toggleBot}></BubbleWidget>
         </span>
       </Show>
       <div
@@ -83,6 +89,8 @@ export const BubbleBot = (
           setSummary={props.setSummary}
           shopifyCart={props.shopifyCart}
           shopifyProduct={props.shopifyProduct}
+          productHandle={props.productHandle}
+          setProductHandle={props.setProductHandle}
         />
       </div>
     </>

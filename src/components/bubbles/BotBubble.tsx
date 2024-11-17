@@ -6,6 +6,7 @@ import { SourceContent, SourceProduct } from '../types/documents';
 
 type Props = {
   getMessage: () => MessageType;
+  ref?: HTMLDivElement | undefined;
   backgroundColor: string;
   textColor?: string;
   sourceProducts?: SourceProduct[];
@@ -13,7 +14,7 @@ type Props = {
   enableMultipricing: boolean;
   faviconUrl?: string;
   suggestedProduct?: SourceProduct;
-  setNewProductHandle: Setter<string>;
+  setProductHandle: Setter<string>;
 } & PurchaseButtonAspect;
 
 const defaultBackgroundColor = '#f7f8ff';
@@ -23,7 +24,7 @@ export const BotBubble = (props: Props) => {
   let msgRef: HTMLDivElement | undefined;
 
   return (
-    <div class="twi-flex twi-flex-row twi-justify-start twi-items-start twi-host-container  twi-w-11/12">
+    <div ref={props.ref} class="twi-flex twi-flex-row twi-justify-start twi-items-start twi-host-container  twi-w-11/12">
       <div
         class="twi-whitespace-pre-wrap twi-rounded-2xl rounded-bl-none twi-chatbot-host-bubble twi-text-sm twi-font-light twi-max-w-full"
         data-testid="host-bubble"
@@ -41,7 +42,7 @@ export const BotBubble = (props: Props) => {
             purchaseButtonBackgroundColor={props.purchaseButtonBackgroundColor}
             purchaseButtonTextColor={props.purchaseButtonTextColor}
             product={props.suggestedProduct as SourceProduct}
-            setNewProductHandle={props.setNewProductHandle}
+            setProductHandle={props.setProductHandle}
           />
         </Show>
         <Show when={props.suggestedProduct == null && props.sourceProducts?.length > 0}>

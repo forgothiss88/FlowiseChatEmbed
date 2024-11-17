@@ -47,6 +47,8 @@ export type BotProps = {
   question: Accessor<string>;
   nextQuestions: Accessor<string[]>;
   setNextQuestions: Setter<string[]>;
+  productHandle: Accessor<string>;
+  setProductHandle: Setter<string>;
   setSummary: Setter<string>;
   welcomeMessage: string;
   shopifyCart?: ShopifyCart;

@@ -1,4 +1,4 @@
-export const BubbleWidget = (props: { isBotOpened: () => boolean; toggleBot: () => void }) => (
+export const BubbleWidget = (props: { toggleBot: () => void }) => (
   <svg width="173" height="172" viewBox="0 0 173 172" fill="none" xmlns="http://www.w3.org/2000/svg">
     <g filter="url(#filter0_dd_2152_5929)">
       <circle cx="86.5" cy="82" r="30" fill="#EFEFEF" />

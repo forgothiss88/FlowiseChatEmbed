@@ -164,9 +164,9 @@ export const SinglePriceButton = (props: { purchaseButtonText: string; price: nu
   );
 };
 
-export const SingleProductShowcase = (props: { setNewProductHandle: Setter<string>; product: SourceProduct } & PurchaseButtonAspect) => {
+export const SingleProductShowcase = (props: { setProductHandle: Setter<string>; product: SourceProduct } & PurchaseButtonAspect) => {
   console.debug('SingleProductShowcase', props);
-  console.debug('setNewProductHandle', props.setNewProductHandle);
+  console.debug('setProductHandle', props.setProductHandle);
   return (
     <div class=" twi-flex twi-flex-row twi-p-3 twi-overflow-visible">
       <div
@@ -205,7 +205,7 @@ export const SingleProductShowcase = (props: { setNewProductHandle: Setter<strin
             color: props.purchaseButtonBackgroundColor,
             'border-color': props.purchaseButtonTextColor,
           }}
-          onClick={() => props.setNewProductHandle(props.product.metadata.slug)}
+          onClick={() => props.setProductHandle(props.product.metadata.slug)}
         >
           <HintStars fill={props.purchaseButtonBackgroundColor} class="twi-mr-1" />
           Ask more...

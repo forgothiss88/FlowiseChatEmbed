@@ -29,6 +29,8 @@ import {
 export const Bot = (props: BotConfig & BotProps) => {
   let chatContainer: HTMLDivElement | undefined;
   let textareaRef: HTMLTextAreaElement | undefined;
+  let hintsRef: HTMLDivElement | undefined;
+  let lastBotMessageRef: HTMLDivElement | undefined;
 
   const [userInput, setUserInput] = createSignal<string>('');
   const [sourcePopupOpen, setSourcePopupOpen] = createSignal<boolean>(false);
@@ -47,15 +49,11 @@ export const Bot = (props: BotConfig & BotProps) => {
     { equals: false },
   );
 
-  console.log(props.welcomeMessage);
-  console.log(messages());
-
   const [isBusy, setBusy] = createSignal(true);
   const [isWaitingForResponse, setWaitingForResponse] = createSignal(false);
 
   const [chatRef, setChatRef] = createSignal<string | null>(null);
   const [cartToken, setCartToken] = createSignal<string | null>(null);
-  const [newProductHandle, setNewProductHandle] = createSignal<string | null>(null);
 
   const storageKey = `twini-${props.shopRef}`;
 
@@ -90,6 +88,11 @@ export const Bot = (props: BotConfig & BotProps) => {
     setChatRef(localChats.chatRef);
     setMessages([...localChats.chatHistory]);
     props.setNextQuestions(localChats.chatHistory[localChats.chatHistory.length - 1].nextQuestions ?? []);
+
+    const lastProductHandle = localChats.chatHistory.findLast((msg) => msg.productHandle != null)?.productHandle;
+    if (lastProductHandle != null) {
+      props.setProductHandle(lastProductHandle);
+    }
     return true;
   };
 
@@ -299,16 +302,6 @@ export const Bot = (props: BotConfig & BotProps) => {
     }
   };
 
-  const onStorageChange = (event: StorageEvent) => {
-    if (event.storageArea !== localStorage) {
-      return;
-    } else if (props.shopifyProduct !== null && event.key === storageKey) {
-      restoreChatFromStorage();
-    } else {
-      return;
-    }
-  };
-
   onMount(async () => {
     if (!restoreChatFromStorage()) {
       setChatRef(uuidv4());
@@ -335,38 +328,41 @@ export const Bot = (props: BotConfig & BotProps) => {
   });
 
   createEffect(
-    on(
-      () => props.question(),
-      (question) => {
-        if (question != '') {
-          handleSubmit(question);
-        }
-      },
-    ),
+    on(props.question, (question) => {
+      if (question != '') {
+        handleSubmit(question);
+      }
+    }),
   );
 
   createEffect(
-    on(
-      () => newProductHandle(),
-      (handle) => {
-        if (handle == null) return;
-        setMessages([
-          ...messages(),
-          {
-            type: 'apiMessage',
-            message: "Let's talk about this product",
-            nextQuestions: [...props.starterPrompts.prompts],
-            productHandle: handle,
-          },
-        ]);
-        console.debug('bot client height', props.bot.clientHeight);
-        setBottomSpacerHeight(props.bot.clientHeight);
+    on(props.productHandle, (handle) => {
+      const lastProductHandleFromMessages = messages().findLast((msg) => msg.productHandle != null)?.productHandle;
+      console.log('lastProductHandleFromMessages', lastProductHandleFromMessages);
+      console.log('new productHandle', handle);
+      // if chat is already about this product, don't start a new conversation
+      if (handle == null || lastProductHandleFromMessages == handle) return;
+      setMessages([
+        ...messages(),
+        {
+          type: 'apiMessage',
+          message: "Let's talk about this product",
+          nextQuestions: [...props.starterPrompts.prompts],
+          productHandle: handle,
+        },
+      ]);
+
+      setTimeout(() => {
+        const lastBotMessage = document.querySelector('#twini-message-container')?.lastElementChild?.previousElementSibling;
+        setChatSpacerHeight(props.bot.clientHeight - (bottomSpacerHeight() + (lastBotMessage?.clientHeight || 0) + (hintsRef?.clientHeight || 0)));
         scrollToBottom();
-      },
-    ),
+      }, 100);
+    }),
   );
 
   const [bottomSpacerHeight, setBottomSpacerHeight] = createSignal(0);
+  const [chatSpacerHeight, setChatSpacerHeight] = createSignal(0);
+
   const focusOnTextarea = () => {
     textareaRef?.focus();
   };
@@ -398,12 +394,12 @@ export const Bot = (props: BotConfig & BotProps) => {
           </div>
           <div role="presentation" tabindex="0" class="twi-flex twi-h-full twi-flex-col twi-focus-visible:outline-0 twi-overflow-hidden">
             <div ref={chatContainer} class="twi-flex-1 twi-overflow-auto twi-scroll-smooth twi-no-scrollbar-container">
-              <div class="twi-overflow-hidden twi-px-3">
+              <div class="twi-overflow-hidden twi-px-3" id="twini-message-container">
                 <div class="twi-py-10 twi-block"></div>
                 <For each={messages()}>
                   {(message, i) => {
                     return (
-                      <div class="twi-w-full twi-my-4">
+                      <div class="twi-w-full twi-my-4" id={`twini-message-${i()}`}>
                         {message.type === 'userMessage' && (
                           <GuestBubble
                             message={message.message}
@@ -426,16 +422,23 @@ export const Bot = (props: BotConfig & BotProps) => {
                             purchaseButtonText={props.botMessage?.purchaseButtonText}
                             purchaseButtonBackgroundColor={props.botMessage?.purchaseButtonBackgroundColor}
                             purchaseButtonTextColor={props.botMessage?.purchaseButtonTextColor}
-                            setNewProductHandle={setNewProductHandle as Setter<string>}
+                            setProductHandle={props.setProductHandle as Setter<string>}
                           />
                         )}
                         {message.type === 'apiMessage' && message.productHandle != null && (
-                          <AskMoreAboutProductBubble
-                            productHandle={message.productHandle} // TODO: use handle from Ask more about product
-                            product={message.productHandle == props.shopifyProduct?.handle ? props.shopifyProduct : undefined} // if NOT on product page will be undefined
-                            backgroundColor={props.botMessage?.backgroundColor || 'black'}
-                            textColor={props.botMessage?.textColor}
-                          />
+                          <div ref={lastBotMessageRef}>
+                            <div
+                              classList={{
+                                'twi-py-10 twi-block': i() != 0,
+                              }}
+                            ></div>
+                            <AskMoreAboutProductBubble
+                              productHandle={message.productHandle} // TODO: use handle from Ask more about product
+                              product={message.productHandle == props.shopifyProduct?.handle ? props.shopifyProduct : undefined} // if NOT on product page will be undefined
+                              backgroundColor={props.botMessage?.backgroundColor || 'black'}
+                              textColor={props.botMessage?.textColor}
+                            />
+                          </div>
                         )}
                       </div>
                     );
@@ -457,23 +460,26 @@ export const Bot = (props: BotConfig & BotProps) => {
                     purchaseButtonText={props.botMessage?.purchaseButtonText}
                     purchaseButtonBackgroundColor={props.botMessage?.purchaseButtonBackgroundColor}
                     purchaseButtonTextColor={props.botMessage?.purchaseButtonTextColor}
-                    setNewProductHandle={setNewProductHandle as Setter<string>}
+                    setProductHandle={props.setProductHandle as Setter<string>}
                   />
                 </Show>
-                <Show when={!isBusy()}>
-                  <For each={props.nextQuestions()}>
-                    {(prompt, _) => (
-                      <HintBubble
-                        actionColor={props.starterPrompts.actionColor}
-                        message={prompt}
-                        textColor={props.starterPrompts.textColor}
-                        backgroundColor={props.starterPrompts.backgroundColor}
-                        onClick={() => handleSubmit(prompt)}
-                      />
-                    )}
-                  </For>
-                </Show>
+                <div ref={hintsRef}>
+                  <Show when={!isBusy()}>
+                    <For each={props.nextQuestions()}>
+                      {(prompt, _) => (
+                        <HintBubble
+                          actionColor={props.starterPrompts.actionColor}
+                          message={prompt}
+                          textColor={props.starterPrompts.textColor}
+                          backgroundColor={props.starterPrompts.backgroundColor}
+                          onClick={() => handleSubmit(prompt)}
+                        />
+                      )}
+                    </For>
+                  </Show>
+                </div>
               </div>
+              <div class="twi-w-full" style={{ display: 'block', height: chatSpacerHeight() + 'px' }}></div>
               <div class="twi-w-full" style={{ display: 'block', height: bottomSpacerHeight() + 'px' }}></div>
             </div>
           </div>
