@@ -170,26 +170,26 @@ export const SingleProductShowcase = (props: { setProductHandle: Setter<string>;
   return (
     <div class=" twi-flex twi-flex-row twi-p-3 twi-overflow-visible">
       <div
-        class="twi-flex twi-flex-col twi-rounded-lg -twi-rotate-3 twi-max-w-36 twi-ai-shadow"
+        class="twi-flex twi-flex-col twi-rounded-lg -twi-rotate-3 twi-max-w-36 twi-ai-shadow twi-overflow-hidden"
         style={{
           flex: '0 0 auto',
         }}
       >
         <img
-          class="twi-aspect-auto twi-object-cover twi-bg-white twi-animate-fade-in twi-rounded-t-lg twi-border-gray-500 twi-bottom-1"
+          class="twi-aspect-auto twi-object-cover twi-bg-white twi-animate-fade-in twi-border-gray-500 twi-bottom-1"
           src={props.product.metadata.thumbnail_url}
           alt="" // TODO: add alt text
         />
         <div class="twi-px-4 twi-py-3">
           <span class="twi-text-base twi-font-normal twi-text-start twi-block">{props.product.metadata.name}</span>
-          <span class="twi-text-xs twi-font-light twi-text-start twi-mt-2 twi-block">{Math.round(props.product.metadata.price)}€</span>
+          <span class="twi-text-xs twi-font-normal twi-text-start twi-mt-2 twi-block">{Math.round(props.product.metadata.price)}€</span>
         </div>
       </div>
       <div class="twi-flex twi-flex-col twi-self-center twi-h-full twi-ml-7">
         <a
           href={props.product.metadata.item_url}
           target="_blank"
-          class="twi-w-full twi-rounded-md twi-my-2 twi-text-sm twi-font-light twi-px-4 twi-py-2 twi-whitespace-nowrap twi-self-center twi-block twi-text-center"
+          class="twi-w-full twi-rounded-md twi-my-2 twi-text-sm twi-font-normal twi-px-4 twi-py-2 twi-whitespace-nowrap twi-self-center twi-block twi-text-center"
           style={{
             background: props.purchaseButtonBackgroundColor,
             color: props.purchaseButtonTextColor,
@@ -199,7 +199,7 @@ export const SingleProductShowcase = (props: { setProductHandle: Setter<string>;
           {props.purchaseButtonText}
         </a>
         <button
-          class="twi-w-full twi-rounded-md twi-my-2 twi-text-sm twi-font-light twi-px-4 twi-py-2 twi-whitespace-nowrap twi-self-center twi-block twi-text-center twi-cursor-pointer"
+          class="twi-inline-flex twi-w-full twi-rounded-md twi-my-2 twi-text-sm twi-font-normal twi-px-4 twi-py-2 twi-whitespace-nowrap twi-cursor-pointer"
           style={{
             background: props.purchaseButtonTextColor,
             color: props.purchaseButtonBackgroundColor,

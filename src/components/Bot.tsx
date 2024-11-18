@@ -1,4 +1,3 @@
-import { Popup } from '@/features/popup';
 import { MessageBE, RunInput } from '@/queries/sendMessageQuery';
 import { fetchEventSource } from '@microsoft/fetch-event-source';
 import { Accessor, For, Setter, Show, createEffect, createSignal, on, onMount } from 'solid-js';
@@ -377,9 +376,9 @@ export const Bot = (props: BotConfig & BotProps) => {
       <div class="twi-relative twi-flex twi-h-full twi-w-full twi-flex-1 twi-flex-col twi-overflow-hidden">
         <div class="twi-flex twi-w-full twi-items-center twi-justify-center twi-overflow-hidden"></div>
         <main class="twi-relative twi-h-full twi-w-full twi-flex-1 twi-overflow-hidden twi-transition-width">
-          <div id="twini-topbar" class="twi-absolute twi-top-0 twi-left-0 twi-w-full">
-            <div class="twi-absolute twi-inset-0 twi-blur-lg"></div>
-            <div class="twi-relative twi-flex twi-items-center twi-bg-gradient-to-t twi-from-transparent twi-via-white/70 twi-to-white">
+          <div id="twini-topbar" class="twi-absolute twi-top-0 twi-left-0 twi-w-full" style={{ 'z-index': 999999999999 }}>
+            <div class="twi-absolute twi-inset-0 twi-blur-lg twi-bg-gradient-to-t twi-from-white/80 twi-via-white/80 twi-to-white/100"></div>
+            <div class="twi-relative twi-flex twi-items-center twi-bg-gradient-to-t twi-from-transparent twi-via-white/80 twi-to-white/100">
               <button
                 class="twi-cursor-pointer twi-absolute twi-pl-7 twi-py-7 twi-rounded-full twi-bg-transparent twi-z-10"
                 onClick={props.closeBot}
@@ -507,7 +506,6 @@ export const Bot = (props: BotConfig & BotProps) => {
             isLoading={isBusy}
           />
         </main>
-        {sourcePopupOpen() && <Popup isOpen={sourcePopupOpen()} value={sourcePopupSrc()} onClose={() => setSourcePopupOpen(false)} />}
       </div>
     </div>
   );

@@ -55,6 +55,25 @@ const [nextQuestions, setNextQuestions] = createSignal<string[]>([...props.start
 const [summary, setSummary] = createSignal<string>('');
 const [productHandle, setProductHandle] = createSignal<string>('');
 
+let bodyOverflow = 'unset';
+
+const openBot = () => {
+  setIsBotOpened(true);
+  // screen md
+  bodyOverflow = document.body.style.overflow;
+  if (window.innerWidth < 768) document.body.style.overflow = 'hidden';
+};
+
+const closeBot = () => {
+  setIsBotOpened(false);
+  // screen md
+  if (window.innerWidth < 768) document.body.style.overflow = bodyOverflow;
+};
+
+const toggleBot = () => {
+  isBotOpened() ? closeBot() : openBot();
+};
+
 if (process.env.NODE_ENV == 'production') {
   Sentry.init({
     dsn: 'https://0e923b8b2f8f5f284443d82e730e5fd8@o4508080401088512.ingest.de.sentry.io/4508132557717584',
@@ -76,7 +95,8 @@ render(
       {...props}
       getElement={getChatbot}
       isBotOpened={isBotOpened}
-      setIsBotOpened={setIsBotOpened}
+      openBot={openBot}
+      closeBot={closeBot}
       question={question}
       nextQuestions={nextQuestions}
       setNextQuestions={setNextQuestions}
@@ -99,7 +119,7 @@ if (!chatWithProductWidget) {
     return (
       <ChatWithProduct
         isBotOpened={isBotOpened}
-        setIsBotOpened={setIsBotOpened}
+        openBot={openBot}
         textColor={brandColors.actionPrimary}
         backgroundColor={brandColors.secondary}
         hintsBackgroundColor={brandColors.hintsBackgroundColor}

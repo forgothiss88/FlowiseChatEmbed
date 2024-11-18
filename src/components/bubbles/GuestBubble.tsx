@@ -15,10 +15,10 @@ export const GuestBubble = (props: Props) => {
   let userMessageEl: HTMLDivElement | undefined;
 
   return (
-    <div class="twi-flex twi-justify-end twi-items-end twi-guest-container ">
+    <div class="twi-flex twi-justify-end twi-items-end twi-guest-container twi-w-11/12">
       <span
         ref={userMessageEl}
-        class="twi-p-3 twi-rounded-2xl twi-rounded-br-none twi-whitespace-pre-wrap twi-max-w-full twi-chatbot-guest-bubble twi-text-sm twi-font-light"
+        class="twi-p-3 twi-rounded-2xl twi-rounded-br-none twi-whitespace-pre-wrap twi-max-w-full twi-chatbot-guest-bubble twi-text-sm twi-font-normal"
         data-testid="guest-bubble"
         style={{
           'background-color': props.backgroundColor ?? defaultBackgroundColor,

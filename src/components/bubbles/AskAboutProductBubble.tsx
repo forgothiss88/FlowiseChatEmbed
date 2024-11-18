@@ -63,7 +63,7 @@ const ProductCarousel = (props: { product: Accessor<Product | undefined> }) => {
       </div>
       <div class="twi-pt-4">
         <span class="twi-text-base twi-font-normal twi-text-start twi-block">{props.product()?.name || 'Title'}</span>
-        <span class="twi-text-sm twi-font-light twi-text-start twi-mt-2 twi-block">{props.product()?.price || 'xxx'}€</span>
+        <span class="twi-text-sm twi-font-normal twi-text-start twi-mt-2 twi-block">{props.product()?.price || 'xxx'}€</span>
       </div>
     </div>
   );
@@ -111,23 +111,22 @@ export const AskMoreAboutProductBubble = (props: {
   return (
     <div class="twi-flex twi-flex-row twi-justify-start twi-items-start twi-host-container twi-w-11/12">
       <div
-        class="twi-p-4 twi-whitespace-pre-wrap twi-rounded-2xl twi-rounded-bl-none twi-chatbot-host-bubble twi-text-sm twi-font-light twi-max-w-full twi-ai-shadow"
+        class="twi-p-4 twi-whitespace-pre-wrap twi-rounded-2xl twi-rounded-tl-none twi-chatbot-host-bubble twi-text-sm twi-font-normal twi-max-w-full twi-ai-shadow"
         data-testid="host-bubble"
         style={{
           'background-color': 'white',
           color: props.textColor ?? defaultTextColor,
         }}
       >
-        <div class="twi-pb-4">
-          <span
-            style={{
-              color: '#007B4B',
-            }}
-          >
-            <HintStars class="twi-mr-1" fill="#007B4B" />
-            Asking more about...
-          </span>
-        </div>
+        <span
+          class="twi-pb-4 twi-inline-flex twi-text-sm twi-font-normal"
+          style={{
+            color: '#007B4B',
+          }}
+        >
+          <HintStars class="twi-mr-1" fill="#007B4B" />
+          Asking more about...
+        </span>
         <ProductCarousel product={product} />
       </div>
     </div>

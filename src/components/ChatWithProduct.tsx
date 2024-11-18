@@ -1,4 +1,4 @@
-import { Accessor, createEffect, For, onMount, Setter } from 'solid-js';
+import { Accessor, createEffect, For, onMount, Setter, Show } from 'solid-js';
 import { render } from 'solid-js/web';
 import { HintBubble } from './bubbles/HintBubble';
 import { HintStars } from './icons/HintStars';
@@ -10,7 +10,7 @@ export type Props = {
   backgroundColor: string;
   hintsBackgroundColor: string;
   isBotOpened: Accessor<boolean>;
-  setIsBotOpened: Setter<boolean>;
+  openBot: Setter<boolean>;
   product?: ShopifyProduct;
   askQuestion: Setter<string>;
   nextQuestions: Accessor<string[]>;
@@ -34,12 +34,10 @@ export const ChatWithProduct = (props: Props) => {
 
   createEffect(() => {
     const descElement: HTMLParagraphElement | null = document.querySelector('p[id="twini-product-description"]');
-    if (descElement) {
+
+    if (descElement && props.summary() != '') {
       descElement.style.color = props.textColor;
       descElement.innerHTML = '';
-      const text =
-        props.summary() ||
-        'Lorem ipsum dolor sit amet consectetur adipisicing elit. Facere possimus laudantium similique, tempore inventore necessitatibus nihil?';
       render(
         () => (
           <>
@@ -49,7 +47,7 @@ export const ChatWithProduct = (props: Props) => {
                 color: props.textColor,
               }}
             >
-              {text}
+              {props.summary()}
             </p>
             <br />
           </>
@@ -67,38 +65,42 @@ export const ChatWithProduct = (props: Props) => {
   });
 
   return (
-    <div>
-      <p
-        class="twi-text-center twi-w-full twi-text-sm twi-font-light"
-        style={{
-          color: props.textColor,
-        }}
-      >
-        <HintStars class="twi-mr-1" fill={props.textColor} />
-        Summary of your recent chat
-      </p>
+    <>
+      <Show when={props.summary() != ''}>
+        <p
+          class="twi-inline-flex twi-items-center twi-w-full twi-text-sm twi-font-normal twi-justify-center"
+          style={{
+            color: props.textColor,
+          }}
+        >
+          <HintStars class="twi-mr-1" fill={props.textColor} />
+          Summary of your recent chat
+        </p>
+      </Show>
       <br />
-      <For each={props.nextQuestions()}>
-        {(prompt) => (
-          <HintBubble
-            actionColor={props.textColor}
-            message={prompt}
-            textColor={props.textColor}
-            backgroundColor={props.hintsBackgroundColor}
-            onClick={() => {
-              props.setIsBotOpened(true);
-              props.setProductHandle(props.product?.handle ?? '');
-              setTimeout(() => {
-                props.askQuestion(prompt);
-              }, 200);
-            }}
-          />
-        )}
-      </For>
+      <Show when={props.summary() == ''}>
+        <For each={props.nextQuestions()}>
+          {(prompt) => (
+            <HintBubble
+              actionColor={props.textColor}
+              message={prompt}
+              textColor={props.textColor}
+              backgroundColor={props.hintsBackgroundColor}
+              onClick={() => {
+                props.openBot(true);
+                props.setProductHandle(props.product?.handle ?? '');
+                setTimeout(() => {
+                  props.askQuestion(prompt);
+                }, 200);
+              }}
+            />
+          )}
+        </For>
+      </Show>
       <button
         class="twi-cursor-pointer twi-bg-white twi-border twi-w-full twi-px-3 twi-py-1 twi-mt-1 twi-rounded-full twi-flex twi-flex-row twi-items-center"
         onClick={() => {
-          props.setIsBotOpened(true);
+          props.openBot(true);
           props.setProductHandle(props.product?.handle ?? '');
         }}
         style={{
@@ -110,7 +112,7 @@ export const ChatWithProduct = (props: Props) => {
         <span class="twi-mr-auto">Continue this conversation...</span>
         <SendButton arrowColor={props.textColor} color="white" isDisabled={false} isLoading={() => false} />
       </button>
-    </div>
+    </>
   );
 };
 

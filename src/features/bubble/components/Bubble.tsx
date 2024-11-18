@@ -1,5 +1,5 @@
 import { BotProps, FullBotProps } from '@/components/types/botprops';
-import { Accessor, onMount, Setter, Show } from 'solid-js';
+import { Accessor, Show } from 'solid-js';
 import { Bot } from '../../../components/Bot';
 import { BubbleWidget } from './BubbleWidget';
 
@@ -7,26 +7,14 @@ export const BubbleBot = (
   props: FullBotProps &
     Omit<BotProps, 'welcomeMessage' | 'closeBot' | 'bot'> & {
       isBotOpened: Accessor<boolean>;
-      setIsBotOpened: Setter<boolean>;
+      openBot: () => void;
+      closeBot: () => void;
+      toggleBot: () => void;
     },
 ) => {
-  let bodyOverflowY = '';
-
   const openBot = () => {
-    props.setIsBotOpened(true);
+    props.openBot();
     props.setProductHandle(props.shopifyProduct?.handle || '');
-    // screen md
-    if (window.innerWidth < 768) document.body.style.overflowY = 'hidden';
-  };
-
-  const closeBot = () => {
-    props.setIsBotOpened(false);
-    // screen md
-    if (window.innerWidth < 768) document.body.style.overflowY = bodyOverflowY;
-  };
-
-  const toggleBot = () => {
-    props.isBotOpened() ? closeBot() : openBot();
   };
 
   const welcomeMessage =
@@ -34,22 +22,17 @@ export const BubbleBot = (
       ? props.theme.chatWindow.templateWelcomeMessageOnProductPage.replace('{{product}}', props.shopifyProduct.title)
       : props.theme.chatWindow.welcomeMessage;
 
-  onMount(() => {
-    bodyOverflowY = document.body.style.overflowY;
-  });
-
   let botRef: HTMLDivElement | undefined;
   return (
     <>
       <Show when={!props.isBotOpened()}>
-        {/* <BubbleButton {...props.theme?.button} toggleBot={toggleBot} isBotOpened={props.isBotOpened} /> */}
         <span
-          class="twi-bubble-widget twi-left-1/2 twi-bottom-0 twi-fixed twi-animate-fade-in twi-z-50"
+          class="twi-bubble-widget twi-pointer-events-none twi-left-1/2 twi-bottom-0 twi-fixed twi-animate-fade-in twi-z-50"
           style={{
             transform: 'translateX(-50%)', // Center the button horizontally and vertically
           }}
         >
-          <BubbleWidget toggleBot={toggleBot}></BubbleWidget>
+          <BubbleWidget openBot={openBot}></BubbleWidget>
         </span>
       </Show>
       <div
@@ -82,7 +65,7 @@ export const BubbleBot = (
           shopRef={props.shopRef}
           apiUrl={props.apiUrl}
           starterPrompts={props.starterPrompts || {}}
-          closeBot={closeBot}
+          closeBot={props.closeBot}
           question={props.question}
           nextQuestions={props.nextQuestions}
           setNextQuestions={props.setNextQuestions}

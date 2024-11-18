@@ -56,14 +56,7 @@ Sentry.init({
 
 render(
   () => (
-    <BubbleBot
-      {...props}
-      getElement={getChatbot}
-      isBotOpened={isBotOpened}
-      setIsBotOpened={setIsBotOpened}
-      shopifyProduct={product}
-      question={question}
-    />
+    <BubbleBot {...props} getElement={getChatbot} isBotOpened={isBotOpened} openBot={setIsBotOpened} shopifyProduct={product} question={question} />
   ),
   cb,
 );
@@ -77,7 +70,7 @@ if (!chatWithProductWidget) {
     return (
       <ChatWithProduct
         isBotOpened={isBotOpened}
-        setIsBotOpened={setIsBotOpened}
+        openBot={setIsBotOpened}
         textColor={brandColors.actionPrimary}
         backgroundColor={brandColors.secondary}
         product={product}
