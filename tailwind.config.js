@@ -46,6 +46,9 @@ module.exports = {
       animation: {
         'fade-in': 'fade-in 0.3s ease-out',
       },
+      borderRadius: {
+        '4xl': '32px',
+      },
     },
   },
 };

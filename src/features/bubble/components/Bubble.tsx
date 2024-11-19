@@ -9,12 +9,13 @@ export const BubbleBot = (
       isBotOpened: Accessor<boolean>;
       openBot: () => void;
       closeBot: () => void;
-      toggleBot: () => void;
     },
 ) => {
   const openBot = () => {
     props.openBot();
-    props.setProductHandle(props.shopifyProduct?.handle || '');
+    if (props.shopifyProduct?.handle && props.productHandle() == null) {
+      props.setProductHandle(props.shopifyProduct.handle);
+    }
   };
 
   const welcomeMessage =

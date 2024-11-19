@@ -70,10 +70,6 @@ const closeBot = () => {
   if (window.innerWidth < 768) document.body.style.overflow = bodyOverflow;
 };
 
-const toggleBot = () => {
-  isBotOpened() ? closeBot() : openBot();
-};
-
 if (process.env.NODE_ENV == 'production') {
   Sentry.init({
     dsn: 'https://0e923b8b2f8f5f284443d82e730e5fd8@o4508080401088512.ingest.de.sentry.io/4508132557717584',
@@ -123,7 +119,7 @@ if (!chatWithProductWidget) {
         textColor={brandColors.actionPrimary}
         backgroundColor={brandColors.secondary}
         hintsBackgroundColor={brandColors.hintsBackgroundColor}
-        product={product}
+        product={product} // is defined when on product page
         setProductHandle={setProductHandle}
         askQuestion={askQuestion}
         nextQuestions={nextQuestions}

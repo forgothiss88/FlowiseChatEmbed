@@ -17,6 +17,7 @@ export type MessageType = {
   message: string;
   type: messageType;
   productHandle?: string; // if the message starts a new product conversation
+  temporary?: boolean; // if the message is temporary and should be removed if does not start a conversation
   sourceProducts?: SourceProduct[];
   sourceContents?: SourceContent[];
   suggestedProduct?: SourceProduct;

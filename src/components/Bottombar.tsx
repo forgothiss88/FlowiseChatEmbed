@@ -90,7 +90,7 @@ export const Bottombar = (props: Props) => {
   onMount(() => {
     createEffect(() => {
       textareaHeight();
-      props.setBottomSpacerHeight((bb.getBoundingClientRect().height || bb.clientHeight) + 16);
+      props.setBottomSpacerHeight(bb.getBoundingClientRect().height || bb.clientHeight);
     });
   });
 

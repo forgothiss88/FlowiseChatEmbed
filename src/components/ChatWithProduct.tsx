@@ -10,8 +10,8 @@ export type Props = {
   backgroundColor: string;
   hintsBackgroundColor: string;
   isBotOpened: Accessor<boolean>;
-  openBot: Setter<boolean>;
-  product?: ShopifyProduct;
+  openBot: () => void;
+  product: ShopifyProduct;
   askQuestion: Setter<string>;
   nextQuestions: Accessor<string[]>;
   summary: Accessor<string>;
@@ -62,10 +62,11 @@ export const ChatWithProduct = (props: Props) => {
 
   onMount(() => {
     restoreSummaryFromLocalStorage();
+    props.setProductHandle(props.product.handle);
   });
 
   return (
-    <>
+    <div class="twi-flex twi-flex-col twi-gap-2">
       <Show when={props.summary() != ''}>
         <p
           class="twi-inline-flex twi-items-center twi-w-full twi-text-sm twi-font-normal twi-justify-center"
@@ -78,7 +79,7 @@ export const ChatWithProduct = (props: Props) => {
         </p>
       </Show>
       <br />
-      <Show when={props.summary() == ''}>
+      <Show when={props.summary() == '' && props.nextQuestions()}>
         <For each={props.nextQuestions()}>
           {(prompt) => (
             <HintBubble
@@ -87,8 +88,7 @@ export const ChatWithProduct = (props: Props) => {
               textColor={props.textColor}
               backgroundColor={props.hintsBackgroundColor}
               onClick={() => {
-                props.openBot(true);
-                props.setProductHandle(props.product?.handle ?? '');
+                props.openBot();
                 setTimeout(() => {
                   props.askQuestion(prompt);
                 }, 200);
@@ -98,10 +98,9 @@ export const ChatWithProduct = (props: Props) => {
         </For>
       </Show>
       <button
-        class="twi-cursor-pointer twi-bg-white twi-border twi-w-full twi-px-3 twi-py-1 twi-mt-1 twi-rounded-full twi-flex twi-flex-row twi-items-center"
+        class="twi-cursor-pointer twi-bg-white twi-border twi-w-full twi-px-3 twi-py-1 twi-rounded-full twi-flex twi-flex-row twi-items-center"
         onClick={() => {
-          props.openBot(true);
-          props.setProductHandle(props.product?.handle ?? '');
+          props.openBot();
         }}
         style={{
           'background-color': props.backgroundColor,
@@ -112,7 +111,7 @@ export const ChatWithProduct = (props: Props) => {
         <span class="twi-mr-auto">Continue this conversation...</span>
         <SendButton arrowColor={props.textColor} color="white" isDisabled={false} isLoading={() => false} />
       </button>
-    </>
+    </div>
   );
 };
 
