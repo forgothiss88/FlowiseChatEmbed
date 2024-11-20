@@ -24,9 +24,12 @@ export const BubbleBot = (
       : props.theme.chatWindow.welcomeMessage;
 
   let botRef: HTMLDivElement | undefined;
+  console.debug('BubbleBot', props);
+  console.debug('!props.shopifyProduct', !props.shopifyProduct);
+  console.debug('props.isBotOpened()', props.isBotOpened());
   return (
     <>
-      <Show when={!props.isBotOpened()}>
+      <Show when={!props.shopifyProduct && !props.isBotOpened()}>
         <span
           class="twi-bubble-widget twi-pointer-events-none twi-left-1/2 twi-bottom-0 twi-fixed twi-animate-fade-in twi-z-50"
           style={{

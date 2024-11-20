@@ -51,7 +51,7 @@ export const AutoGrowTextArea = (props: Props) => {
   return (
     <div class="twi-inline-flex twi-w-full">
       <div
-        class="twi-flex-1 twi-flex twi-flex-row twi-pl-3 twi-py-1 twi-rounded-3xl twi-bg-gray-200 twi-border twi-w-full"
+        class="twi-flex-1 twi-flex twi-flex-row twi-pl-3 twi-pr-2 twi-py-1 twi-rounded-3xl twi-bg-gray-200 twi-border twi-w-full"
         style={{ 'background-color': props.inputBackgroundColor, 'border-color': props.inputBorderColor }}
       >
         {textarea}

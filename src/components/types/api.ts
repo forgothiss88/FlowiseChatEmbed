@@ -1,9 +1,9 @@
-import { sendRequest } from '@/utils/index';
 
 export type MessageTypeBE = 'ai' | 'human' | 'system';
 
 export type MessageBE = {
   type: string;
+  role: string;
   content: string;
 };
 
@@ -13,6 +13,7 @@ export type RunBody = {
   username: string;
   chat_ref: string;
   cart_token: string;
+  product_handle: string;
 };
 
 export type RunInput = {
@@ -24,11 +25,3 @@ export type MessageRequest = {
   apiUrl?: string;
   body?: RunInput;
 };
-
-export const sendFileDownloadQuery = ({ apiUrl = 'http://localhost:3000', body }: MessageRequest) =>
-  sendRequest<any>({
-    method: 'POST',
-    url: `${apiUrl}/api/v1/openai-assistants-file`,
-    body,
-    type: 'blob',
-  });

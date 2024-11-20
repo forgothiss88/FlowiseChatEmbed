@@ -268,7 +268,7 @@ export const ProductCarousel = (props: ProductCarouselProps) => {
           </Show>
         </div>
         <div class="twi-w-2/5 twi-flex twi-flex-row twi-justify-end twi-pr-2">
-          <div class="twi-flex twi-flex-row twi-text-black">
+          <div class="twi-flex twi-flex-row">
             <button class={'twi-cursor-pointer' + isStart() ? 'twi-opacity-30' : ''} disabled={isStart()} onClick={prevSlide}>
               <LeftArrow></LeftArrow>
             </button>

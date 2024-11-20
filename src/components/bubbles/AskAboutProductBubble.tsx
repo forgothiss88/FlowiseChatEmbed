@@ -110,9 +110,9 @@ export const AskMoreAboutProductBubble = (props: {
   });
 
   return (
-    <div class="twi-flex twi-flex-row twi-justify-start twi-items-start twi-host-container twi-w-11/12">
+    <div class="twi-flex twi-flex-row twi-justify-start twi-items-start twi-host-container">
       <div
-        class="twi-p-4 twi-whitespace-pre-wrap twi-rounded-2xl twi-rounded-tl-none twi-chatbot-host-bubble twi-text-sm twi-font-normal twi-max-w-full twi-ai-shadow"
+        class="twi-p-4 twi-whitespace-pre-wrap twi-rounded-2xl twi-rounded-bl-none twi-chatbot-host-bubble twi-text-sm twi-font-normal twi-max-w-full twi-ai-shadow"
         data-testid="host-bubble"
         style={{
           'background-color': 'white',

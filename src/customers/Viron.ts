@@ -1,15 +1,17 @@
 import { FullBotProps } from '@/components/types/botprops';
 
 export const brandColors = {
-  primary: 'black',
+  primary: '#333333',
   primaryTextColor: 'white',
   secondary: 'white',
-  secondaryTextColor: 'black',
+  secondaryTextColor: '#333333',
   actionPrimary: '#007B4B',
-  actionPrimaryTextColor: 'black',
-  actionSecondary: 'black',
+  actionPrimaryTextColor: '#333333',
+  actionSecondary: '#333333',
   actionSecondaryTextColor: 'white',
   hintsBackgroundColor: 'rgb(0 123 75 / 10%)',
+  gradient: '#007B4B', // 'linear-gradient(90deg, #00BF7D 0%, #007B4B 100%)',
+  gradientReversed: '#007B4B', // 'linear-gradient(270deg, #00BF7D 0%, #007B4B 100%)',
 };
 
 export const vironProps = (): FullBotProps => {
@@ -17,10 +19,12 @@ export const vironProps = (): FullBotProps => {
     apiUrl: 'http://localhost:8000/twini-stream/viron-agents',
     shopRef: 'viron',
     starterPrompts: {
-      prompts: ["What's special about the materials used?", 'Can you tell me more about the fit?', 'Are they good for a trip?'],
-      textColor: 'black',
+      prompts: ["Any cruelty-free loafers for a wedding?", "I'm looking for eco-friendly boots", "What are your shoes made of?"],
+      productPagePrompts: ["What's special about the materials used?", 'Can you tell me more about the fit?', 'Are they good for a trip?'],
+      textColor: brandColors.actionPrimaryTextColor,
       actionColor: brandColors.actionPrimary,
       backgroundColor: 'rgb(0 123 75 / 10%)',
+      borderColor: brandColors.gradient,
     },
     theme: {
       button: {
@@ -36,7 +40,7 @@ export const vironProps = (): FullBotProps => {
         welcomeMessage: 'Hey there!\nI’m your personal shopper from Virón 🌱',
         templateWelcomeMessageOnProductPage: 'Hey there 🌱\nI’m here to help you with the **{{product}}**. How can I help you?',
         backgroundColor: 'rgba(255, 255, 255, 0.65)',
-        poweredByTextColor: 'black',
+        poweredByTextColor: '#333333',
         firstMessage: undefined,
         textInput: {
           placeholder: 'Ask me anything...',

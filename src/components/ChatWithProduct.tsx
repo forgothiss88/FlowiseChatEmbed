@@ -9,6 +9,7 @@ export type Props = {
   textColor: string;
   backgroundColor: string;
   hintsBackgroundColor: string;
+  hintsBorderColor: string;
   isBotOpened: Accessor<boolean>;
   openBot: () => void;
   product: ShopifyProduct;
@@ -87,6 +88,7 @@ export const ChatWithProduct = (props: Props) => {
               message={prompt}
               textColor={props.textColor}
               backgroundColor={props.hintsBackgroundColor}
+              borderColor={props.hintsBorderColor}
               onClick={() => {
                 props.openBot();
                 setTimeout(() => {

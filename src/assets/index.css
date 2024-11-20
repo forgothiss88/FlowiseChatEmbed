@@ -114,3 +114,19 @@
     0px 4px 50px 5px rgba(0, 123, 75, 0.4),
     0px 10px 20px 5px rgba(0, 191, 125, 0.2);
 }
+
+.twini-base .twi-bg-gradient {
+  background-color: linear-gradient(90deg, #007B4B 0%, #00BF7D 100%);
+}
+
+.twini-base .twi-border-gradient {
+  border-color: linear-gradient(90deg, #007B4B 0%, #00BF7D 100%);
+}
+
+.twini-base .twi-gradient-reverse {
+  background-color: linear-gradient(90deg, #00BF7D 0%, #007B4B 100%);
+}
+
+.twini-base .twi-border-gradient-reverse {
+  border-color: linear-gradient(90deg, #00BF7D 0%, #007B4B 100%);
+}

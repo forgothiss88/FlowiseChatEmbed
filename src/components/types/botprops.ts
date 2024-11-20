@@ -26,9 +26,11 @@ export type MessageType = {
 
 export type StarterPromptsType = {
   prompts: string[];
+  productPagePrompts: string[];
   textColor: string;
   actionColor: string;
   backgroundColor: string;
+  borderColor: string;
 };
 
 export type BotConfig = {

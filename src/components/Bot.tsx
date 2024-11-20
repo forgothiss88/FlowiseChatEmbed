@@ -1,4 +1,4 @@
-import { RunInput } from '@/queries/sendMessageQuery';
+import { MessageBE, RunInput } from '@/components/types/api';
 import { fetchEventSource } from '@microsoft/fetch-event-source';
 import { Accessor, For, Setter, Show, createEffect, createSignal, on, onMount } from 'solid-js';
 import { v4 as uuidv4 } from 'uuid';
@@ -38,7 +38,7 @@ export const Bot = (props: BotConfig & BotProps) => {
       {
         message: props.welcomeMessage,
         type: 'apiMessage',
-        nextQuestions: [...props.starterPrompts.prompts],
+        nextQuestions: [...(props.shopifyProduct?.handle ? props.starterPrompts.productPagePrompts : props.starterPrompts.prompts)],
         productHandle: props.shopifyProduct?.handle,
       },
     ],
@@ -147,16 +147,20 @@ export const Bot = (props: BotConfig & BotProps) => {
       console.error('chatRef is null');
       return;
     }
+    let nextQuestions = null;
 
     const body: RunInput = {
       input: {
         input: value,
-        chat_history: msgs.map((message) => {
-          return { content: message.message, type: messageTypeFEtoBE(message.type) };
-        }),
+        chat_history: msgs.reduce<MessageBE[]>((acc, message) => {
+          if (!message.message) return acc;
+          acc.push({ content: message.message, type: messageTypeFEtoBE(message.type), role: messageTypeFEtoBE(message.type) });
+          return acc;
+        }, []),
         username: props.shopRef,
         chat_ref: chatRef(),
         cart_token: cartToken() || 'fake_cart_token',
+        product_handle: props.productHandle(),
         // TODO: product: props.shopifyProduct,
       },
       config: {},
@@ -292,15 +296,16 @@ export const Bot = (props: BotConfig & BotProps) => {
     try {
       localStorage.removeItem(`twini-${props.shopRef}`);
       setChatRef(uuidv4());
+      const prompts = [...(props.shopifyProduct?.handle ? props.starterPrompts.productPagePrompts : props.starterPrompts.prompts)];
       setMessages([
         {
           message: props.welcomeMessage,
           type: 'apiMessage',
-          nextQuestions: [...props.starterPrompts.prompts],
+          nextQuestions: [...prompts],
           productHandle: props.shopifyProduct?.handle,
         },
       ]);
-      props.setNextQuestions([...(props.starterPrompts.prompts ?? [])]);
+      props.setNextQuestions([...prompts]);
       saveChatToLocalStorage();
     } catch (error: any) {
       const errorData = error.response.data || `${error.response.status}: ${error.response.statusText}`;
@@ -347,13 +352,20 @@ export const Bot = (props: BotConfig & BotProps) => {
       console.debug('last productHandle from messages:', lastProductHandleFromMessages);
       console.debug('new productHandle:', handle);
       // if chat is already about this product, don't start a new conversation
-      if (!handle || lastProductHandleFromMessages == handle) return;
+      if (!handle) {
+        console.debug('No product handle, appending ');
+        return;
+      } else if (lastProductHandleFromMessages == handle) {
+        console.debug(`last product handle ${lastProductHandleFromMessages} is the same as the new one: ${handle}`);
+        return;
+      }
+      const lastMsg = messages()[messages().length - 1];
       setMessages([
         ...messages(),
         {
           type: 'apiMessage',
           message: `Let's talk about this product: ${handle}`,
-          nextQuestions: [...props.starterPrompts.prompts],
+          nextQuestions: [...(lastMsg.nextQuestions || props.starterPrompts.productPagePrompts)],
           productHandle: handle,
           temporary: true,
         },
@@ -398,7 +410,7 @@ export const Bot = (props: BotConfig & BotProps) => {
                 onClick={props.closeBot}
                 style={{ 'line-height': 0 }}
               >
-                <XIcon fill="black" width={24} height={24}></XIcon>
+                <XIcon fill="#333333" width={24} height={24}></XIcon>
               </button>
               <div class="twi-flex-1 twi-flex twi-py-7 twi-justify-center">
                 <StarsAvatar width={24} height={24} />
@@ -407,12 +419,12 @@ export const Bot = (props: BotConfig & BotProps) => {
           </div>
           <div role="presentation" tabindex="0" class="twi-flex twi-h-full twi-flex-col twi-focus-visible:outline-0 twi-overflow-hidden">
             <div ref={chatContainer} class="twi-flex-1 twi-overflow-auto twi-scroll-smooth twi-no-scrollbar-container">
-              <div class="twi-px-3 twi-pb-3 twi-pt-16" id="twini-message-container">
+              <div class="twi-px-4 twi-pb-3 twi-pt-16 twi-flex twi-flex-col twi-gap-4" id="twini-message-container">
                 <For each={messages()}>
                   {(message, i) => {
                     if (message.type === 'userMessage') {
                       return (
-                        <div class="twi-w-full twi-my-4" id={`twini-message-${i()}`}>
+                        <div class="twi-w-11/12 twi-ml-auto twi-mr-2" id={`twini-message-${i()}`}>
                           <GuestBubble
                             message={message.message}
                             backgroundColor={props.userMessage?.backgroundColor}
@@ -425,7 +437,7 @@ export const Bot = (props: BotConfig & BotProps) => {
                     } else if (message.type === 'apiMessage') {
                       if (message.productHandle) {
                         return (
-                          <div class="twi-w-full twi-my-4" id={`twini-message-${i()}`}>
+                          <div class="twi-w-full twi-mb-4" id={`twini-message-${i()}`}>
                             <AskMoreAboutProductBubble
                               productHandle={message.productHandle}
                               product={message.productHandle == props.shopifyProduct?.handle ? props.shopifyProduct : undefined}
@@ -436,7 +448,7 @@ export const Bot = (props: BotConfig & BotProps) => {
                         );
                       } else {
                         return (
-                          <div class="twi-w-full twi-my-4" id={`twini-message-${i()}`}>
+                          <div class="twi-w-11/12 twi-mr-auto twi-ml-2" id={`twini-message-${i()}`}>
                             <BotBubble
                               getMessage={() => message}
                               backgroundColor={props.botMessage?.backgroundColor || 'black'}
@@ -461,23 +473,25 @@ export const Bot = (props: BotConfig & BotProps) => {
                   <LoadingBubble />
                 </Show>
                 <Show when={!isWaitingForResponse() && streamingBotResponse()?.message}>
-                  <BotBubble
-                    getMessage={streamingBotResponse as Accessor<MessageType>}
-                    backgroundColor={props.botMessage?.backgroundColor || 'black'}
-                    textColor={props.botMessage?.textColor}
-                    faviconUrl={props.botMessage?.faviconUrl}
-                    sourceProducts={streamingBotResponse()?.sourceProducts}
-                    sourceContent={streamingBotResponse()?.sourceContents}
-                    suggestedProduct={streamingBotResponse()?.suggestedProduct}
-                    enableMultipricing={props.botMessage?.enableMultipricing || false}
-                    purchaseButtonText={props.botMessage?.purchaseButtonText}
-                    purchaseButtonBackgroundColor={props.botMessage?.purchaseButtonBackgroundColor}
-                    purchaseButtonTextColor={props.botMessage?.purchaseButtonTextColor}
-                    setProductHandle={props.setProductHandle as Setter<string>}
-                  />
+                  <div class="twi-w-11/12 twi-mr-auto twi-ml-2" id="twini-message-last-streaming">
+                    <BotBubble
+                      getMessage={streamingBotResponse as Accessor<MessageType>}
+                      backgroundColor={props.botMessage?.backgroundColor || 'black'}
+                      textColor={props.botMessage?.textColor}
+                      faviconUrl={props.botMessage?.faviconUrl}
+                      sourceProducts={streamingBotResponse()?.sourceProducts}
+                      sourceContent={streamingBotResponse()?.sourceContents}
+                      suggestedProduct={streamingBotResponse()?.suggestedProduct}
+                      enableMultipricing={props.botMessage?.enableMultipricing || false}
+                      purchaseButtonText={props.botMessage?.purchaseButtonText}
+                      purchaseButtonBackgroundColor={props.botMessage?.purchaseButtonBackgroundColor}
+                      purchaseButtonTextColor={props.botMessage?.purchaseButtonTextColor}
+                      setProductHandle={props.setProductHandle as Setter<string>}
+                    />
+                  </div>
                 </Show>
-                <div ref={hintsRef} class="twi-flex twi-flex-col twi-gap-2">
-                  <Show when={!isBusy()}>
+                <div ref={hintsRef} class="twi-flex twi-flex-col twi-gap-2 twi-mr-2">
+                  <Show when={!isBusy() && !messages()[messages().length - 1].suggestedProduct}>
                     <For each={props.nextQuestions()}>
                       {(prompt, _) => (
                         <HintBubble
@@ -485,6 +499,7 @@ export const Bot = (props: BotConfig & BotProps) => {
                           message={prompt}
                           textColor={props.starterPrompts.textColor}
                           backgroundColor={props.starterPrompts.backgroundColor}
+                          borderColor={props.starterPrompts.borderColor}
                           onClick={() => handleSubmit(prompt)}
                         />
                       )}

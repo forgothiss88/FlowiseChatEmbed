@@ -51,7 +51,10 @@ if (cb.hasAttribute('data-cart')) {
 
 const [isBotOpened, setIsBotOpened] = createSignal(false);
 const [question, askQuestion] = createSignal<string>('');
-const [nextQuestions, setNextQuestions] = createSignal<string[]>([...props.starterPrompts.prompts]);
+
+const [nextQuestions, setNextQuestions] = createSignal<string[]>([
+  ...(product ? props.starterPrompts.productPagePrompts : props.starterPrompts.prompts),
+]);
 const [summary, setSummary] = createSignal<string>('');
 const [productHandle, setProductHandle] = createSignal<string>('');
 
@@ -119,6 +122,7 @@ if (!chatWithProductWidget) {
         textColor={brandColors.actionPrimary}
         backgroundColor={brandColors.secondary}
         hintsBackgroundColor={brandColors.hintsBackgroundColor}
+        hintsBorderColor={brandColors.gradient}
         product={product} // is defined when on product page
         setProductHandle={setProductHandle}
         askQuestion={askQuestion}
