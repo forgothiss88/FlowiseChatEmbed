@@ -93,15 +93,20 @@ export const Bot = (props: BotConfig & BotProps) => {
     const localChats: storedChat = JSON.parse(data);
     console.log('Restoring chats with chatRef', localChats.chatRef);
     setChatRef(localChats.chatRef);
+    const pageProductHandle: string | undefined = props.shopifyProduct?.handle;
+    let chatProductHandle: string | undefined = undefined;
     if (localChats.chatHistory.length >= 2) {
       // restore only an actual conversation happened
       setMessages([...localChats.chatHistory]);
       const lastProductHandle = localChats.chatHistory.findLast((msg) => msg.productHandle != null)?.productHandle;
       if (lastProductHandle != null) {
-        props.setProductHandle(lastProductHandle);
+        chatProductHandle = lastProductHandle;
       }
     }
 
+    // prioritize product handle from page when we restore the chat
+    console.debug('Restoring product handle. Page ph:', pageProductHandle, ' Chat ph:', chatProductHandle);
+    props.setProductHandle(pageProductHandle || chatProductHandle || '');
     props.setNextQuestions(localChats.chatHistory[localChats.chatHistory.length - 1].nextQuestions ?? []);
 
     console.debug('Restored chat from storage', localChats);
@@ -360,6 +365,8 @@ export const Bot = (props: BotConfig & BotProps) => {
         return;
       }
       const lastMsg = messages()[messages().length - 1];
+
+      // adding a temporary message to the chat to change the product context
       setMessages([
         ...messages(),
         {

@@ -107,7 +107,6 @@ export const AskMoreAboutProductBubble = (props: {
   textColor?: string;
   showViewProductButton: boolean;
 }) => {
-  console.debug('AskMoreAboutProductBubble', props);
   const [product, setProduct] = createSignal<Product | undefined>(
     props.product
       ? {

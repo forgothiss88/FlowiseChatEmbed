@@ -1,4 +1,4 @@
-import { Accessor, createEffect, For, onMount, Setter, Show } from 'solid-js';
+import { Accessor, createEffect, For, on, onMount, Setter, Show } from 'solid-js';
 import { render } from 'solid-js/web';
 import { HintBubble } from './bubbles/HintBubble';
 import { HintStars } from './icons/HintStars';
@@ -18,52 +18,67 @@ export type Props = {
   summary: Accessor<string>;
   setSummary: Setter<string>;
   shopRef: string;
+  productHandle: Accessor<string>;
   setProductHandle: Setter<string>;
 };
 
 export const ChatWithProduct = (props: Props) => {
+  const getStorageKey = () => {
+    console.debug('getStorageKey - Product handle:', props.productHandle());
+    if (props.productHandle()) {
+      return `twini-${props.shopRef}-summary-${props.productHandle()}`;
+    }
+    return `twini-${props.shopRef}-summary`;
+  };
+
   const restoreSummaryFromLocalStorage = () => {
-    const summary = localStorage.getItem(`twini-${props.shopRef}-summary-${props.product?.handle}`);
+    const summary = localStorage.getItem(getStorageKey());
     if (summary) {
       props.setSummary(summary);
     }
   };
 
   const saveSummaryToLocalStorage = () => {
-    localStorage.setItem(`twini-${props.shopRef}-summary-${props.product?.handle}`, props.summary());
+    localStorage.setItem(getStorageKey(), props.summary());
   };
 
-  createEffect(() => {
-    const descElement: HTMLParagraphElement | null = document.querySelector('p[id="twini-product-description"]');
+  createEffect(
+    on(props.summary, (summary: string) => {
+      if (!summary) {
+        return;
+      }
+      saveSummaryToLocalStorage();
+      if (props.productHandle() != props.product.handle) {
+        console.debug("Product handle doesn't match, not updating product page");
+        return;
+      }
+      const descElement: HTMLParagraphElement | null = document.querySelector('p[id="twini-product-description"]');
 
-    if (descElement && props.summary() != '') {
-      descElement.style.color = props.textColor;
-      descElement.innerHTML = '';
-      render(
-        () => (
-          <>
-            <br />
-            <p
-              style={{
-                color: props.textColor,
-              }}
-            >
-              {props.summary()}
-            </p>
-            <br />
-          </>
-        ),
-        descElement,
-      );
-    }
-    saveSummaryToLocalStorage();
-  });
-
-  createEffect(saveSummaryToLocalStorage);
+      if (descElement && summary != '') {
+        descElement.style.color = props.textColor;
+        descElement.innerHTML = '';
+        render(
+          () => (
+            <>
+              <br />
+              <p
+                style={{
+                  color: props.textColor,
+                }}
+              >
+                {summary}
+              </p>
+              <br />
+            </>
+          ),
+          descElement,
+        );
+      }
+    }),
+  );
 
   onMount(() => {
     restoreSummaryFromLocalStorage();
-    props.setProductHandle(props.product.handle);
   });
 
   return (

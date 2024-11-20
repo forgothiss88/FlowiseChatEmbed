@@ -165,8 +165,6 @@ export const SinglePriceButton = (props: { purchaseButtonText: string; price: nu
 };
 
 export const SingleProductShowcase = (props: { setProductHandle: Setter<string>; product: SourceProduct } & PurchaseButtonAspect) => {
-  console.debug('SingleProductShowcase', props);
-  console.debug('setProductHandle', props.setProductHandle);
   return (
     <div class=" twi-flex twi-flex-row twi-p-3 twi-overflow-visible">
       <div

@@ -35,14 +35,14 @@ if (twiniApiUrl) {
 }
 let product: ShopifyProduct | undefined = undefined;
 if (cb.hasAttribute('data-product')) {
-  product = JSON.parse(cb.getAttribute('data-product'));
+  product = JSON.parse(cb.getAttribute('data-product') as string);
 } else {
   console.warn('Attribute "data-product" not found. Not on product page?');
 }
 
 let cart: ShopifyCart | undefined = undefined;
 if (cb.hasAttribute('data-cart')) {
-  cart = JSON.parse(cb.getAttribute('data-cart'));
+  cart = JSON.parse(cb.getAttribute('data-cart') as string);
 } else {
   console.warn('Attribute "data-cart" not found. Not on cart page?');
 }
@@ -124,6 +124,7 @@ if (!chatWithProductWidget) {
         hintsBackgroundColor={brandColors.hintsBackgroundColor}
         hintsBorderColor={brandColors.gradient}
         product={product} // is defined when on product page
+        productHandle={productHandle}
         setProductHandle={setProductHandle}
         askQuestion={askQuestion}
         nextQuestions={nextQuestions}

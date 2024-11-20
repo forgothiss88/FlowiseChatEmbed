@@ -11,22 +11,12 @@ export const BubbleBot = (
       closeBot: () => void;
     },
 ) => {
-  const openBot = () => {
-    props.openBot();
-    if (props.shopifyProduct?.handle && props.productHandle() == null) {
-      props.setProductHandle(props.shopifyProduct.handle);
-    }
-  };
-
   const welcomeMessage =
     props.shopifyProduct != null
       ? props.theme.chatWindow.templateWelcomeMessageOnProductPage.replace('{{product}}', props.shopifyProduct.title)
       : props.theme.chatWindow.welcomeMessage;
 
   let botRef: HTMLDivElement | undefined;
-  console.debug('BubbleBot', props);
-  console.debug('!props.shopifyProduct', !props.shopifyProduct);
-  console.debug('props.isBotOpened()', props.isBotOpened());
   return (
     <>
       <Show when={!props.shopifyProduct && !props.isBotOpened()}>
@@ -36,7 +26,7 @@ export const BubbleBot = (
             transform: 'translateX(-50%)', // Center the button horizontally and vertically
           }}
         >
-          <BubbleWidget openBot={openBot}></BubbleWidget>
+          <BubbleWidget openBot={props.openBot}></BubbleWidget>
         </span>
       </Show>
       <div
