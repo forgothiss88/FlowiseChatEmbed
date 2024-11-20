@@ -35,7 +35,7 @@ const ProductCarousel = (props: { product: Accessor<Product | undefined> }) => {
     return () => {
       const l = loadedImg();
       l[index] = true;
-      setLoadedImg(l);
+      setLoadedImg([...l]);
     };
   };
 
@@ -46,16 +46,20 @@ const ProductCarousel = (props: { product: Accessor<Product | undefined> }) => {
           <Show when={props.product() != null} fallback={<ImagesPlaceholder n={5} />}>
             <Index each={loadedImg()}>
               {(isLoaded, index) => (
-                <>
-                  {/* {!isLoaded() && <ImagesPlaceholder n={1} id={`image-placeholder-${index}`} />} */}
+                <div
+                  class="twi-w-32 twi-h-32 twi-bg-gray-200"
+                  classList={{
+                    'twi-animate-pulse': !isLoaded(),
+                  }}
+                >
                   <img
                     onLoad={onLoaded(index)}
                     src={props.product()?.images[index]}
                     alt={props.product()?.name || 'Product Image Placeholder'}
-                    class="twi-w-32 twi-h-32 twi-object-cover"
+                    class="twi-w-full twi-h-full twi-object-cover twi-aspect-square"
                     loading="lazy"
                   />
-                </>
+                </div>
               )}
             </Index>
           </Show>
@@ -63,7 +67,7 @@ const ProductCarousel = (props: { product: Accessor<Product | undefined> }) => {
       </div>
       <div class="twi-pt-4">
         <span class="twi-text-base twi-font-normal twi-text-start twi-block">{props.product()?.name || 'Title'}</span>
-        <span class="twi-text-sm twi-font-normal twi-text-start twi-mt-2 twi-block">{props.product()?.price || 'xxx'}€</span>
+        <span class="twi-text-sm twi-font-normal twi-text-start twi-mt-2 twi-block twi-text-nearly-black">{props.product()?.price || 'xxx'}€</span>
       </div>
     </div>
   );
