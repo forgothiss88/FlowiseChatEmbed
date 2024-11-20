@@ -403,7 +403,7 @@ export const Bot = (props: BotConfig & BotProps) => {
         <div class="twi-flex twi-w-full twi-items-center twi-justify-center twi-overflow-hidden"></div>
         <main class="twi-relative twi-h-full twi-w-full twi-flex-1 twi-overflow-hidden twi-transition-width">
           <div id="twini-topbar" class="twi-absolute twi-top-0 twi-left-0 twi-w-full" style={{ 'z-index': 999999999999 }}>
-            <div class="twi-absolute twi-inset-0 twi-blur-lg twi-bg-gradient-to-t twi-from-white/80 twi-via-white/80 twi-to-white/100"></div>
+            <div class="twi-absolute twi-inset-0 twi-blur-lg twi-bg-gradient-to-t twi-from-transparent twi-via-white/100 twi-to-white/100"></div>
             <div class="twi-relative twi-flex twi-items-center twi-bg-gradient-to-t twi-from-transparent twi-via-white/80 twi-to-white/100">
               <button
                 class="twi-cursor-pointer twi-absolute twi-pl-7 twi-py-7 twi-rounded-full twi-bg-transparent twi-z-10"
@@ -419,7 +419,7 @@ export const Bot = (props: BotConfig & BotProps) => {
           </div>
           <div role="presentation" tabindex="0" class="twi-flex twi-h-full twi-flex-col twi-focus-visible:outline-0 twi-overflow-hidden">
             <div ref={chatContainer} class="twi-flex-1 twi-overflow-auto twi-scroll-smooth twi-no-scrollbar-container">
-              <div class="twi-px-4 twi-pb-3 twi-pt-16 twi-flex twi-flex-col twi-gap-4" id="twini-message-container">
+              <div class="twi-px-4 twi-pb-3 twi-pt-20 twi-flex twi-flex-col twi-gap-4" id="twini-message-container">
                 <For each={messages()}>
                   {(message, i) => {
                     if (message.type === 'userMessage') {
@@ -452,7 +452,7 @@ export const Bot = (props: BotConfig & BotProps) => {
                             <BotBubble
                               getMessage={() => message}
                               backgroundColor={props.botMessage?.backgroundColor || 'black'}
-                              textColor={props.botMessage?.textColor}
+                              textColor={props.botMessage.textColor}
                               faviconUrl={props.botMessage?.faviconUrl}
                               sourceProducts={message.sourceProducts}
                               sourceContent={message.sourceContents}
@@ -477,7 +477,7 @@ export const Bot = (props: BotConfig & BotProps) => {
                     <BotBubble
                       getMessage={streamingBotResponse as Accessor<MessageType>}
                       backgroundColor={props.botMessage?.backgroundColor || 'black'}
-                      textColor={props.botMessage?.textColor}
+                      textColor={props.botMessage.textColor}
                       faviconUrl={props.botMessage?.faviconUrl}
                       sourceProducts={streamingBotResponse()?.sourceProducts}
                       sourceContent={streamingBotResponse()?.sourceContents}
