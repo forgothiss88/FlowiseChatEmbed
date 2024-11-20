@@ -56,7 +56,7 @@ const [nextQuestions, setNextQuestions] = createSignal<string[]>([
   ...(product ? props.starterPrompts.productPagePrompts : props.starterPrompts.prompts),
 ]);
 const [summary, setSummary] = createSignal<string>('');
-const [productHandle, setProductHandle] = createSignal<string>('');
+const [productHandle, setProductHandle] = createSignal<string>(product?.handle ?? '');
 
 let bodyOverflow = 'unset';
 

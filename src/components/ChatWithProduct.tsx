@@ -22,7 +22,27 @@ export type Props = {
   setProductHandle: Setter<string>;
 };
 
+function wait(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function typeWriter(el: HTMLElement, txt: string) {
+  let baseSpeed = 50; /* The speed/duration of the effect in milliseconds */
+  let step = 5;
+  const write = (txt: string) => {
+    console.debug('writing:', txt);
+    el.innerHTML += txt;
+  };
+  for (let i = 0; i < txt.length; i += step) {
+    write(txt.slice(i, i + step));
+    await wait(baseSpeed + Math.random() * 10);
+  }
+}
+
 export const ChatWithProduct = (props: Props) => {
+  let summaryParagraph: HTMLElement | undefined = undefined;
+  let descElement: HTMLParagraphElement | null = null;
+
   const getStorageKey = () => {
     console.debug('getStorageKey - Product handle:', props.productHandle());
     if (props.productHandle()) {
@@ -48,37 +68,52 @@ export const ChatWithProduct = (props: Props) => {
         return;
       }
       saveSummaryToLocalStorage();
-      if (props.productHandle() != props.product.handle) {
-        console.debug("Product handle doesn't match, not updating product page");
-        return;
-      }
-      const descElement: HTMLParagraphElement | null = document.querySelector('p[id="twini-product-description"]');
+    }),
+  );
 
-      if (descElement && summary != '') {
-        descElement.style.color = props.textColor;
-        descElement.innerHTML = '';
-        render(
-          () => (
-            <>
-              <br />
-              <p
-                style={{
-                  color: props.textColor,
-                }}
-              >
-                {summary}
-              </p>
-              <br />
-            </>
-          ),
-          descElement,
-        );
+  createEffect(
+    on(props.isBotOpened, async () => {
+      console.debug('triggered isBotOpened effect');
+      console.debug('isBotOpened:', props.isBotOpened());
+      console.debug('summary:', props.summary());
+      console.debug('productHandle:', props.productHandle());
+      console.debug('summaryParagraph:', summaryParagraph);
+
+      if (!props.isBotOpened() && props.summary() != '' && props.productHandle() == props.product.handle && summaryParagraph) {
+        if (props.productHandle() != props.product.handle) {
+          console.debug("Product handle doesn't match, not updating product page");
+          return;
+        }
+        summaryParagraph.innerHTML = '';
+        await typeWriter(summaryParagraph, props.summary());
       }
     }),
   );
 
   onMount(() => {
+    descElement = document.querySelector('p[id="twini-product-description"]');
+    if (!descElement) {
+      console.error('Product description element not found');
+      return;
+    }
     restoreSummaryFromLocalStorage();
+    render(
+      () => (
+        <>
+          <br />
+          <p
+            ref={summaryParagraph}
+            style={{
+              color: props.textColor,
+            }}
+          >
+            {props.summary()}
+          </p>
+          <br />
+        </>
+      ),
+      descElement,
+    );
   });
 
   return (
