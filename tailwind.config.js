@@ -43,6 +43,26 @@ module.exports = {
           },
         },
       },
+      colors: {
+        'brand-dark': 'rgb(var(--brand-secondary))',
+        'brand-light': 'rgb(var(--brand-primary))',
+        'brand-primary': 'rgb(var(--brand-primary))',
+        'brand-secondary': 'rgb(var(--brand-secondary))',
+        'brand-action-primary': 'rgb(var(--brand-action-primary))',
+        'brand-action-secondary': 'rgb(var(--brand-action-secondary))',
+        'brand-gradient': 'var(--brand-gradient)',
+        'brand-gradient-reversed': 'var(--brand-gradient-reversed)',
+      },
+      textColor: {
+        'brand-primary': 'rgb(var(--brand-primary-text-color))',
+        'brand-secondary': 'rgb(var(--brand-secondary-text-color))',
+        'brand-action-primary': 'rgb(var(--brand-action-primary-text-color))',
+        'brand-action-secondary': 'rgb(var(--brand-action-secondary-text-color))',
+      },
+      gradientColorStops: {
+        brand: 'var(--brand-gradient)',
+        'brand-reversed': 'var(--brand-gradient-reversed)',
+      },
       animation: {
         'fade-in': 'fade-in 0.3s ease-out',
       },

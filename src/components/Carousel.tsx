@@ -170,7 +170,7 @@ export const SingleProductShowcase = (props: { setProductHandle: Setter<string>;
   return (
     <div class=" twi-flex twi-flex-row twi-p-3 twi-overflow-visible">
       <div
-        class="twi-flex twi-flex-col twi-rounded-lg -twi-rotate-3 twi-max-w-36 twi-ai-shadow twi-overflow-hidden"
+        class="twi-flex twi-flex-col twi-rounded-lg -twi-rotate-3 twi-max-w-36 twi-overflow-hidden twi-shadow-brand-ai"
         style={{
           flex: '0 0 auto',
         }}
