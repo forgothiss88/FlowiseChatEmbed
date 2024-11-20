@@ -9,6 +9,7 @@ type Product = {
   name: string;
   images: string[];
   price: number;
+  url: string;
 };
 
 const ImagesPlaceholder = (props: { n: number } & JSX.HTMLAttributes<HTMLDivElement>) => {
@@ -16,7 +17,12 @@ const ImagesPlaceholder = (props: { n: number } & JSX.HTMLAttributes<HTMLDivElem
   return <Index each={Array(n.n)}>{() => <div class="twi-block twi-w-32 twi-h-32 twi-bg-gray-200 twi-animate-pulse" {...otherProps} />}</Index>;
 };
 
-const ProductCarousel = (props: { product: Accessor<Product | undefined> }) => {
+export type ProductCarouselProps = {
+  product: Accessor<Product | undefined>;
+  showViewProductButton: boolean;
+};
+
+const ProductCarousel = (props: ProductCarouselProps) => {
   const [loadedImg, setLoadedImg] = createSignal<boolean[]>([]);
 
   createEffect(
@@ -56,7 +62,7 @@ const ProductCarousel = (props: { product: Accessor<Product | undefined> }) => {
                     onLoad={onLoaded(index)}
                     src={props.product()?.images[index]}
                     alt={props.product()?.name || 'Product Image Placeholder'}
-                    class="twi-w-full twi-h-full twi-object-cover twi-aspect-square"
+                    class="twi-w-full twi-h-full twi-object-cover"
                     loading="lazy"
                   />
                 </div>
@@ -65,9 +71,30 @@ const ProductCarousel = (props: { product: Accessor<Product | undefined> }) => {
           </Show>
         </div>
       </div>
-      <div class="twi-pt-4">
-        <span class="twi-text-base twi-font-normal twi-text-start twi-block">{props.product()?.name || 'Title'}</span>
-        <span class="twi-text-sm twi-font-normal twi-text-start twi-mt-2 twi-block twi-text-nearly-black">{props.product()?.price || 'xxx'}€</span>
+      <div class="twi-pt-4 twi-w-full twi-flex twi-flex-row twi-justify-between twi-font-normal twi-text-start">
+        <Show
+          when={props.product()}
+          fallback={
+            <div>
+              <span class="twi-text-base twi-block twi-text-transparent twi-bg-gray-200 twi-animate-pulse twi-rounded-lg">Product Title</span>
+              <span class="twi-text-sm twi-mt-2 twi-block twi-text-transparent twi-bg-gray-200 twi-animate-pulse twi-rounded-lg">1234€</span>
+            </div>
+          }
+        >
+          <div>
+            <span class="twi-text-base twi-block twi-font-medium twi-text-brand-primary">{props.product()?.name}</span>
+            <span class="twi-text-sm twi-mt-2 twi-block twi-text-brand-primary">{props.product()?.price}€</span>
+          </div>
+        </Show>
+        <Show when={props.showViewProductButton}>
+          <a
+            href={props.product()?.url}
+            target="_blank"
+            class="twi-bg-brand-action-primary twi-text-brand-action-primary twi-rounded-md twi-mt-auto twi-text-sm twi-font-normal twi-px-4 twi-py-2 twi-whitespace-nowrap twi-self-center twi-block twi-text-center"
+          >
+            View product
+          </a>
+        </Show>
       </div>
     </div>
   );
@@ -75,9 +102,10 @@ const ProductCarousel = (props: { product: Accessor<Product | undefined> }) => {
 
 export const AskMoreAboutProductBubble = (props: {
   productHandle: string;
-  product?: ShopifyProduct;
+  product?: ShopifyProduct; // if on product page will be passed
   backgroundColor: string;
   textColor?: string;
+  showViewProductButton: boolean;
 }) => {
   console.debug('AskMoreAboutProductBubble', props);
   const [product, setProduct] = createSignal<Product | undefined>(
@@ -85,7 +113,8 @@ export const AskMoreAboutProductBubble = (props: {
       ? {
           name: props.product.title,
           images: props.product.images,
-          price: Number.parseInt(props.product.price) / 100,
+          price: Number.parseInt(props.product.price.toString()) / 100,
+          url: props.product.url,
         }
       : undefined,
   );
@@ -101,11 +130,12 @@ export const AskMoreAboutProductBubble = (props: {
         }
         return res.json();
       })
-      .then((data: ShopifyProduct) =>
+      .then((p: ShopifyProduct) =>
         setProduct({
-          name: data.title,
-          images: data.images,
-          price: Number.parseInt(data.price) / 100,
+          name: p.title,
+          images: p.images,
+          price: Number.parseInt((p.price / 100).toString()),
+          url: p.url,
         }),
       )
       .catch((error) => {
@@ -116,7 +146,7 @@ export const AskMoreAboutProductBubble = (props: {
   return (
     <div class="twi-flex twi-flex-row twi-justify-start twi-items-start twi-host-container">
       <div
-        class="twi-p-4 twi-whitespace-pre-wrap twi-rounded-2xl twi-rounded-bl-none twi-chatbot-host-bubble twi-text-sm twi-font-normal twi-max-w-full twi-ai-shadow"
+        class="twi-p-4 twi-whitespace-pre-wrap twi-rounded-2xl twi-rounded-bl-none twi-chatbot-host-bubble twi-text-sm twi-font-normal twi-max-w-full twi-shadow-brand-ai"
         data-testid="host-bubble"
         style={{
           'background-color': 'white',
@@ -132,7 +162,7 @@ export const AskMoreAboutProductBubble = (props: {
           <HintStars class="twi-mr-1" fill="#007B4B" />
           Asking more about...
         </span>
-        <ProductCarousel product={product} />
+        <ProductCarousel product={product} showViewProductButton={props.showViewProductButton} />
       </div>
     </div>
   );

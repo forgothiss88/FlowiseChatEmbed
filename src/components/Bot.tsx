@@ -439,6 +439,7 @@ export const Bot = (props: BotConfig & BotProps) => {
                         return (
                           <div class="twi-w-full twi-mb-4" id={`twini-message-${i()}`}>
                             <AskMoreAboutProductBubble
+                              showViewProductButton={message.productHandle != props.shopifyProduct?.handle}
                               productHandle={message.productHandle}
                               product={message.productHandle == props.shopifyProduct?.handle ? props.shopifyProduct : undefined}
                               backgroundColor={props.botMessage?.backgroundColor || 'black'}
