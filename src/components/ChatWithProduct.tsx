@@ -96,7 +96,7 @@ export const ChatWithProduct = (props: Props) => {
       </Show>
       <br />
       <Show when={props.summary() == '' && props.nextQuestions()}>
-        <For each={props.nextQuestions()}>
+        <For each={props.nextQuestions().toSorted((a, b) => b.length - a.length)}>
           {(prompt) => (
             <HintBubble
               actionColor={props.textColor}

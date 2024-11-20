@@ -500,7 +500,7 @@ export const Bot = (props: BotConfig & BotProps) => {
                 </Show>
                 <div ref={hintsRef} class="twi-flex twi-flex-col twi-gap-2 twi-mr-2">
                   <Show when={!isBusy() && !messages()[messages().length - 1].suggestedProduct}>
-                    <For each={props.nextQuestions()}>
+                    <For each={props.nextQuestions().toSorted((a, b) => b.length - a.length)}>
                       {(prompt, _) => (
                         <HintBubble
                           actionColor={props.starterPrompts.actionColor}
