@@ -51,7 +51,10 @@ export const Bottombar = (props: Props) => {
   };
 
   const bb: HTMLDivElement = (
-    <div class="twi-shadow-sm" style={{ 'background-color': props.backgroundColor ?? defaultBackgroundColor, 'border-top': '1px solid #eeeeee' }}>
+    <div
+      class="twi-shadow-sm twi-pb-1 md:twi-pb-0"
+      style={{ 'background-color': props.backgroundColor ?? defaultBackgroundColor, 'border-top': '1px solid #eeeeee' }}
+    >
       <div
         class={'twi-w-full twi-flex twi-flex-row twi-py-3 twi-px-2'}
         data-testid="input"
