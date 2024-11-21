@@ -30,8 +30,7 @@ async function typeWriter(el: HTMLElement, txt: string) {
   let baseSpeed = 50; /* The speed/duration of the effect in milliseconds */
   let step = 5;
   const write = (txt: string) => {
-    console.debug('writing:', txt);
-    el.innerHTML += txt;
+    el.innerText += txt;
   };
   for (let i = 0; i < txt.length; i += step) {
     write(txt.slice(i, i + step));
@@ -40,7 +39,7 @@ async function typeWriter(el: HTMLElement, txt: string) {
 }
 
 export const ChatWithProduct = (props: Props) => {
-  let summaryParagraph: HTMLElement | undefined = undefined;
+  let summaryParagraph: HTMLElement = undefined;
   let descElement: HTMLParagraphElement | null = null;
 
   const getStorageKey = () => {
@@ -73,19 +72,26 @@ export const ChatWithProduct = (props: Props) => {
 
   createEffect(
     on(props.isBotOpened, async () => {
-      console.debug('triggered isBotOpened effect');
       console.debug('isBotOpened:', props.isBotOpened());
-      console.debug('summary:', props.summary());
+      console.debug('summary:', props.summary().trim());
+      console.debug('summaryParagraph:', summaryParagraph.innerText.trim());
       console.debug('productHandle:', props.productHandle());
+      console.debug('props.product.handle:', props.product.handle);
       console.debug('summaryParagraph:', summaryParagraph);
+      console.debug('props.summary().trim() != summaryParagraph?.innerText.trim():', props.summary().trim() != summaryParagraph?.innerText.trim());
 
-      if (!props.isBotOpened() && props.summary() != '' && props.productHandle() == props.product.handle && summaryParagraph) {
-        if (props.productHandle() != props.product.handle) {
-          console.debug("Product handle doesn't match, not updating product page");
-          return;
-        }
-        summaryParagraph.innerHTML = '';
+      if (
+        !props.isBotOpened() &&
+        props.summary() != '' &&
+        props.summary().trim() != summaryParagraph?.innerText.trim() &&
+        props.productHandle() == props.product.handle &&
+        summaryParagraph
+      ) {
+        console.debug('Writing summary to product description');
+        summaryParagraph.innerHTML = '<br/>';
         await typeWriter(summaryParagraph, props.summary());
+      } else {
+        console.debug('Not writing summary to product description');
       }
     }),
   );
@@ -97,19 +103,32 @@ export const ChatWithProduct = (props: Props) => {
       return;
     }
     restoreSummaryFromLocalStorage();
+    const s = props.summary();
     render(
       () => (
         <>
-          <br />
           <p
             ref={summaryParagraph}
             style={{
               color: props.textColor,
             }}
           >
-            {props.summary()}
+            <br />
+            {s}
           </p>
-          <br />
+          <Show when={props.summary() != ''}>
+            <div class="twini-base">
+              <p
+                class="twi-inline-flex twi-mt-4 twi-mb-8 twi-items-center twi-w-full twi-text-sm twi-font-normal twi-justify-center"
+                style={{
+                  color: props.textColor,
+                }}
+              >
+                <HintStars class="twi-mr-1" fill={props.textColor} />
+                Summary of your recent chat
+              </p>
+            </div>
+          </Show>
         </>
       ),
       descElement,
@@ -117,53 +136,43 @@ export const ChatWithProduct = (props: Props) => {
   });
 
   return (
-    <div class="twi-flex twi-flex-col twi-gap-2">
-      <Show when={props.summary() != ''}>
-        <p
-          class="twi-inline-flex twi-items-center twi-w-full twi-text-sm twi-font-normal twi-justify-center"
+    <>
+      <div class="twi-flex twi-flex-col twi-gap-2">
+        <Show when={props.summary() == '' && props.nextQuestions()}>
+          <For each={props.nextQuestions().toSorted((a, b) => b.length - a.length)}>
+            {(prompt) => (
+              <HintBubble
+                actionColor={props.textColor}
+                message={prompt}
+                textColor={props.textColor}
+                backgroundColor={props.hintsBackgroundColor}
+                borderColor={props.hintsBorderColor}
+                onClick={() => {
+                  props.openBot();
+                  setTimeout(() => {
+                    props.askQuestion(prompt);
+                  }, 200);
+                }}
+              />
+            )}
+          </For>
+        </Show>
+        <button
+          class="twi-cursor-pointer twi-bg-white twi-border twi-w-full twi-px-3 twi-py-1 twi-rounded-full twi-flex twi-flex-row twi-items-center"
+          onClick={() => {
+            props.openBot();
+          }}
           style={{
+            'background-color': props.backgroundColor,
             color: props.textColor,
+            'border-color': props.textColor,
           }}
         >
-          <HintStars class="twi-mr-1" fill={props.textColor} />
-          Summary of your recent chat
-        </p>
-      </Show>
-      <br />
-      <Show when={props.summary() == '' && props.nextQuestions()}>
-        <For each={props.nextQuestions().toSorted((a, b) => b.length - a.length)}>
-          {(prompt) => (
-            <HintBubble
-              actionColor={props.textColor}
-              message={prompt}
-              textColor={props.textColor}
-              backgroundColor={props.hintsBackgroundColor}
-              borderColor={props.hintsBorderColor}
-              onClick={() => {
-                props.openBot();
-                setTimeout(() => {
-                  props.askQuestion(prompt);
-                }, 200);
-              }}
-            />
-          )}
-        </For>
-      </Show>
-      <button
-        class="twi-cursor-pointer twi-bg-white twi-border twi-w-full twi-px-3 twi-py-1 twi-rounded-full twi-flex twi-flex-row twi-items-center"
-        onClick={() => {
-          props.openBot();
-        }}
-        style={{
-          'background-color': props.backgroundColor,
-          color: props.textColor,
-          'border-color': props.textColor,
-        }}
-      >
-        <span class="twi-mr-auto">Continue this conversation...</span>
-        <SendButton arrowColor={props.textColor} color="white" isDisabled={false} isLoading={() => false} />
-      </button>
-    </div>
+          <span class="twi-mr-auto">Continue this conversation...</span>
+          <SendButton arrowColor={props.textColor} color="white" isDisabled={false} isLoading={() => false} />
+        </button>
+      </div>
+    </>
   );
 };
 
