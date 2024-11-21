@@ -26,11 +26,11 @@ function wait(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-async function typeWriter(el: HTMLElement, txt: string) {
+async function writeTo(el: HTMLElement, txt: string) {
   let baseSpeed = 50; /* The speed/duration of the effect in milliseconds */
   let step = 5;
   const write = (txt: string) => {
-    el.innerText += txt;
+    el.innerHTML += txt;
   };
   for (let i = 0; i < txt.length; i += step) {
     write(txt.slice(i, i + step));
@@ -39,7 +39,7 @@ async function typeWriter(el: HTMLElement, txt: string) {
 }
 
 export const ChatWithProduct = (props: Props) => {
-  let summaryParagraph: HTMLElement = undefined;
+  let summaryParagraph: HTMLElement | undefined = undefined;
   let descElement: HTMLParagraphElement | null = null;
 
   const getStorageKey = () => {
@@ -71,25 +71,25 @@ export const ChatWithProduct = (props: Props) => {
   );
 
   createEffect(
-    on(props.isBotOpened, async () => {
+    on(props.isBotOpened, () => {
       console.debug('isBotOpened:', props.isBotOpened());
-      console.debug('summary:', props.summary().trim());
-      console.debug('summaryParagraph:', summaryParagraph.innerText.trim());
-      console.debug('productHandle:', props.productHandle());
-      console.debug('props.product.handle:', props.product.handle);
-      console.debug('summaryParagraph:', summaryParagraph);
-      console.debug('props.summary().trim() != summaryParagraph?.innerText.trim():', props.summary().trim() != summaryParagraph?.innerText.trim());
+      // console.debug('summary:', props.summary().trim());
+      // console.debug('summaryParagraph:', summaryParagraph?.innerText.trim());
+      // console.debug('productHandle:', props.productHandle());
+      // console.debug('props.product.handle:', props.product.handle);
+      // console.debug('summaryParagraph:', summaryParagraph);
+      // console.debug('props.summary().trim() != summaryParagraph?.innerText.trim():', props.summary().trim() != summaryParagraph?.innerText.trim());
 
       if (
         !props.isBotOpened() &&
+        summaryParagraph &&
         props.summary() != '' &&
         props.summary().trim() != summaryParagraph?.innerText.trim() &&
-        props.productHandle() == props.product.handle &&
-        summaryParagraph
+        props.productHandle() == props.product.handle
       ) {
         console.debug('Writing summary to product description');
         summaryParagraph.innerHTML = '<br/>';
-        await typeWriter(summaryParagraph, props.summary());
+        writeTo(summaryParagraph, props.summary());
       } else {
         console.debug('Not writing summary to product description');
       }
