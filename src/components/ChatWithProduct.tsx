@@ -139,14 +139,15 @@ export const ChatWithProduct = (props: Props) => {
     <>
       <div class="twi-flex twi-flex-col twi-gap-2">
         <Show when={props.summary() == '' && props.nextQuestions()}>
-          <For each={props.nextQuestions().toSorted((a, b) => b.length - a.length)}>
-            {(prompt) => (
+          <For each={props.nextQuestions().toSorted((a, b) => a.length - b.length)}>
+            {(prompt, i) => (
               <HintBubble
                 actionColor={props.textColor}
                 message={prompt}
                 textColor={props.textColor}
                 backgroundColor={props.hintsBackgroundColor}
                 borderColor={props.hintsBorderColor}
+                delayMilliseconds={200 + i() * 400}
                 onClick={() => {
                   props.openBot();
                   setTimeout(() => {

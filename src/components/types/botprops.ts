@@ -58,6 +58,7 @@ export type BotProps = {
   shopifyProduct?: ShopifyProduct;
   bot: HTMLDivElement;
   getElement: () => HTMLElement;
+  isOpened: Accessor<boolean>;
   closeBot: () => void;
 };
 

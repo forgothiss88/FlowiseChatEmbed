@@ -64,7 +64,7 @@ module.exports = {
         'brand-reversed': 'var(--brand-gradient-reversed)',
       },
       animation: {
-        'fade-in': 'fade-in 0.3s ease-out',
+        'fade-in': 'fade-in 0.5s ease-in-out forwards',
       },
       borderRadius: {
         '4xl': '32px',

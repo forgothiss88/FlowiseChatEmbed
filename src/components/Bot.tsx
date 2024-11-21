@@ -29,7 +29,6 @@ export const Bot = (props: BotConfig & BotProps) => {
   let chatContainer: HTMLDivElement | undefined;
   let textareaRef: HTMLTextAreaElement | undefined;
   let hintsRef: HTMLDivElement | undefined;
-  let lastBotMessageRef: HTMLDivElement | undefined;
 
   const [userInput, setUserInput] = createSignal<string>('');
   const [streamingBotResponse, setStreamingBotResponse] = createSignal<MessageType | null>(null);
@@ -499,9 +498,9 @@ export const Bot = (props: BotConfig & BotProps) => {
                   </div>
                 </Show>
                 <div ref={hintsRef} class="twi-flex twi-flex-col twi-gap-2 twi-mr-2">
-                  <Show when={!isBusy() && !messages()[messages().length - 1].suggestedProduct}>
+                  <Show when={props.isOpened() && !isBusy() && !messages()[messages().length - 1].suggestedProduct}>
                     <For each={props.nextQuestions().toSorted((a, b) => b.length - a.length)}>
-                      {(prompt, _) => (
+                      {(prompt, i) => (
                         <HintBubble
                           actionColor={props.starterPrompts.actionColor}
                           message={prompt}
@@ -509,6 +508,7 @@ export const Bot = (props: BotConfig & BotProps) => {
                           backgroundColor={props.starterPrompts.backgroundColor}
                           borderColor={props.starterPrompts.borderColor}
                           onClick={() => handleSubmit(prompt)}
+                          delayMilliseconds={400 + i() * 400} // 200ms is bot opening animation
                         />
                       )}
                     </For>

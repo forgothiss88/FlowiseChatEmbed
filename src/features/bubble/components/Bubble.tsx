@@ -59,6 +59,7 @@ export const BubbleBot = (
           shopRef={props.shopRef}
           apiUrl={props.apiUrl}
           starterPrompts={props.starterPrompts || {}}
+          isOpened={props.isBotOpened}
           closeBot={props.closeBot}
           question={props.question}
           nextQuestions={props.nextQuestions}
