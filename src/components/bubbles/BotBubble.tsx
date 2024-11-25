@@ -26,7 +26,7 @@ export const BotBubble = (props: Props) => {
   return (
     <div ref={props.ref} class="twi-flex twi-flex-row twi-justify-start twi-items-start twi-host-container">
       <div
-        class="twi-whitespace-pre-wrap twi-rounded-2xl rounded-bl-none twi-chatbot-host-bubble twi-text-sm twi-font-normal twi-max-w-full"
+        class="twi-rounded-2xl rounded-bl-none twi-chatbot-host-bubble twi-text-sm twi-font-normal twi-max-w-full"
         data-testid="host-bubble"
         style={{
           'background-color': props.backgroundColor ?? defaultBackgroundColor,
