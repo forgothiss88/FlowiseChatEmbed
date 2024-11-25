@@ -119,6 +119,23 @@ export const Bot = (props: BotConfig & BotProps) => {
     setStreamingBotResponse(null);
   };
 
+  const updateCartToken = async () => {
+    const cartToken: string = await fetch('/cart.js')
+      .then(async (res) => await res.json())
+      .then((data) => data.token);
+    if (!cartToken) {
+      console.error('cartToken is null');
+      return false;
+    }
+    const t = cartToken.split('?key=');
+    if (t.length != 2) {
+      console.warn('Skipping update cartToken, still not finalized (new customer):', cartToken);
+      return false;
+    }
+    setCartToken(t[0]);
+    return true;
+  };
+
   const messageTypeFEtoBE = (msg: messageType) => {
     switch (msg) {
       case 'apiMessage':
@@ -140,18 +157,22 @@ export const Bot = (props: BotConfig & BotProps) => {
 
     setWaitingForResponse(true);
     setBusy(true);
-    setUserInput(value);
+    // setUserInput(value);
     props.setNextQuestions([]);
     scrollToBottom();
     let msgs = messages();
     msgs = setMessages([...msgs.slice(0, msgs.length - 1), { ...msgs[msgs.length - 1], temporary: false }, { message: value, type: 'userMessage' }]);
     saveChatToLocalStorage();
 
-    if (chatRef() == null) {
-      console.error('chatRef is null');
+    if (!chatRef()) {
+      console.error('chatRef is null. Skipping submit');
       return;
     }
-    let nextQuestions = null;
+
+    if (!cartToken()) {
+      console.warn('cartToken is null. Updating cart token');
+      await updateCartToken();
+    }
 
     const body: RunInput = {
       input: {
@@ -163,7 +184,7 @@ export const Bot = (props: BotConfig & BotProps) => {
         }, []),
         username: props.shopRef,
         chat_ref: chatRef(),
-        cart_token: cartToken() || 'fake_cart_token',
+        cart_token: cartToken(),
         product_handle: props.productHandle(),
         // TODO: product: props.shopifyProduct,
       },
@@ -329,17 +350,8 @@ export const Bot = (props: BotConfig & BotProps) => {
     setWaitingForResponse(false);
     setBusy(false);
   });
-
   onMount(async () => {
-    const cartToken = await fetch('/cart.js')
-      .then(async (res) => await res.json())
-      .then((data) => data.token);
-    if (cartToken != null) {
-      setCartToken(cartToken);
-    } else {
-      console.error('cartToken is null');
-      setCartToken('fake_cart_token');
-    }
+    updateCartToken();
   });
 
   createEffect(
