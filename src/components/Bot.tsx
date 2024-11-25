@@ -330,6 +330,7 @@ export const Bot = (props: BotConfig & BotProps) => {
           productHandle: props.shopifyProduct?.handle,
         },
       ]);
+      props.setProductHandle(props.shopifyProduct?.handle);
       props.setNextQuestions([...prompts]);
       saveChatToLocalStorage();
     } catch (error: any) {
