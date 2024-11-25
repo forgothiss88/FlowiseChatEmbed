@@ -27,7 +27,7 @@ export const AutoGrowTextArea = (props: Props) => {
       aria-placeholder={local.placeholder}
       placeholder={local.placeholder}
       rows="1"
-      style={{ 'max-height': '4lh' }}
+      style={{ 'max-height': '4lh', 'font-size': '16px' }}
       value={local.getInputValue()}
       onInput={(e) => local.setInputValue(e.target.value)}
       onFocus={(e) => local.scrollToBottom()}
