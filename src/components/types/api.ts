@@ -12,7 +12,7 @@ export type RunBody = {
   chat_history: MessageBE[];
   username: string;
   chat_ref: string;
-  cart_token: string;
+  cart_token?: string; // will be null for new customers
   product_handle: string;
 };
 

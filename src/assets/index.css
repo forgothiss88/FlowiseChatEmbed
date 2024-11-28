@@ -12,8 +12,8 @@
   --brand-secondary-text-color: 255 255 255;
   --brand-action-primary: 0 123 75;
   --brand-action-primary-text-color: 255 255 255;
-  --brand-action-secondary: 51 51 51;
-  --brand-action-secondary-text-color: 255 255 255;
+  --brand-action-secondary: 255 255 255;
+  --brand-action-secondary-text-color: 0 123 75;
   --brand-gradient: linear-gradient(90deg, #00bf7d 0%, #007b4b 100%);
   --brand-gradient-reversed: linear-gradient(270deg, #00bf7d 0%, #007b4b 100%);
   --brand-ai-shadow-1: 0px 4px 50px 5px rgba(0, 123, 75, 0.4);
@@ -50,6 +50,21 @@
   }
 }
 
+@keyframes drawerEnterFromBottom {
+  0% {
+    transform: translateY(100%);
+  }
+  60% {
+    transform: translateY(-10%);
+  }
+  70% {
+    transform: translateY(2%);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
 .twini-base a {
   text-decoration: none;
 }
@@ -83,6 +98,11 @@
 
 .twini-base .twi-bubble-widget {
   animation: enterFromBottom 0.5s ease-in-out;
+  animation-delay: 0s;
+}
+
+.twini-base .twi-bubble-drawer {
+  animation: drawerEnterFromBottom 0.5s ease-in-out;
   animation-delay: 0s;
 }
 

@@ -1,15 +1,18 @@
 import { JSX, splitProps } from 'solid-js';
 
 export const HintStars = (props: JSX.SvgSVGAttributes<SVGSVGElement>) => {
-  const [selected_props, other_props] = splitProps(props, ['fill', 'width', 'height']);
+  const [selectedProps, otherProps] = splitProps(props, ['fill', 'width', 'height']);
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      fill={selected_props.fill}
-      width={selected_props.width || '14'}
-      height={selected_props.height || '14'}
+      fill={selectedProps.fill}
+      width={selectedProps.width || '14'}
+      height={selectedProps.height || '14'}
       viewBox="0 0 14 14"
-      {...other_props}
+      style={{
+        fill: selectedProps.fill ? '' : 'rgb(var(--brand-action-primary))',
+      }}
+      {...otherProps}
     >
       <g opacity="0.65">
         <path

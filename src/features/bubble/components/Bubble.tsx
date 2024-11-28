@@ -1,7 +1,10 @@
 import { BotProps, FullBotProps } from '@/components/types/botprops';
-import { Accessor, Show } from 'solid-js';
+import { Accessor, createSignal, Show } from 'solid-js';
 import { Bot } from '../../../components/Bot';
+import { BubbleDrawer } from './BubbleDrawer';
 import { BubbleWidget } from './BubbleWidget';
+
+type WidgetsState = 'close' | 'open-drawer' | 'close-drawer' | 'open-bot' | 'close-bot';
 
 export const BubbleBot = (
   props: FullBotProps &
@@ -9,6 +12,7 @@ export const BubbleBot = (
       isBotOpened: Accessor<boolean>;
       openBot: () => void;
       closeBot: () => void;
+      askQuestion: (question: string) => void;
     },
 ) => {
   const welcomeMessage =
@@ -17,16 +21,45 @@ export const BubbleBot = (
       : props.theme.chatWindow.welcomeMessage;
 
   let botRef: HTMLDivElement | undefined;
+  let bubbleWidgetRef: HTMLDivElement | undefined;
+
+  const [drawerIsOpen, setDrawerIsOpen] = createSignal(false);
+
   return (
     <>
-      <Show when={!props.shopifyProduct && !props.isBotOpened()}>
-        <span
-          class="twi-bubble-widget twi-pointer-events-none twi-left-1/2 twi-bottom-0 twi-fixed twi-animate-fade-in twi-z-50"
+      <Show when={!props.shopifyProduct && window.outerWidth < 768 && drawerIsOpen()}>
+        <div
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              setDrawerIsOpen(false);
+            }
+          }}
+          class="twi-fixed twi-bottom-0 twi-w-full twi-h-[500px] twi-transition-all twi-duration-500"
           style={{
-            transform: 'translateX(-50%)', // Center the button horizontally and vertically
+            'z-index': 99999999,
           }}
         >
-          <BubbleWidget openBot={props.openBot}></BubbleWidget>
+          <BubbleDrawer
+            setDrawerIsOpen={setDrawerIsOpen}
+            drawerIsOpen={drawerIsOpen}
+            openBot={props.openBot}
+            closeBot={props.closeBot}
+            handleSubmit={(text: string) => props.askQuestion(text)}
+            nextQuestions={props.nextQuestions}
+          ></BubbleDrawer>
+        </div>
+      </Show>
+      <Show when={!drawerIsOpen() && !props.shopifyProduct && !props.isBotOpened()}>
+        <span ref={bubbleWidgetRef} class=" twi-bubble-widget twi-left-1/2 twi-bottom-5 twi-fixed twi-z-50 -twi-translate-x-1/2">
+          <BubbleWidget
+            onClick={() => {
+              if (window.outerWidth < 768) {
+                setDrawerIsOpen(true);
+              } else {
+                props.openBot();
+              }
+            }}
+          ></BubbleWidget>
         </span>
       </Show>
       <div

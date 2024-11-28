@@ -120,9 +120,15 @@ export const Bot = (props: BotConfig & BotProps) => {
   };
 
   const updateCartToken = async () => {
-    const cartToken: string = await fetch('/cart.js')
-      .then(async (res) => await res.json())
-      .then((data) => data.token);
+    let cartToken: string | null = null;
+    try {
+      cartToken = await fetch('/cart.js')
+        .then(async (res) => await res.json())
+        .then((data) => data.token);
+    } catch (error) {
+      console.error('Failed to fetch cart token:', error);
+      return false;
+    }
     if (!cartToken) {
       console.error('cartToken is null');
       return false;

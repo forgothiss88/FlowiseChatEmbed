@@ -1,7 +1,5 @@
 import { Accessor, createEffect, For, on, onMount, Setter, Show } from 'solid-js';
-import { render } from 'solid-js/web';
 import { HintBubble } from './bubbles/HintBubble';
-import { HintStars } from './icons/HintStars';
 import { SendButton } from './SendButton';
 import { ShopifyProduct } from './types/product';
 
@@ -47,32 +45,33 @@ export const ChatWithProduct = (props: Props) => {
     if (props.productHandle()) {
       return `twini-${props.shopRef}-summary-${props.productHandle()}`;
     }
-    return `twini-${props.shopRef}-summary`;
+    return null;
   };
 
   const restoreSummaryFromLocalStorage = () => {
-    const summary = localStorage.getItem(getStorageKey());
+    const key = getStorageKey();
+    if (!key) {
+      return;
+    }
+    const summary = localStorage.getItem(key);
     if (summary) {
       props.setSummary(summary);
     }
   };
 
-  const saveSummaryToLocalStorage = () => {
-    localStorage.setItem(getStorageKey(), props.summary());
-  };
-
   createEffect(
     on(props.summary, (summary: string) => {
-      if (!summary) {
+      const key = getStorageKey();
+      if (!summary || !key) {
         return;
       }
-      saveSummaryToLocalStorage();
+      localStorage.setItem(key, summary);
     }),
   );
 
   createEffect(
     on(props.isBotOpened, () => {
-      console.debug('isBotOpened:', props.isBotOpened());
+      // console.debug('isBotOpened:', props.isBotOpened());
       // console.debug('summary:', props.summary().trim());
       // console.debug('summaryParagraph:', summaryParagraph?.innerText.trim());
       // console.debug('productHandle:', props.productHandle());
@@ -97,46 +96,26 @@ export const ChatWithProduct = (props: Props) => {
   );
 
   onMount(() => {
-    descElement = document.querySelector('p[id="twini-product-description"]');
-    if (!descElement) {
-      console.error('Product description element not found');
-      return;
-    }
     restoreSummaryFromLocalStorage();
-    const s = props.summary();
-    render(
-      () => (
-        <>
-          <p
-            ref={summaryParagraph}
-            style={{
-              color: props.textColor,
-            }}
-          >
-            <br />
-            {s}
-          </p>
-          <Show when={props.summary() != ''}>
-            <div class="twini-base">
-              <p
-                class="twi-inline-flex twi-mt-4 twi-mb-8 twi-items-center twi-w-full twi-text-sm twi-font-normal twi-justify-center"
-                style={{
-                  color: props.textColor,
-                }}
-              >
-                <HintStars class="twi-mr-1" fill={props.textColor} />
-                Summary of your recent chat
-              </p>
-            </div>
-          </Show>
-        </>
-      ),
-      descElement,
-    );
   });
 
   return (
     <>
+      <p
+        ref={summaryParagraph}
+        style={{
+          color: props.textColor,
+          'font-family': 'inherit',
+          'font-weight': 'inherit',
+          'line-height': 'inherit',
+        }}
+      >
+        <br />
+        {props.summary()}
+      </p>
+      <Show when={props.summary() != ''}>
+        <br />
+      </Show>
       <div class="twi-flex twi-flex-col twi-gap-2">
         <Show when={props.summary() == '' && props.nextQuestions()}>
           <For each={props.nextQuestions().toSorted((a, b) => a.length - b.length)}>
@@ -159,17 +138,14 @@ export const ChatWithProduct = (props: Props) => {
           </For>
         </Show>
         <button
-          class="twi-cursor-pointer twi-bg-white twi-border twi-w-full twi-px-3 twi-py-1 twi-rounded-full twi-flex twi-flex-row twi-items-center"
+          class="twi-cursor-pointer twi-h-11 twi-bg-brand-action-secondary twi-border-2 twi-border-brand-action-primary twi-text-brand-action-secondary twi-w-full twi-px-3 twi-py-1 twi-rounded-full twi-flex twi-flex-row twi-items-center"
           onClick={() => {
             props.openBot();
           }}
-          style={{
-            'background-color': props.backgroundColor,
-            color: props.textColor,
-            'border-color': props.textColor,
-          }}
         >
-          <span class="twi-mr-auto">Continue this conversation...</span>
+          <span class="twi-w-full twi-text-left twi-text-sm" style={'font-weight: bold !important;'}>
+            Continue this conversation...
+          </span>
           <SendButton arrowColor={props.textColor} color="white" isDisabled={false} isLoading={() => false} />
         </button>
       </div>

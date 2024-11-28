@@ -44,7 +44,7 @@ let cart: ShopifyCart | undefined = undefined;
 if (cb.hasAttribute('data-cart')) {
   cart = JSON.parse(cb.getAttribute('data-cart') as string);
 } else {
-  console.warn('Attribute "data-cart" not found. Not on cart page?');
+  console.error('Attribute "data-cart" not found.');
 }
 
 // const img = document.querySelector('.page-container .swiper-container');
@@ -61,16 +61,16 @@ const [productHandle, setProductHandle] = createSignal<string>(product?.handle ?
 let bodyOverflow = 'unset';
 
 const openBot = () => {
+  bodyOverflow = document.body.style.overflow;
+  if (window.outerWidth < 768) document.body.style.overflow = 'hidden';
   setIsBotOpened(true);
   // screen md
-  bodyOverflow = document.body.style.overflow;
-  if (window.innerWidth < 768) document.body.style.overflow = 'hidden';
 };
 
 const closeBot = () => {
+  if (window.outerWidth < 768) document.body.style.overflow = bodyOverflow;
   setIsBotOpened(false);
   // screen md
-  if (window.innerWidth < 768) document.body.style.overflow = bodyOverflow;
 };
 
 if (process.env.NODE_ENV == 'production') {
@@ -97,6 +97,7 @@ render(
       openBot={openBot}
       closeBot={closeBot}
       question={question}
+      askQuestion={askQuestion}
       nextQuestions={nextQuestions}
       setNextQuestions={setNextQuestions}
       setSummary={setSummary}
@@ -111,7 +112,7 @@ render(
 
 const chatWithProductWidget = document.getElementsByTagName('twini-chat-with-product')[0];
 
-if (!chatWithProductWidget) {
+if (!chatWithProductWidget && product) {
   console.warn('Element with id "twini-chat-with-product" not found.');
 } else {
   render(() => {

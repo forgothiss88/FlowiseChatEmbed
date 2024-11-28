@@ -54,7 +54,7 @@ export type BotProps = {
   setProductHandle: Setter<string>;
   setSummary: Setter<string>;
   welcomeMessage: string;
-  shopifyCart?: ShopifyCart;
+  shopifyCart: ShopifyCart;
   shopifyProduct?: ShopifyProduct;
   bot: HTMLDivElement;
   getElement: () => HTMLElement;

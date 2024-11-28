@@ -2,12 +2,11 @@ import { HintStars } from '../icons/HintStars';
 
 type Props = {
   message: string;
-  textColor: string;
-  actionColor: string;
-  backgroundColor: string;
-  borderColor: string;
+  textColor?: string;
+  actionColor?: string;
   delayMilliseconds?: number;
   onClick: () => void;
+  class: string;
 };
 
 export const HintBubble = (props: Props) => {
@@ -15,7 +14,10 @@ export const HintBubble = (props: Props) => {
   return (
     <div class="twi-flex twi-justify-end twi-guest-container twi-w-full">
       <button
-        class="twi-animate-fade-in twi-bg-brand-action-primary/10 twi-border-brand-action-primary twi-flex twi-cursor-pointer twi-items-center twi-p-2 twi-max-w-[80%] twi-rounded-l-4xl twi-rounded-tr-2xl twi-rounded-br-none twi-whitespace-pre-wrap twi-font-normal twi-text-sm twi-text-left twi-border-dashed twi-border"
+        class={
+          'twi-animate-fade-in twi-bg-brand-action-primary/10 twi-border-brand-action-primary twi-flex twi-cursor-pointer twi-items-center twi-p-2 twi-max-w-[80%] twi-rounded-l-4xl twi-rounded-tr-2xl twi-rounded-br-none twi-whitespace-pre-wrap twi-font-normal twi-text-sm twi-text-left twi-border-dashed twi-border ' +
+          props.class
+        }
         onClick={props.onClick}
         classList={{
           'twi-opacity-0': (props.delayMilliseconds || 0) > 0,
