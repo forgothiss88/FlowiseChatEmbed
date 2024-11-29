@@ -9,6 +9,7 @@ import { BotBubble } from './bubbles/BotBubble';
 import { GuestBubble } from './bubbles/GuestBubble';
 import { HintBubble } from './bubbles/HintBubble';
 import { LoadingBubble } from './bubbles/LoadingBubble';
+import { ErrorPopup } from './ErrorPopup';
 import { XIcon } from './icons/XIcon';
 import { BotConfig, BotProps, MessageType, messageType } from './types/botprops';
 import { storedChat } from './types/chat';
@@ -215,15 +216,13 @@ export const Bot = (props: BotConfig & BotProps) => {
         console.log('EventSource closed');
       },
       onerror: (err) => {
-        console.error('EventSource error:', err);
-        abortCtrl.abort();
         throw err;
       },
       onopen: async (response) => {
         console.log('EventSource opened', response);
       },
       onmessage(ev) {
-        console.log('EventSource message:', ev.data);
+        console.debug('EventSource message:', ev.data);
         if (ev.event === 'metadata') {
           const data: MetadataEvent = JSON.parse(ev.data);
         } else if (ev.event === 'close') {
@@ -251,6 +250,9 @@ export const Bot = (props: BotConfig & BotProps) => {
         } else if (ev.event === 'chat_summary_generated') {
           const data: ChatSummaryGeneratedEvent = JSON.parse(ev.data);
           props.setSummary(data.summary);
+        } else if (ev.event === 'internal_error') {
+          console.error('Internal error:', ev.data);
+          abortCtrl.abort();
         } else if (ev.event === 'message_context_streamed') {
           const data: ContextEvent = JSON.parse(ev.data);
           data.context.forEach((item) => {
@@ -271,15 +273,13 @@ export const Bot = (props: BotConfig & BotProps) => {
         }
         scrollToBottom();
       },
-    }).catch((err) => {});
+    }).catch((err) => {
+      abortCtrl.abort();
+    });
 
     if (abortCtrl.signal.aborted) {
       console.log('abortCtrl', abortCtrl);
-      setUserInput('');
-      scrollToBottom();
-      setStreamingBotResponse(null);
-      setWaitingForResponse(false);
-      setBusy(false);
+      setError(true);
     }
 
     let suggestedProducts: SourceProduct[] | undefined = undefined;
@@ -412,10 +412,20 @@ export const Bot = (props: BotConfig & BotProps) => {
 
   const [bottomSpacerHeight, setBottomSpacerHeight] = createSignal(0);
   const [chatSpacerHeight, setChatSpacerHeight] = createSignal(0);
+  const [error, setError] = createSignal<boolean | null>(null);
 
-  const focusOnTextarea = () => {
-    textareaRef?.focus();
-  };
+  createEffect(() => {
+    if (error() === true) {
+      setUserInput('');
+      setBusy(true);
+    } else if (error() === false) {
+      setUserInput('');
+      scrollToBottom();
+      setStreamingBotResponse(null);
+      setWaitingForResponse(false);
+      setBusy(false);
+    }
+  });
 
   return (
     <div
@@ -426,8 +436,14 @@ export const Bot = (props: BotConfig & BotProps) => {
     >
       <div class="twi-relative twi-flex twi-h-full twi-w-full twi-flex-1 twi-flex-col twi-overflow-hidden">
         <div class="twi-flex twi-w-full twi-items-center twi-justify-center twi-overflow-hidden"></div>
-        <main class="twi-relative twi-h-full twi-w-full twi-flex-1 twi-overflow-hidden twi-transition-width">
-          <div id="twini-topbar" class="twi-absolute twi-z-max twi-top-0 twi-left-0 twi-w-full">
+        <main class="twi-relative twi-h-full twi-w-full twi-flex-1 twi-overflow-hidden">
+          <div
+            id="twini-topbar"
+            class="twi-absolute twi-z-max twi-top-0 twi-left-0 twi-w-full"
+            classList={{
+              'twi-pointer-events-none': error() === true,
+            }}
+          >
             <div class="twi-absolute twi-inset-0 twi-blur-lg twi-bg-gradient-to-t twi-from-transparent twi-via-white/100 twi-to-white/100"></div>
             <div class="twi-relative twi-flex twi-items-center twi-bg-gradient-to-t twi-from-transparent twi-via-white/80 twi-to-white/100">
               <button
@@ -442,7 +458,14 @@ export const Bot = (props: BotConfig & BotProps) => {
               </div>
             </div>
           </div>
-          <div role="presentation" tabindex="0" class="twi-flex twi-h-full twi-flex-col twi-focus-visible:outline-0 twi-overflow-hidden">
+          <div
+            role="presentation"
+            tabindex="0"
+            class="twi-flex twi-h-full twi-flex-col twi-focus-visible:outline-0 twi-overflow-hidden twi-transition"
+            classList={{
+              'twi-pointer-events-none': error() === true,
+            }}
+          >
             <div ref={chatContainer} class="twi-flex-1 twi-overflow-auto twi-scroll-smooth twi-no-scrollbar-container">
               <div class="twi-px-4 twi-pb-3 twi-pt-20 twi-flex twi-flex-col twi-gap-4" id="twini-message-container">
                 <For each={messages()}>
@@ -537,7 +560,11 @@ export const Bot = (props: BotConfig & BotProps) => {
               <div class="twi-block twi-w-full twi-flex-1" style={{ 'min-height': `${bottomSpacerHeight() + chatSpacerHeight()}px` }}></div>
             </div>
           </div>
-
+          <Show when={error()}>
+            <div class="twi-absolute twi-inset-0 twi-flex twi-items-center twi-justify-center twi-animate-fade-in twi-bg-black twi-bg-opacity-50 twi-backdrop-blur-lg">
+              <ErrorPopup restartChat={clearChat} setError={setError} />
+            </div>
+          </Show>
           <Bottombar
             ref={textareaRef}
             backgroundColor={props.textInput.backgroundColor}
