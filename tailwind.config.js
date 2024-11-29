@@ -69,6 +69,9 @@ module.exports = {
       borderRadius: {
         '4xl': '32px',
       },
+      zIndex: {
+        max: '999999999999',
+      },
     },
   },
 };

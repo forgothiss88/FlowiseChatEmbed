@@ -427,7 +427,7 @@ export const Bot = (props: BotConfig & BotProps) => {
       <div class="twi-relative twi-flex twi-h-full twi-w-full twi-flex-1 twi-flex-col twi-overflow-hidden">
         <div class="twi-flex twi-w-full twi-items-center twi-justify-center twi-overflow-hidden"></div>
         <main class="twi-relative twi-h-full twi-w-full twi-flex-1 twi-overflow-hidden twi-transition-width">
-          <div id="twini-topbar" class="twi-absolute twi-top-0 twi-left-0 twi-w-full" style={{ 'z-index': 999999999999 }}>
+          <div id="twini-topbar" class="twi-absolute twi-z-max twi-top-0 twi-left-0 twi-w-full">
             <div class="twi-absolute twi-inset-0 twi-blur-lg twi-bg-gradient-to-t twi-from-transparent twi-via-white/100 twi-to-white/100"></div>
             <div class="twi-relative twi-flex twi-items-center twi-bg-gradient-to-t twi-from-transparent twi-via-white/80 twi-to-white/100">
               <button

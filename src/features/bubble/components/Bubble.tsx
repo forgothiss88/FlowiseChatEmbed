@@ -34,11 +34,8 @@ export const BubbleBot = (
               setDrawerIsOpen(false);
             }
           }}
-          class="twi-fixed twi-bottom-0 twi-w-full twi-h-1/2 twi-transition-all twi-duration-500"
+          class="twi-fixed twi-bottom-0 twi-w-full twi-h-1/2 twi-z-max twi-transition-all twi-duration-500"
           classList={{ 'twi-translate-y-0': drawerIsOpen(), 'twi-translate-y-[120%] twi-pointer-events-none': !drawerIsOpen() }}
-          style={{
-            'z-index': 99999999,
-          }}
         >
           <BubbleDrawer
             setDrawerIsOpen={setDrawerIsOpen}
@@ -73,10 +70,9 @@ export const BubbleBot = (
           transform: props.isBotOpened() ? 'scale3d(1, 1, 1)' : 'scale3d(0, 0, 1)',
           'box-shadow': 'rgb(0 0 0 / 16%) 0px 5px 40px',
           background: props.theme.chatWindow.backgroundColor + ' fixed',
-          'z-index': 9999999999,
         }}
         class={
-          'twi-fixed twi-overflow-hidden twi-z-50 twi-right-0 twi-bottom-0 twi-backdrop-blur md:twi-rounded-3xl md:twi-right-4 md:twi-bottom-4 twi-w-full md:twi-max-w-md twi-h-full md:twi-top-auto md:twi-h-[704px]' +
+          'twi-fixed twi-overflow-hidden twi-z-max twi-right-0 twi-bottom-0 twi-backdrop-blur md:twi-rounded-3xl md:twi-right-4 md:twi-bottom-4 twi-w-full md:twi-max-w-md twi-h-full md:twi-top-auto md:twi-h-[704px]' +
           (props.isBotOpened() ? ' twi-opacity-1' : ' twi-opacity-0 twi-pointer-events-none')
         }
       >

@@ -16,8 +16,7 @@ export const BubbleDrawer = (props: {
   return (
     <>
       <div
-        class="twi-absolute twi-top-0 twi-right-1/2 twi-translate-x-1/2 -twi-translate-y-1/2 twi-transition-all twi-duration-200"
-        style={{ 'z-index': 99999999 }}
+        class="twi-absolute twi-z-max twi-top-0 twi-right-1/2 twi-translate-x-1/2 -twi-translate-y-1/2 twi-transition-all twi-duration-200"
         classList={{ 'twi-opacity-0': !props.drawerIsOpen() }} // Hide the drawer quicker than the drawer animation
       >
         <BubbleWidget
