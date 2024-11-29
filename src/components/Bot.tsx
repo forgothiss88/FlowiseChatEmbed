@@ -397,21 +397,12 @@ export const Bot = (props: BotConfig & BotProps) => {
       ]);
 
       setTimeout(() => {
-        const lastBotMessage = document.querySelector('#twini-message-container')?.lastElementChild?.previousElementSibling;
-
-        // 80px is the topbar height
-        // 12px is the chatContainer padding
-        // 32px is the lastBotMessage margin
-        setChatSpacerHeight(
-          props.bot.clientHeight - (80 + 12 + 32 + bottomSpacerHeight() + (lastBotMessage?.clientHeight || 0) + (hintsRef?.clientHeight || 0)),
-        );
         scrollToBottom();
       }, 100);
     }),
   );
 
   const [bottomSpacerHeight, setBottomSpacerHeight] = createSignal(0);
-  const [chatSpacerHeight, setChatSpacerHeight] = createSignal(0);
 
   const focusOnTextarea = () => {
     textareaRef?.focus();
@@ -443,7 +434,7 @@ export const Bot = (props: BotConfig & BotProps) => {
             </div>
           </div>
           <div role="presentation" tabindex="0" class="twi-flex twi-h-full twi-flex-col twi-focus-visible:outline-0 twi-overflow-hidden">
-            <div ref={chatContainer} class="twi-flex-1 twi-overflow-auto twi-scroll-smooth twi-no-scrollbar-container">
+            <div ref={chatContainer} class="twi-flex-1 twi-flex twi-flex-col twi-overflow-auto twi-scroll-smooth twi-no-scrollbar-container">
               <div class="twi-px-4 twi-pb-3 twi-pt-20 twi-flex twi-flex-col twi-gap-4" id="twini-message-container">
                 <For each={messages()}>
                   {(message, i) => {
@@ -534,8 +525,7 @@ export const Bot = (props: BotConfig & BotProps) => {
                   </Show>
                 </div>
               </div>
-              <div class="twi-w-full" style={{ display: 'block', height: chatSpacerHeight() + 'px' }}></div>
-              <div class="twi-w-full" style={{ display: 'block', height: bottomSpacerHeight() + 'px' }}></div>
+              <div class="twi-flex-1 twi-w-full" style={{ display: 'block', 'min-height': bottomSpacerHeight() + 'px' }}></div>
             </div>
           </div>
 
