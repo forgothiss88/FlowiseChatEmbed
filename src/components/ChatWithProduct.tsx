@@ -1,4 +1,4 @@
-import { Accessor, createEffect, For, on, onMount, Setter, Show } from 'solid-js';
+import { Accessor, createEffect, createSignal, For, on, onMount, Setter, Show } from 'solid-js';
 import { HintBubble } from './bubbles/HintBubble';
 import { SendButton } from './SendButton';
 import { ShopifyProduct } from './types/product';
@@ -38,7 +38,8 @@ async function writeTo(el: HTMLElement, txt: string) {
 
 export const ChatWithProduct = (props: Props) => {
   let summaryParagraph: HTMLElement | undefined = undefined;
-  let descElement: HTMLParagraphElement | null = null;
+
+  const [onMountSummary, setOnMountSummary] = createSignal('');
 
   const getStorageKey = () => {
     console.debug('getStorageKey - Product handle:', props.productHandle());
@@ -55,7 +56,7 @@ export const ChatWithProduct = (props: Props) => {
     }
     const summary = localStorage.getItem(key);
     if (summary) {
-      props.setSummary(summary);
+      setOnMountSummary(summary);
     }
   };
 
@@ -111,13 +112,13 @@ export const ChatWithProduct = (props: Props) => {
         }}
       >
         <br />
-        {props.summary()}
+        {onMountSummary()}
       </p>
-      <Show when={props.summary() != ''}>
+      <Show when={onMountSummary() || props.summary()}>
         <br />
       </Show>
       <div class="twi-flex twi-flex-col twi-gap-2">
-        <Show when={props.summary() == '' && props.nextQuestions()}>
+        <Show when={onMountSummary() == '' && props.summary() == '' && props.nextQuestions()}>
           <For each={props.nextQuestions().toSorted((a, b) => a.length - b.length)}>
             {(prompt, i) => (
               <HintBubble
