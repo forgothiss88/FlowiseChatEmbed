@@ -145,7 +145,7 @@ export const ChatWithProduct = (props: Props) => {
           }}
         >
           <span class="twi-w-full twi-text-left twi-text-sm" style={'font-weight: bold !important;'}>
-            Continue this conversation...
+            Ask me anything...
           </span>
           <SendButton arrowColor={props.textColor} color="white" isDisabled={false} isLoading={() => false} />
         </button>

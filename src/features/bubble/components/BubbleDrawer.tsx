@@ -62,7 +62,7 @@ export const BubbleDrawer = (props: {
             props.openBot();
           }}
         >
-          <span class="twi-mr-auto">Continue this conversation...</span>
+          <span class="twi-mr-auto">Ask me anything...</span>
           <SendButton color="white" isDisabled={false} isLoading={() => false} />
         </button>
       </div>
