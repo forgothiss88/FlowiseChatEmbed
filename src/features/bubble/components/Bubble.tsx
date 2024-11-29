@@ -34,7 +34,7 @@ export const BubbleBot = (
               setDrawerIsOpen(false);
             }
           }}
-          class="twi-fixed twi-bottom-0 twi-w-full twi-h-[500px] twi-transition-all twi-duration-500"
+          class="twi-fixed twi-bottom-0 twi-w-full twi-h-1/2 twi-transition-all twi-duration-500"
           classList={{ 'twi-translate-y-0': drawerIsOpen(), 'twi-translate-y-[120%] twi-pointer-events-none': !drawerIsOpen() }}
           style={{
             'z-index': 99999999,

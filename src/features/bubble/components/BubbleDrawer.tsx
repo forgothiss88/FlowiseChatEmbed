@@ -29,7 +29,8 @@ export const BubbleDrawer = (props: {
       <div
         class="twi-w-full twi-h-full twi-shadow-sm twi-px-8 twi-pb-8 twi-flex twi-flex-col twi-items-center twi-justify-between twi-transition-all twi-duration-500 twi-bg-brand-primary/65 twi-backdrop-blur-lg"
         style={{
-          'clip-path': 'circle(500px at 50% 100%)', // 500px it the height of the drawer
+          // 'clip-path': 'circle(100% at 50% 100%)', // not working for some fuckin reason
+          'clip-path': 'ellipse(100% 100% at 50% 100%)',
         }}
       >
         <p class="twi-text-left twi-text-sm twi-mt-14">
