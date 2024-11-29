@@ -7,6 +7,7 @@ import { ShopifyCart } from './components/types/cart';
 import { ShopifyProduct } from './components/types/product';
 import { brandColors, vironProps } from './customers/Viron';
 import { BubbleBot } from './features/bubble';
+import { isMobile } from './utils/isMobileSignal';
 
 const getChatbot = (): HTMLElement => document.getElementsByTagName('twini-chatbot')[0];
 const cb = getChatbot();
@@ -62,13 +63,13 @@ let bodyOverflow = 'unset';
 
 const openBot = () => {
   bodyOverflow = document.body.style.overflow;
-  if (window.outerWidth < 768) document.body.style.overflow = 'hidden';
+  if (isMobile()) document.body.style.overflow = 'hidden';
   setIsBotOpened(true);
   // screen md
 };
 
 const closeBot = () => {
-  if (window.outerWidth < 768) document.body.style.overflow = bodyOverflow;
+  if (isMobile()) document.body.style.overflow = bodyOverflow;
   setIsBotOpened(false);
   // screen md
 };

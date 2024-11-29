@@ -1,4 +1,5 @@
 import { BotProps, FullBotProps } from '@/components/types/botprops';
+import { isMobile } from '@/utils/isMobileSignal';
 import { Accessor, createEffect, createSignal, Show } from 'solid-js';
 import { Bot } from '../../../components/Bot';
 import { BubbleDrawer } from './BubbleDrawer';
@@ -41,7 +42,7 @@ export const BubbleBot = (
 
   return (
     <>
-      <Show when={!props.shopifyProduct && window.outerWidth < 768}>
+      <Show when={!props.shopifyProduct && isMobile()}>
         <div
           ref={bubbleDrawerRef}
           class="twi-fixed twi-bottom-0 twi-w-full twi-h-1/2 twi-z-max twi-transition-all twi-duration-500"
@@ -61,7 +62,7 @@ export const BubbleBot = (
         <span ref={bubbleWidgetRef} class=" twi-bubble-widget twi-left-1/2 twi-bottom-5 twi-fixed twi-z-50 -twi-translate-x-1/2">
           <BubbleWidget
             onClick={() => {
-              if (window.outerWidth < 768) {
+              if (isMobile()) {
                 setDrawerIsOpen(true);
               } else {
                 props.openBot();
