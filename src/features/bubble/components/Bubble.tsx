@@ -1,5 +1,5 @@
 import { BotProps, FullBotProps } from '@/components/types/botprops';
-import { Accessor, createSignal, Show } from 'solid-js';
+import { Accessor, createEffect, createSignal, Show } from 'solid-js';
 import { Bot } from '../../../components/Bot';
 import { BubbleDrawer } from './BubbleDrawer';
 import { BubbleWidget } from './BubbleWidget';
@@ -20,20 +20,30 @@ export const BubbleBot = (
       ? props.theme.chatWindow.templateWelcomeMessageOnProductPage.replace('{{product}}', props.shopifyProduct.title)
       : props.theme.chatWindow.welcomeMessage;
 
+  const [drawerIsOpen, setDrawerIsOpen] = createSignal(false);
   let botRef: HTMLDivElement | undefined;
   let bubbleWidgetRef: HTMLDivElement | undefined;
+  let bubbleDrawerRef: HTMLDivElement | undefined;
 
-  const [drawerIsOpen, setDrawerIsOpen] = createSignal(false);
+  const handleClickOutside = (event: Event) => {
+    if (bubbleDrawerRef && !bubbleDrawerRef.contains(event.target as Node)) {
+      setDrawerIsOpen(false);
+    }
+  };
+
+  createEffect(() => {
+    if (drawerIsOpen()) {
+      document.addEventListener('click', handleClickOutside);
+    } else {
+      document.removeEventListener('click', handleClickOutside);
+    }
+  });
 
   return (
     <>
       <Show when={!props.shopifyProduct && window.outerWidth < 768}>
         <div
-          onClick={(e) => {
-            if (e.target === e.currentTarget) {
-              setDrawerIsOpen(false);
-            }
-          }}
+          ref={bubbleDrawerRef}
           class="twi-fixed twi-bottom-0 twi-w-full twi-h-1/2 twi-z-max twi-transition-all twi-duration-500"
           classList={{ 'twi-translate-y-0': drawerIsOpen(), 'twi-translate-y-[120%] twi-pointer-events-none': !drawerIsOpen() }}
         >
@@ -64,15 +74,11 @@ export const BubbleBot = (
         part="bot"
         ref={botRef}
         style={{
-          height: props.theme.chatWindow.height ? `${props.theme.chatWindow.height.toString()}px` : '',
-          transition: 'transform 200ms cubic-bezier(0, 1.2, 1, 1), opacity 150ms ease-out',
-          'transform-origin': 'calc(100% - 32px) calc(100% - 32px)',
-          transform: props.isBotOpened() ? 'scale3d(1, 1, 1)' : 'scale3d(0, 0, 1)',
-          'box-shadow': 'rgb(0 0 0 / 16%) 0px 5px 40px',
+          height: props.theme.chatWindow.height ? `${props.theme.chatWindow.height.toString()}px` : undefined,
           background: props.theme.chatWindow.backgroundColor + ' fixed',
         }}
         class={
-          'twi-fixed twi-overflow-hidden twi-z-max twi-right-0 twi-bottom-0 twi-backdrop-blur md:twi-rounded-3xl md:twi-right-4 md:twi-bottom-4 twi-w-full md:twi-max-w-md twi-h-full md:twi-top-auto md:twi-h-[704px]' +
+          'twi-fixed twi-transition-all twi-duration-200 twi-shadow-md twi-overflow-hidden twi-z-max twi-right-0 twi-bottom-0 twi-backdrop-blur md:twi-rounded-3xl md:twi-right-4 md:twi-bottom-4 twi-w-full md:twi-max-w-md twi-h-full md:twi-top-auto md:twi-h-[704px]' +
           (props.isBotOpened() ? ' twi-opacity-1' : ' twi-opacity-0 twi-pointer-events-none')
         }
       >
