@@ -534,8 +534,7 @@ export const Bot = (props: BotConfig & BotProps) => {
                   </Show>
                 </div>
               </div>
-              <div class="twi-w-full" style={{ display: 'block', height: chatSpacerHeight() + 'px' }}></div>
-              <div class="twi-w-full" style={{ display: 'block', height: bottomSpacerHeight() + 'px' }}></div>
+              <div class="twi-block twi-w-full twi-flex-1" style={{ 'min-height': `${bottomSpacerHeight() + chatSpacerHeight()}px` }}></div>
             </div>
           </div>
 
