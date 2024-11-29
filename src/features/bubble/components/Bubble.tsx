@@ -27,7 +27,7 @@ export const BubbleBot = (
 
   return (
     <>
-      <Show when={!props.shopifyProduct && window.outerWidth < 768 && drawerIsOpen()}>
+      <Show when={!props.shopifyProduct && window.outerWidth < 768}>
         <div
           onClick={(e) => {
             if (e.target === e.currentTarget) {
@@ -35,6 +35,7 @@ export const BubbleBot = (
             }
           }}
           class="twi-fixed twi-bottom-0 twi-w-full twi-h-[500px] twi-transition-all twi-duration-500"
+          classList={{ 'twi-translate-y-0': drawerIsOpen(), 'twi-translate-y-[120%] twi-pointer-events-none': !drawerIsOpen() }}
           style={{
             'z-index': 99999999,
           }}
