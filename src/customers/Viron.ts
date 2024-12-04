@@ -19,8 +19,16 @@ export const vironProps = (): FullBotProps => {
     apiUrl: 'http://localhost:8000/twini-stream/viron-agents',
     shopRef: 'viron',
     starterPrompts: {
-      prompts: ["Any cruelty-free loafers for a wedding?", "I'm looking for eco-friendly boots", "What are your shoes made of?"],
-      productPagePrompts: ["What's special about the materials used?", 'Can you tell me more about the fit?', 'Are they good for a trip?'],
+      prompts: [
+        "Do you have any shoes for this winter?",
+        "What makes your shoes sustainable?",
+        "Do you offer international shipping?"
+      ],
+      productPagePrompts: [
+        "How do they fit?",
+        "Can you tell me more about the material? ",
+        "Are they good for winter?",
+      ],
       textColor: brandColors.actionPrimaryTextColor,
       actionColor: brandColors.actionPrimary,
       backgroundColor: 'rgb(0 123 75 / 10%)',
