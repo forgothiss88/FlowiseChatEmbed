@@ -50,6 +50,21 @@ export const Bot = (props: BotConfig & BotProps) => {
 
   const [chatRef, setChatRef] = createSignal<string | null>(null);
   const [cartToken, setCartToken] = createSignal<string | null>(null);
+  const [windowSize, setWindowSize] = createSignal<{ width: number; height: number }>({ width: window.innerWidth, height: window.innerHeight });
+
+  const handleWindowResize = () => {
+    setWindowSize({ width: window.innerWidth, height: window.innerHeight });
+  };
+
+  createEffect(() => {
+    // component is mounted and window is available
+    handleWindowResize();
+
+    window.addEventListener('resize', handleWindowResize);
+
+    // unsubscribe from the event on component unmount
+    return () => window.removeEventListener('resize', handleWindowResize);
+  });
 
   const storageKey = `twini-${props.shopRef}`;
 
@@ -370,7 +385,7 @@ export const Bot = (props: BotConfig & BotProps) => {
   );
 
   createEffect(
-    on(props.productHandle, (handle) => {
+    on(props.productHandle, (handle: string) => {
       const lastProductHandleFromMessages = messages().findLast((msg) => msg.productHandle != null)?.productHandle;
       console.debug('last productHandle from messages:', lastProductHandleFromMessages);
       console.debug('new productHandle:', handle);
@@ -395,19 +410,26 @@ export const Bot = (props: BotConfig & BotProps) => {
           temporary: true,
         },
       ]);
-
-      setTimeout(() => {
-        const lastBotMessage = document.querySelector('#twini-message-container')?.lastElementChild?.previousElementSibling;
-
-        // 80px is the topbar height
-        // 12px is the chatContainer padding
-        // 32px is the lastBotMessage margin
-        setChatSpacerHeight(
-          props.bot.clientHeight - (80 + 12 + 32 + bottomSpacerHeight() + (lastBotMessage?.clientHeight || 0) + (hintsRef?.clientHeight || 0)),
-        );
-        scrollToBottom();
-      }, 100);
     }),
+  );
+
+  createEffect(
+    on(
+      () => [props.productHandle(), props.isOpened(), windowSize()],
+      () => {
+        setTimeout(() => {
+          const lastBotMessage = hintsRef?.previousElementSibling as HTMLElement;
+
+          // 80px is the topbar height
+          // 12px is the chatContainer padding
+          // 32px is the lastBotMessage margin
+          setChatSpacerHeight(
+            props.bot.clientHeight - (80 + 12 + 32 + bottomSpacerHeight() + (lastBotMessage?.clientHeight || 0) + (hintsRef?.clientHeight || 0)),
+          );
+          scrollToBottom();
+        }, 100);
+      },
+    ),
   );
 
   const [bottomSpacerHeight, setBottomSpacerHeight] = createSignal(0);
@@ -555,7 +577,7 @@ export const Bot = (props: BotConfig & BotProps) => {
                   </Show>
                 </div>
               </div>
-              <div class="twi-block twi-w-full twi-flex-1" style={{ 'min-height': `${bottomSpacerHeight() + chatSpacerHeight()}px` }}></div>
+              <div class="twi-block twi-w-full" style={{ 'min-height': `${bottomSpacerHeight() + chatSpacerHeight()}px` }}></div>
             </div>
           </div>
           <Show when={error()}>
@@ -583,6 +605,7 @@ export const Bot = (props: BotConfig & BotProps) => {
             poweredByTextColor={props.poweredByTextColor ?? 'black'}
             inputBorderColor={props.textInput.inputBorderColor}
             scrollToBottom={scrollToBottom}
+            isOpened={props.isOpened}
             isLoading={isBusy}
           />
         </main>
