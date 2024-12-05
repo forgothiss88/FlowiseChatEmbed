@@ -168,7 +168,7 @@ export const SingleProductShowcase = (props: { setProductHandle: Setter<string>;
   return (
     <div class=" twi-flex twi-flex-row twi-p-3 twi-overflow-visible">
       <div
-        class="twi-flex twi-flex-col twi-rounded-lg -twi-rotate-3 twi-max-w-36 twi-overflow-hidden twi-shadow-brand-ai"
+        class="twi-flex twi-flex-col twi-bg-white twi-rounded-lg -twi-rotate-3 twi-max-w-36 twi-overflow-hidden twi-shadow-brand-ai"
         style={{
           flex: '0 0 auto',
         }}
@@ -207,7 +207,7 @@ export const SingleProductShowcase = (props: { setProductHandle: Setter<string>;
           }}
           onClick={() => props.setProductHandle(props.product.metadata.slug)}
         >
-          <HintStars fill={props.purchaseButtonBackgroundColor} class="twi-mr-1" />
+          <HintStars class="twi-mr-1 twi-fill-brand-action-primary" />
           Ask more...
         </button>
       </div>

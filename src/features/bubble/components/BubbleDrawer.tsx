@@ -1,9 +1,10 @@
 import { HintBubble } from '@/components/bubbles/HintBubble';
-import { SendButton } from '@/components/SendButton';
+import { SendIcon } from '@/components/icons/SendIcon';
 import { Accessor, For, Setter } from 'solid-js';
 import { BubbleWidget } from './BubbleWidget';
 
 export const BubbleDrawer = (props: {
+  customerName: string;
   nextQuestions: Accessor<string[]>;
   closeBot: () => void;
   drawerIsOpen: Accessor<boolean>;
@@ -20,6 +21,7 @@ export const BubbleDrawer = (props: {
         classList={{ 'twi-opacity-0': !props.drawerIsOpen() }} // Hide the drawer quicker than the drawer animation
       >
         <BubbleWidget
+          customerName={props.customerName}
           onClick={() => {
             props.setDrawerIsOpen(false);
           }}
@@ -56,14 +58,16 @@ export const BubbleDrawer = (props: {
           </For>
         </div>
         <button
-          class="twi-cursor-pointer twi-text-brand-action-secondary twi-bg-brand-action-secondary twi-border-brand-action-primary twi-border twi-w-full twi-px-3 twi-py-1 twi-rounded-full twi-flex twi-flex-row twi-items-center"
+          class="twi-cursor-pointer twi-h-11 twi-bg-brand-action-secondary twi-border-2 twi-border-brand-action-primary twi-text-brand-action-secondary twi-w-full twi-px-3 twi-py-1 twi-rounded-full twi-flex twi-flex-row twi-items-center"
           onClick={() => {
             props.setDrawerIsOpen(false);
             props.openBot();
           }}
         >
-          <span class="twi-mr-auto">Ask me anything...</span>
-          <SendButton color="white" isDisabled={false} isLoading={() => false} />
+          <span class="twi-w-full twi-text-left twi-text-sm twi-font-bold">Ask me anything...</span>
+          <span>
+            <SendIcon class="twi-fill-brand-action-primary" />
+          </span>
         </button>
       </div>
     </>

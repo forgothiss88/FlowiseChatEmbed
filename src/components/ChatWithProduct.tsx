@@ -1,13 +1,10 @@
 import { Accessor, createEffect, createSignal, For, on, onMount, Setter, Show } from 'solid-js';
 import { HintBubble } from './bubbles/HintBubble';
-import { SendButton } from './SendButton';
+import { SendIcon } from './icons/SendIcon';
 import { ShopifyProduct } from './types/product';
 
 export type Props = {
   textColor: string;
-  backgroundColor: string;
-  hintsBackgroundColor: string;
-  hintsBorderColor: string;
   isBotOpened: Accessor<boolean>;
   openBot: () => void;
   product: ShopifyProduct;
@@ -101,7 +98,7 @@ export const ChatWithProduct = (props: Props) => {
   });
 
   return (
-    <>
+    <div class="twini-base">
       <p
         ref={summaryParagraph}
         style={{
@@ -122,11 +119,9 @@ export const ChatWithProduct = (props: Props) => {
           <For each={props.nextQuestions().toSorted((a, b) => a.length - b.length)}>
             {(prompt, i) => (
               <HintBubble
-                actionColor={props.textColor}
+                class="twi-text-brand-action-secondary"
+                starsColor={props.textColor}
                 message={prompt}
-                textColor={props.textColor}
-                backgroundColor={props.hintsBackgroundColor}
-                borderColor={props.hintsBorderColor}
                 delayMilliseconds={200 + i() * 400}
                 onClick={() => {
                   props.openBot();
@@ -147,10 +142,12 @@ export const ChatWithProduct = (props: Props) => {
           <span class="twi-w-full twi-text-left twi-text-sm" style={'font-weight: bold !important;'}>
             Ask me anything...
           </span>
-          <SendButton arrowColor={props.textColor} color="white" isDisabled={false} isLoading={() => false} />
+          <span>
+            <SendIcon class="twi-fill-brand-action-primary" />
+          </span>
         </button>
       </div>
-    </>
+    </div>
   );
 };
 

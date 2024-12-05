@@ -11,8 +11,8 @@ export const StarsAvatar = (props: JSX.SvgSVGAttributes<SVGSVGElement>) => {
       />
       <defs>
         <linearGradient id="paint0_linear_2311_1408" x1="12.0319" y1="0.903557" x2="12.0319" y2="23.4293" gradientUnits="userSpaceOnUse">
-          <stop stop-color="#007B4B" />
-          <stop offset="1" stop-color="#00BF7D" />
+          <stop stop-color="rgb(var(--brand-gradient-step-1))" />
+          <stop offset="1" stop-color="rgb(var(--brand-gradient-step-2))" />
         </linearGradient>
       </defs>
     </svg>

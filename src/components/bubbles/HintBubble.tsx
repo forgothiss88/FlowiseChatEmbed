@@ -2,11 +2,10 @@ import { HintStars } from '../icons/HintStars';
 
 type Props = {
   message: string;
-  textColor?: string;
-  actionColor?: string;
+  starsColor?: string;
   delayMilliseconds?: number;
   onClick: () => void;
-  class: string;
+  class?: string;
 };
 
 export const HintBubble = (props: Props) => {
@@ -27,11 +26,9 @@ export const HintBubble = (props: Props) => {
         }}
       >
         <span class="twi-mr-2">
-          <HintStars fill={props.actionColor} width={18} height={18} />
+          <HintStars fill={props.starsColor} width={18} height={18} />
         </span>
-        <span class="twi-text-left twi-text-sm" style={{ color: props.textColor }}>
-          {props.message}
-        </span>
+        <span class="twi-text-left twi-text-sm">{props.message}</span>
       </button>
     </div>
   );

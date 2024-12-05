@@ -18,12 +18,9 @@ export const GuestBubble = (props: Props) => {
     <div class="twi-flex twi-justify-end twi-items-end twi-guest-container">
       <span
         ref={userMessageEl}
-        class="twi-p-3 twi-rounded-2xl twi-rounded-br-none twi-whitespace-pre-wrap twi-max-w-full twi-chatbot-guest-bubble twi-text-sm twi-font-normal"
+        class="twi-p-3 twi-rounded-2xl twi-rounded-br-none twi-whitespace-pre-wrap twi-max-w-full twi-chatbot-guest-bubble twi-text-sm twi-font-normal twi-bg-brand-action-primary twi-text-brand-action-primary"
         data-testid="guest-bubble"
-        style={{
-          'background-color': props.backgroundColor ?? defaultBackgroundColor,
-          color: props.textColor ?? defaultTextColor,
-        }}
+        style={{}}
         innerHTML={Marked.parse(props.message, { isNoP: true })}
       />
     </div>

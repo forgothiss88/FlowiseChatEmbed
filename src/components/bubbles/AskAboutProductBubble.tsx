@@ -152,13 +152,8 @@ export const AskMoreAboutProductBubble = (props: {
           color: props.textColor ?? defaultTextColor,
         }}
       >
-        <span
-          class="twi-pb-4 twi-inline-flex twi-text-sm twi-font-normal"
-          style={{
-            color: '#007B4B',
-          }}
-        >
-          <HintStars class="twi-mr-1" fill="#007B4B" />
+        <span class="twi-pb-4 twi-inline-flex twi-text-sm twi-font-normal twi-text-brand-action-secondary">
+          <HintStars class="twi-mr-1 twi-fill-brand-primary" />
           Asking more about...
         </span>
         <ProductCarousel product={product} showViewProductButton={props.showViewProductButton} />

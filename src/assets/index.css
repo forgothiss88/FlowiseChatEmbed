@@ -5,21 +5,6 @@
   @tailwind base;
 }
 
-:root {
-  --brand-primary: 255 255 255;
-  --brand-primary-text-color: 51 51 51;
-  --brand-secondary: 51 51 51;
-  --brand-secondary-text-color: 255 255 255;
-  --brand-action-primary: 0 123 75;
-  --brand-action-primary-text-color: 255 255 255;
-  --brand-action-secondary: 255 255 255;
-  --brand-action-secondary-text-color: 0 123 75;
-  --brand-gradient: linear-gradient(90deg, #00bf7d 0%, #007b4b 100%);
-  --brand-gradient-reversed: linear-gradient(270deg, #00bf7d 0%, #007b4b 100%);
-  --brand-ai-shadow-1: 0px 4px 50px 5px rgba(0, 123, 75, 0.4);
-  --brand-ai-shadow-2: 0px 10px 20px 5px rgba(0, 191, 125, 0.2);
-}
-
 @keyframes chatBubbles {
   0% {
     transform: translateY(0);
@@ -145,5 +130,5 @@
 }
 
 .twini-base .twi-shadow-brand-ai {
-  box-shadow: var(--brand-ai-shadow-1), var(--brand-ai-shadow-2);
+  box-shadow: var(--brand-ai-box-shadow-1), var(--brand-ai-box-shadow-2);
 }

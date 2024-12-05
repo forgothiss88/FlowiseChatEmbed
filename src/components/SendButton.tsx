@@ -21,7 +21,7 @@ export const SendButton = (props: SendButtonProps) => {
       style={{ background: props.color, border: 'none' }}
       {...props}
     >
-      <SendIcon width={24} height={24} color={props.arrowColor} class={'twi-send-icon twi-flex'} />
+      <SendIcon width={24} height={24} class="twi-fill-white" />
     </button>
   );
 };

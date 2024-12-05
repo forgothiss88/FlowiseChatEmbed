@@ -49,7 +49,9 @@ const pluginsConfig = (serveFiles) => [
   postcss({
     include: ['src/**/*.css', 'src/**/*.scss'],
     plugins: [autoprefixer(), tailwindcss({ config: './tailwind.config.js' })],
-    extract: true,
+    extract: false, // will be used as inline style
+    // minimize: true,
+    use: ['sass'],
   }),
   typescript({ inlineSources: false, tsconfig: './tsconfig.json' }),
   ...(serveFiles ? [sourcemaps()] : []),
@@ -68,6 +70,15 @@ const configs = [
     output: {
       sourcemap: true,
       file: 'dist/vironpopup.js',
+      format: 'es',
+    },
+    plugins: pluginsConfig(serveFiles),
+  },
+  {
+    input: './src/flerpopup.tsx',
+    output: {
+      sourcemap: true,
+      file: 'dist/flerpopup.js',
       format: 'es',
     },
     plugins: pluginsConfig(serveFiles),

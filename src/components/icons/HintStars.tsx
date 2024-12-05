@@ -5,13 +5,11 @@ export const HintStars = (props: JSX.SvgSVGAttributes<SVGSVGElement>) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      fill={selectedProps.fill}
+      // fill={selectedProps.fill}
       width={selectedProps.width || '14'}
       height={selectedProps.height || '14'}
       viewBox="0 0 14 14"
-      style={{
-        fill: selectedProps.fill ? '' : 'rgb(var(--brand-action-primary))',
-      }}
+      class="twi-fill-brand-action-primary"
       {...otherProps}
     >
       <g opacity="0.65">

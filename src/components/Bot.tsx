@@ -544,11 +544,9 @@ export const Bot = (props: BotConfig & BotProps) => {
                     <For each={props.nextQuestions().toSorted((a, b) => b.length - a.length)}>
                       {(prompt, i) => (
                         <HintBubble
-                          actionColor={props.starterPrompts.actionColor}
+                          class="twi-text-brand-dark twi-bg-brand-action-primary/10"
+                          starsColor={props.starterPrompts.actionColor}
                           message={prompt}
-                          textColor={props.starterPrompts.textColor}
-                          backgroundColor={props.starterPrompts.backgroundColor}
-                          borderColor={props.starterPrompts.borderColor}
                           onClick={() => handleSubmit(prompt)}
                           delayMilliseconds={400 + i() * 400} // 200ms is bot opening animation
                         />

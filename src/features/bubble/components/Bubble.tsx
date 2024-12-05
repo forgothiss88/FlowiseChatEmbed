@@ -1,15 +1,14 @@
+import { Bot } from '@/components/Bot';
 import { BotProps, FullBotProps } from '@/components/types/botprops';
 import { isMobile } from '@/utils/isMobileSignal';
 import { Accessor, createEffect, createSignal, Show } from 'solid-js';
-import { Bot } from '../../../components/Bot';
 import { BubbleDrawer } from './BubbleDrawer';
 import { BubbleWidget } from './BubbleWidget';
-
-type WidgetsState = 'close' | 'open-drawer' | 'close-drawer' | 'open-bot' | 'close-bot';
 
 export const BubbleBot = (
   props: FullBotProps &
     Omit<BotProps, 'welcomeMessage' | 'closeBot' | 'bot'> & {
+      customerName: string;
       isBotOpened: Accessor<boolean>;
       openBot: () => void;
       closeBot: () => void;
@@ -41,7 +40,7 @@ export const BubbleBot = (
   });
 
   return (
-    <>
+    <div class="twini-base">
       <Show when={!props.shopifyProduct && isMobile()}>
         <div
           ref={bubbleDrawerRef}
@@ -49,6 +48,7 @@ export const BubbleBot = (
           classList={{ 'twi-translate-y-0': drawerIsOpen(), 'twi-translate-y-[120%] twi-pointer-events-none': !drawerIsOpen() }}
         >
           <BubbleDrawer
+            customerName={props.customerName}
             setDrawerIsOpen={setDrawerIsOpen}
             drawerIsOpen={drawerIsOpen}
             openBot={props.openBot}
@@ -61,6 +61,7 @@ export const BubbleBot = (
       <Show when={!drawerIsOpen() && !props.shopifyProduct && !props.isBotOpened()}>
         <span ref={bubbleWidgetRef} class=" twi-bubble-widget twi-left-1/2 twi-bottom-5 twi-fixed twi-z-50 -twi-translate-x-1/2">
           <BubbleWidget
+            customerName={props.customerName}
             onClick={() => {
               if (isMobile()) {
                 setDrawerIsOpen(true);
@@ -85,7 +86,6 @@ export const BubbleBot = (
       >
         <Bot
           bot={botRef}
-          getElement={props.getElement}
           titleAvatarSrc={props.theme.chatWindow.titleAvatarSrc}
           welcomeMessage={welcomeMessage}
           poweredByTextColor={props.theme.chatWindow.poweredByTextColor}
@@ -108,6 +108,6 @@ export const BubbleBot = (
           setProductHandle={props.setProductHandle}
         />
       </div>
-    </>
+    </div>
   );
 };

@@ -1,12 +1,12 @@
 import * as Sentry from '@sentry/solid';
 import { createSignal, Show } from 'solid-js';
 import { Portal } from 'solid-js/web';
+import customerStyles from './assets/fler.css';
 import indexStyles from './assets/index.css';
-import customerStyles from './assets/viron.css';
 import ChatWithProduct from './components/ChatWithProduct';
 import { ShopifyCart } from './components/types/cart';
 import { ShopifyProduct } from './components/types/product';
-import { brandColors, vironProps } from './customers/Viron';
+import { brandColors, flerProps } from './customers/Fler';
 import { BubbleBot } from './features/bubble';
 import { isMobile } from './utils/isMobileSignal';
 
@@ -15,7 +15,7 @@ const twiniChatbot = getChatbot();
 if (!twiniChatbot) {
   console.error('Element with id "twini-chatbot" not found.');
 }
-const props = vironProps();
+const props = flerProps();
 // dev
 props.apiUrl = 'http://localhost:8001/twini-stream/viron-agents';
 
