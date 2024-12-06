@@ -50,21 +50,6 @@ export const Bot = (props: BotConfig & BotProps) => {
 
   const [chatRef, setChatRef] = createSignal<string | null>(null);
   const [cartToken, setCartToken] = createSignal<string | null>(null);
-  const [windowSize, setWindowSize] = createSignal<{ width: number; height: number }>({ width: window.innerWidth, height: window.innerHeight });
-
-  const handleWindowResize = () => {
-    setWindowSize({ width: window.innerWidth, height: window.innerHeight });
-  };
-
-  createEffect(() => {
-    // component is mounted and window is available
-    handleWindowResize();
-
-    window.addEventListener('resize', handleWindowResize);
-
-    // unsubscribe from the event on component unmount
-    return () => window.removeEventListener('resize', handleWindowResize);
-  });
 
   const storageKey = `twini-${props.shopRef}`;
 
@@ -385,7 +370,7 @@ export const Bot = (props: BotConfig & BotProps) => {
   );
 
   createEffect(
-    on(props.productHandle, (handle: string) => {
+    on(props.productHandle, (handle) => {
       const lastProductHandleFromMessages = messages().findLast((msg) => msg.productHandle != null)?.productHandle;
       console.debug('last productHandle from messages:', lastProductHandleFromMessages);
       console.debug('new productHandle:', handle);
@@ -410,25 +395,19 @@ export const Bot = (props: BotConfig & BotProps) => {
           temporary: true,
         },
       ]);
+
+      setTimeout(() => {
+        const lastBotMessage = document.querySelector('#twini-message-container')?.lastElementChild?.previousElementSibling;
+
+        // 80px is the topbar height
+        // 12px is the chatContainer padding
+        // 32px is the lastBotMessage margin
+        setChatSpacerHeight(
+          props.bot.clientHeight - (80 + 12 + 32 + bottomSpacerHeight() + (lastBotMessage?.clientHeight || 0) + (hintsRef?.clientHeight || 0)),
+        );
+        scrollToBottom();
+      }, 100);
     }),
-  );
-
-  createEffect(
-    on(
-      //  on click on 'Ask more...', windore resize, and bottom spacer height change
-      () => [props.productHandle(), messages(), streamingBotResponse(), windowSize(), bottomSpacerHeight()],
-      () => {
-        setTimeout(() => {
-          // select id twini-last-product-context
-          const lastMsgs = props.bot.querySelector('.twini-last-product-context');
-
-          const totHeight = props.bot.clientHeight - (lastMsgs?.clientHeight || 0);
-
-          setChatSpacerHeight(totHeight < bottomSpacerHeight() ? bottomSpacerHeight() : totHeight);
-          scrollToBottom();
-        }, 100);
-      },
-    ),
   );
 
   const [bottomSpacerHeight, setBottomSpacerHeight] = createSignal(0);
@@ -527,13 +506,7 @@ export const Bot = (props: BotConfig & BotProps) => {
                         );
                       } else {
                         return (
-                          <div
-                            class="twi-w-11/12 twi-mr-auto twi-ml-2"
-                            id={`twini-message-${i()}`}
-                            classList={{
-                              'twi-mt-20': i() == 0,
-                            }}
-                          >
+                          <div class="twi-w-11/12 twi-mr-auto twi-ml-2" id={`twini-message-${i()}`}>
                             <BotBubble
                               getMessage={() => message}
                               backgroundColor={props.botMessage?.backgroundColor || 'black'}
@@ -554,102 +527,44 @@ export const Bot = (props: BotConfig & BotProps) => {
                     }
                   }}
                 </For>
-                <div class="twi-flex twi-flex-col twi-gap-4 twini-last-product-context">
-                  <For each={messages().slice(lastProductMessageIndex())}>
-                    {(message, i) => {
-                      if (message.type === 'userMessage') {
-                        return (
-                          <div class="twi-w-11/12 twi-ml-auto twi-mr-2" id={`twini-message-${i()}`}>
-                            <GuestBubble
-                              message={message.message}
-                              backgroundColor={props.userMessage?.backgroundColor}
-                              textColor={props.userMessage?.textColor}
-                              showAvatar={false}
-                              avatarSrc={undefined}
-                            />
-                          </div>
-                        );
-                      } else if (message.type === 'apiMessage') {
-                        if (message.productHandle) {
-                          return (
-                            <div class="twi-w-full twi-mb-4 twi-mt-20" id={`twini-message-${i()}`}>
-                              <AskMoreAboutProductBubble
-                                showViewProductButton={message.productHandle != props.shopifyProduct?.handle}
-                                productHandle={message.productHandle}
-                                product={message.productHandle == props.shopifyProduct?.handle ? props.shopifyProduct : undefined}
-                                backgroundColor={props.botMessage?.backgroundColor || 'black'}
-                                textColor={props.botMessage?.textColor}
-                              />
-                            </div>
-                          );
-                        } else {
-                          return (
-                            <div
-                              class="twi-w-11/12 twi-mr-auto twi-ml-2"
-                              id={`twini-message-${i()}`}
-                              classList={{
-                                'twi-mt-20': i() == 0,
-                              }}
-                            >
-                              <BotBubble
-                                getMessage={() => message}
-                                backgroundColor={props.botMessage?.backgroundColor || 'black'}
-                                textColor={props.botMessage.textColor}
-                                faviconUrl={props.botMessage?.faviconUrl}
-                                sourceProducts={message.sourceProducts}
-                                sourceContent={message.sourceContents}
-                                suggestedProduct={message.suggestedProduct || undefined}
-                                enableMultipricing={props.botMessage?.enableMultipricing}
-                                purchaseButtonText={props.botMessage?.purchaseButtonText}
-                                purchaseButtonBackgroundColor={props.botMessage?.purchaseButtonBackgroundColor}
-                                purchaseButtonTextColor={props.botMessage?.purchaseButtonTextColor}
-                                setProductHandle={props.setProductHandle as Setter<string>}
-                              />
-                            </div>
-                          );
-                        }
-                      }
-                    }}
-                  </For>
-                  <Show when={isWaitingForResponse()}>
-                    <LoadingBubble />
-                  </Show>
-                  <Show when={!isWaitingForResponse() && streamingBotResponse()?.message}>
-                    <div class="twi-w-11/12 twi-mr-auto twi-ml-2" id="twini-message-last-streaming">
-                      <BotBubble
-                        getMessage={streamingBotResponse as Accessor<MessageType>}
-                        backgroundColor={props.botMessage?.backgroundColor || 'black'}
-                        textColor={props.botMessage.textColor}
-                        faviconUrl={props.botMessage?.faviconUrl}
-                        sourceProducts={streamingBotResponse()?.sourceProducts}
-                        sourceContent={streamingBotResponse()?.sourceContents}
-                        suggestedProduct={streamingBotResponse()?.suggestedProduct}
-                        enableMultipricing={props.botMessage?.enableMultipricing || false}
-                        purchaseButtonText={props.botMessage?.purchaseButtonText}
-                        purchaseButtonBackgroundColor={props.botMessage?.purchaseButtonBackgroundColor}
-                        purchaseButtonTextColor={props.botMessage?.purchaseButtonTextColor}
-                        setProductHandle={props.setProductHandle as Setter<string>}
-                      />
-                    </div>
-                  </Show>
-                  <div ref={hintsRef} class="twi-flex twi-flex-col twi-gap-2 twi-mr-2">
-                    <Show when={props.isOpened() && !isBusy() && !messages()[messages().length - 1].suggestedProduct}>
-                      <For each={props.nextQuestions().toSorted((a, b) => b.length - a.length)}>
-                        {(prompt, i) => (
-                          <HintBubble
-                            class="twi-text-brand-dark twi-bg-brand-action-primary/10"
-                            starsColor={props.starterPrompts.actionColor}
-                            message={prompt}
-                            onClick={() => handleSubmit(prompt)}
-                            delayMilliseconds={400 + i() * 400} // 200ms is bot opening animation
-                          />
-                        )}
-                      </For>
-                    </Show>
+                <Show when={isWaitingForResponse()}>
+                  <LoadingBubble />
+                </Show>
+                <Show when={!isWaitingForResponse() && streamingBotResponse()?.message}>
+                  <div class="twi-w-11/12 twi-mr-auto twi-ml-2" id="twini-message-last-streaming">
+                    <BotBubble
+                      getMessage={streamingBotResponse as Accessor<MessageType>}
+                      backgroundColor={props.botMessage?.backgroundColor || 'black'}
+                      textColor={props.botMessage.textColor}
+                      faviconUrl={props.botMessage?.faviconUrl}
+                      sourceProducts={streamingBotResponse()?.sourceProducts}
+                      sourceContent={streamingBotResponse()?.sourceContents}
+                      suggestedProduct={streamingBotResponse()?.suggestedProduct}
+                      enableMultipricing={props.botMessage?.enableMultipricing || false}
+                      purchaseButtonText={props.botMessage?.purchaseButtonText}
+                      purchaseButtonBackgroundColor={props.botMessage?.purchaseButtonBackgroundColor}
+                      purchaseButtonTextColor={props.botMessage?.purchaseButtonTextColor}
+                      setProductHandle={props.setProductHandle as Setter<string>}
+                    />
                   </div>
+                </Show>
+                <div ref={hintsRef} class="twi-flex twi-flex-col twi-gap-2 twi-mr-2">
+                  <Show when={props.isOpened() && !isBusy() && !messages()[messages().length - 1].suggestedProduct}>
+                    <For each={props.nextQuestions().toSorted((a, b) => b.length - a.length)}>
+                      {(prompt, i) => (
+                        <HintBubble
+                          class="twi-text-brand-dark twi-bg-brand-action-primary/10"
+                          starsColor={props.starterPrompts.actionColor}
+                          message={prompt}
+                          onClick={() => handleSubmit(prompt)}
+                          delayMilliseconds={400 + i() * 400} // 200ms is bot opening animation
+                        />
+                      )}
+                    </For>
+                  </Show>
                 </div>
               </div>
-              <div class="twi-block twi-w-full" style={{ 'min-height': `${chatSpacerHeight()}px` }}></div>
+              <div class="twi-block twi-w-full twi-flex-1" style={{ 'min-height': `${bottomSpacerHeight() + chatSpacerHeight()}px` }}></div>
             </div>
           </div>
           <Show when={error()}>
@@ -677,7 +592,6 @@ export const Bot = (props: BotConfig & BotProps) => {
             poweredByTextColor={props.poweredByTextColor ?? 'black'}
             inputBorderColor={props.textInput.inputBorderColor}
             scrollToBottom={scrollToBottom}
-            isOpened={props.isOpened}
             isLoading={isBusy}
           />
         </main>

@@ -1,4 +1,4 @@
-import { Accessor, createEffect, createSignal, on } from 'solid-js';
+import { Accessor, createEffect, createSignal, onMount } from 'solid-js';
 import { DeleteButton } from './SendButton';
 import { AutoGrowTextArea } from './inputs/AutoGrowTextArea';
 
@@ -24,7 +24,6 @@ export type Props = {
   isFullPage?: boolean;
   isDeleteEnabled: boolean;
   isLoading: Accessor<boolean>;
-  isOpened: Accessor<boolean>;
   onSubmit: (value: string) => void;
   clearChat: () => void;
   getInputValue: () => string;
@@ -51,55 +50,52 @@ export const Bottombar = (props: Props) => {
     if (e.key === 'Enter' && !isIMEComposition) submit();
   };
 
-  let bb: HTMLDivElement | undefined;
-  createEffect(
-    on(textareaHeight, () => {
-      props.setBottomSpacerHeight(bb?.getBoundingClientRect().height || bb?.clientHeight || 0);
-    }),
-  );
-
-  return (
-    <div class="twi-fixed md:twi-absolute twi-bottom-0 twi-left-0 twi-right-0 twi-w-full twi-h-fit">
+  const bb: HTMLDivElement = (
+    <div
+      class="twi-shadow-sm twi-pb-2 md:twi-pb-0"
+      style={{ 'background-color': props.backgroundColor ?? defaultBackgroundColor, 'border-top': '1px solid #eeeeee' }}
+    >
       <div
-        ref={bb}
-        class="twi-shadow-sm twi-pb-2 md:twi-pb-0"
-        style={{ 'background-color': props.backgroundColor ?? defaultBackgroundColor, 'border-top': '1px solid #eeeeee' }}
+        class={'twi-w-full twi-flex twi-flex-row twi-py-3 twi-px-2'}
+        data-testid="input"
+        style={{
+          color: props.textColor ?? defaultTextColor,
+        }}
+        onKeyDown={submitWhenEnter}
       >
-        <div
-          class={'twi-w-full twi-flex twi-flex-row twi-py-3 twi-px-2'}
-          data-testid="input"
-          style={{
-            color: props.textColor ?? defaultTextColor,
-          }}
-          onKeyDown={submitWhenEnter}
-        >
-          <DeleteButton
+        <DeleteButton
+          isLoading={props.isLoading}
+          color={props.resetButtonColor}
+          type="reset"
+          isDisabled={!props.isDeleteEnabled}
+          onClick={props.clearChat}
+        />
+        <div class="twi-mx-2 twi-w-full">
+          <AutoGrowTextArea
+            ref={props.ref}
+            setInputValue={props.setInputValue}
+            getInputValue={props.getInputValue}
+            fontSize={props.fontSize}
+            disabled={props.disabled}
+            placeholder={props.placeholder}
+            setHeight={setTextareaHeight}
+            onSubmit={submit}
+            sendButtonColor={props.sendButtonColor || 'black'}
+            scrollToBottom={props.scrollToBottom}
+            inputBackgroundColor={props.inputBackgroundColor}
+            inputBorderColor={props.inputBorderColor}
             isLoading={props.isLoading}
-            color={props.resetButtonColor}
-            type="reset"
-            isDisabled={!props.isDeleteEnabled}
-            onClick={props.clearChat}
           />
-          <div class="twi-mx-2 twi-w-full">
-            <AutoGrowTextArea
-              ref={props.ref}
-              setInputValue={props.setInputValue}
-              getInputValue={props.getInputValue}
-              fontSize={props.fontSize}
-              disabled={props.disabled}
-              placeholder={props.placeholder}
-              setHeight={setTextareaHeight}
-              onSubmit={submit}
-              sendButtonColor={props.sendButtonColor || 'black'}
-              scrollToBottom={props.scrollToBottom}
-              inputBackgroundColor={props.inputBackgroundColor}
-              inputBorderColor={props.inputBorderColor}
-              isLoading={props.isLoading}
-              isOpened={props.isOpened}
-            />
-          </div>
         </div>
       </div>
     </div>
   );
+  onMount(() => {
+    createEffect(() => {
+      textareaHeight();
+      props.setBottomSpacerHeight(bb.getBoundingClientRect().height || bb.clientHeight);
+    });
+  });
+
+  return <div class="twi-fixed md:twi-absolute twi-bottom-0 twi-left-0 twi-right-0 twi-w-full twi-h-fit">{bb}</div>;
 };
