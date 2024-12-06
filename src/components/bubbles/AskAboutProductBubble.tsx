@@ -2,7 +2,6 @@ import { Accessor, createEffect, createSignal, Index, JSX, on, onMount, Show, sp
 import { HintStars } from '../icons/HintStars';
 import { ShopifyProduct } from '../types/product';
 
-const defaultBackgroundColor = '#f7f8ff';
 const defaultTextColor = '#303235';
 
 type Product = {
@@ -22,7 +21,7 @@ export type ProductCarouselProps = {
   showViewProductButton: boolean;
 };
 
-const ProductCarousel = (props: ProductCarouselProps) => {
+export const ProductCarousel = (props: ProductCarouselProps) => {
   const [loadedImg, setLoadedImg] = createSignal<boolean[]>([]);
 
   createEffect(

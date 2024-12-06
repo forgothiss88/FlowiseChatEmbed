@@ -1,8 +1,9 @@
 import { Marked } from '@ts-stack/markdown';
 import { Setter, Show } from 'solid-js';
-import { ProductCarousel, PurchaseButtonAspect, SingleProductShowcase } from '../Carousel';
+import { PurchaseButtonAspect, SingleProductShowcase } from '../Carousel';
 import { MessageType } from '../types/botprops';
 import { SourceContent, SourceProduct } from '../types/documents';
+import { ProductCarousel } from './AskAboutProductBubble';
 
 type Props = {
   getMessage: () => MessageType;
