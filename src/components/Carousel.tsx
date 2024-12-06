@@ -1,5 +1,5 @@
 import { Setter, Show, createSignal } from 'solid-js';
-import { DownArrow, LeftArrow, RightArrow, UpArrow } from './icons/Arrow';
+import { DownArrow, UpArrow } from './icons/Arrow';
 import { HintStars } from './icons/HintStars';
 import { ProductMetadata, SourceProduct } from './types/documents';
 
@@ -205,79 +205,14 @@ export const SingleProductShowcase = (props: { setProductHandle: Setter<string>;
             'border-color': props.purchaseButtonTextColor,
             'animation-delay': '0.5s',
           }}
-          onClick={() => props.setProductHandle(props.product.metadata.slug)}
+          onClick={() => {
+            props.setProductHandle(props.product.metadata.slug);
+          }}
         >
           <HintStars class="twi-mr-1 twi-fill-brand-action-primary" />
           Ask more...
         </button>
       </div>
     </div>
-  );
-};
-
-export const ProductCarousel = (props: ProductCarouselProps) => {
-  let carousel: HTMLDivElement | undefined;
-  const [currentSlide, setCurrentSlide] = createSignal(0);
-  const numProducts = props.products.length;
-  const nextSlide = () => {
-    setCurrentSlide((prev: number) => Math.min(prev + 1, numProducts));
-  };
-
-  const prevSlide = () => {
-    setCurrentSlide((prev: number) => Math.max(prev - 1, 0));
-  };
-
-  const isStart = () => currentSlide() === 0;
-  const isEnd = () => currentSlide() + 1 === numProducts;
-  return (
-    <>
-      <div class=" twi-overflow-hidden twi-w-full" style={{ background: props.backgroundColor }}>
-        <div ref={carousel} class="twi-flex twi-flex-row twi-overflow-hidden twi-w-full twi-p-3">
-          <Show when={numProducts > 0}>
-            <div class="twi-w-3/5 pr-3">
-              <ProductCard isPrimary={true} product={props.products[currentSlide()].metadata} />
-            </div>
-          </Show>
-          <Show when={numProducts > 1 && currentSlide() + 1 < numProducts}>
-            <div class="twi-w-2/5">
-              <ProductCard isPrimary={false} product={props.products[currentSlide() + 1].metadata} onClick={nextSlide} />
-            </div>
-          </Show>
-        </div>
-      </div>
-      <div class="twi-pb-3 twi-px-3 twi-pt-2 twi-flex twi-flex-row twi-w-full">
-        <div class="twi-w-3/5">
-          <Show when={props.enableMultipricing}>
-            <MultiPriceButton
-              purchaseButtonText={props.purchaseButtonText}
-              purchaseButtonBackgroundColor={props.purchaseButtonBackgroundColor}
-              purchaseButtonTextColor={props.purchaseButtonTextColor}
-              price={props.products[currentSlide()].metadata.price}
-              url={props.products[currentSlide()].metadata.item_url}
-              otherPricesUrl={'https://www.hdblog.it/prezzi/' + props.products[currentSlide()].metadata?.slug} // TODO: take multiple prices from API
-            />
-          </Show>
-          <Show when={!props.enableMultipricing}>
-            <SinglePriceButton
-              purchaseButtonBackgroundColor={props.purchaseButtonBackgroundColor}
-              purchaseButtonTextColor={props.purchaseButtonTextColor}
-              purchaseButtonText={props.purchaseButtonText}
-              price={props.products[currentSlide()].metadata.price}
-              url={props.products[currentSlide()].metadata.item_url}
-            />
-          </Show>
-        </div>
-        <div class="twi-w-2/5 twi-flex twi-flex-row twi-justify-end twi-pr-2">
-          <div class="twi-flex twi-flex-row">
-            <button class={'twi-cursor-pointer' + isStart() ? 'twi-opacity-30' : ''} disabled={isStart()} onClick={prevSlide}>
-              <LeftArrow></LeftArrow>
-            </button>
-            <button class={'twi-cursor-pointer' + isEnd() ? 'twi-opacity-30' : ''} disabled={isEnd()} onClick={nextSlide}>
-              <RightArrow></RightArrow>
-            </button>
-          </div>
-        </div>
-      </div>
-    </>
   );
 };

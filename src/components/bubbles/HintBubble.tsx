@@ -9,7 +9,6 @@ type Props = {
 };
 
 export const HintBubble = (props: Props) => {
-  console.log('HintBubble', props);
   return (
     <div class="twi-flex twi-justify-end twi-guest-container twi-w-full">
       <button

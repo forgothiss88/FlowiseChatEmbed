@@ -415,17 +415,16 @@ export const Bot = (props: BotConfig & BotProps) => {
 
   createEffect(
     on(
-      () => [props.productHandle(), props.isOpened(), windowSize()],
+      //  on click on 'Ask more...', windore resize, and bottom spacer height change
+      () => [props.productHandle(), messages(), streamingBotResponse(), windowSize(), bottomSpacerHeight()],
       () => {
         setTimeout(() => {
-          const lastBotMessage = hintsRef?.previousElementSibling as HTMLElement;
+          // select id twini-last-product-context
+          const lastMsgs = props.bot.querySelector('.twini-last-product-context');
 
-          // 80px is the topbar height
-          // 12px is the chatContainer padding
-          // 32px is the lastBotMessage margin
-          setChatSpacerHeight(
-            props.bot.clientHeight - (80 + 12 + 32 + bottomSpacerHeight() + (lastBotMessage?.clientHeight || 0) + (hintsRef?.clientHeight || 0)),
-          );
+          const totHeight = props.bot.clientHeight - (lastMsgs?.clientHeight || 0);
+
+          setChatSpacerHeight(totHeight < bottomSpacerHeight() ? bottomSpacerHeight() : totHeight);
           scrollToBottom();
         }, 100);
       },
@@ -435,6 +434,15 @@ export const Bot = (props: BotConfig & BotProps) => {
   const [bottomSpacerHeight, setBottomSpacerHeight] = createSignal(0);
   const [chatSpacerHeight, setChatSpacerHeight] = createSignal(0);
   const [error, setError] = createSignal<boolean | null>(null);
+  const [lastProductMessageIndex, setLastProductMessageIndex] = createSignal<number>(0);
+
+  createEffect(
+    on(messages, () => {
+      console.debug('messages changed', messages());
+      setLastProductMessageIndex(messages().findLastIndex((msg) => msg.productHandle != null) || 0);
+      console.debug('lastProductMessageIndex', lastProductMessageIndex());
+    }),
+  );
 
   createEffect(() => {
     if (error() === true) {
@@ -489,8 +497,8 @@ export const Bot = (props: BotConfig & BotProps) => {
             }}
           >
             <div ref={chatContainer} class="twi-flex-1 twi-overflow-auto twi-scroll-smooth twi-no-scrollbar-container">
-              <div class="twi-px-4 twi-pb-3 twi-pt-20 twi-flex twi-flex-col twi-gap-4" id="twini-message-container">
-                <For each={messages()}>
+              <div class="twi-px-4 twi-pb-3 twi-flex twi-flex-col twi-gap-4" id="twini-message-container">
+                <For each={messages().slice(0, lastProductMessageIndex())}>
                   {(message, i) => {
                     if (message.type === 'userMessage') {
                       return (
@@ -507,7 +515,7 @@ export const Bot = (props: BotConfig & BotProps) => {
                     } else if (message.type === 'apiMessage') {
                       if (message.productHandle) {
                         return (
-                          <div class="twi-w-full twi-mb-4" id={`twini-message-${i()}`}>
+                          <div class="twi-w-full twi-mb-4 twi-mt-20" id={`twini-message-${i()}`}>
                             <AskMoreAboutProductBubble
                               showViewProductButton={message.productHandle != props.shopifyProduct?.handle}
                               productHandle={message.productHandle}
@@ -519,7 +527,13 @@ export const Bot = (props: BotConfig & BotProps) => {
                         );
                       } else {
                         return (
-                          <div class="twi-w-11/12 twi-mr-auto twi-ml-2" id={`twini-message-${i()}`}>
+                          <div
+                            class="twi-w-11/12 twi-mr-auto twi-ml-2"
+                            id={`twini-message-${i()}`}
+                            classList={{
+                              'twi-mt-20': i() == 0,
+                            }}
+                          >
                             <BotBubble
                               getMessage={() => message}
                               backgroundColor={props.botMessage?.backgroundColor || 'black'}
@@ -540,44 +554,102 @@ export const Bot = (props: BotConfig & BotProps) => {
                     }
                   }}
                 </For>
-                <Show when={isWaitingForResponse()}>
-                  <LoadingBubble />
-                </Show>
-                <Show when={!isWaitingForResponse() && streamingBotResponse()?.message}>
-                  <div class="twi-w-11/12 twi-mr-auto twi-ml-2" id="twini-message-last-streaming">
-                    <BotBubble
-                      getMessage={streamingBotResponse as Accessor<MessageType>}
-                      backgroundColor={props.botMessage?.backgroundColor || 'black'}
-                      textColor={props.botMessage.textColor}
-                      faviconUrl={props.botMessage?.faviconUrl}
-                      sourceProducts={streamingBotResponse()?.sourceProducts}
-                      sourceContent={streamingBotResponse()?.sourceContents}
-                      suggestedProduct={streamingBotResponse()?.suggestedProduct}
-                      enableMultipricing={props.botMessage?.enableMultipricing || false}
-                      purchaseButtonText={props.botMessage?.purchaseButtonText}
-                      purchaseButtonBackgroundColor={props.botMessage?.purchaseButtonBackgroundColor}
-                      purchaseButtonTextColor={props.botMessage?.purchaseButtonTextColor}
-                      setProductHandle={props.setProductHandle as Setter<string>}
-                    />
-                  </div>
-                </Show>
-                <div ref={hintsRef} class="twi-flex twi-flex-col twi-gap-2 twi-mr-2">
-                  <Show when={props.isOpened() && !isBusy() && !messages()[messages().length - 1].suggestedProduct}>
-                    <For each={props.nextQuestions().toSorted((a, b) => b.length - a.length)}>
-                      {(prompt, i) => (
-                        <HintBubble
-                          class="twi-text-brand-dark twi-bg-brand-action-primary/10"
-                          starsColor={props.starterPrompts.actionColor}
-                          message={prompt}
-                          onClick={() => handleSubmit(prompt)}
-                          delayMilliseconds={400 + i() * 400} // 200ms is bot opening animation
-                        />
-                      )}
-                    </For>
+                <div class="twi-flex twi-flex-col twi-gap-4 twini-last-product-context">
+                  <For each={messages().slice(lastProductMessageIndex())}>
+                    {(message, i) => {
+                      if (message.type === 'userMessage') {
+                        return (
+                          <div class="twi-w-11/12 twi-ml-auto twi-mr-2" id={`twini-message-${i()}`}>
+                            <GuestBubble
+                              message={message.message}
+                              backgroundColor={props.userMessage?.backgroundColor}
+                              textColor={props.userMessage?.textColor}
+                              showAvatar={false}
+                              avatarSrc={undefined}
+                            />
+                          </div>
+                        );
+                      } else if (message.type === 'apiMessage') {
+                        if (message.productHandle) {
+                          return (
+                            <div class="twi-w-full twi-mb-4 twi-mt-20" id={`twini-message-${i()}`}>
+                              <AskMoreAboutProductBubble
+                                showViewProductButton={message.productHandle != props.shopifyProduct?.handle}
+                                productHandle={message.productHandle}
+                                product={message.productHandle == props.shopifyProduct?.handle ? props.shopifyProduct : undefined}
+                                backgroundColor={props.botMessage?.backgroundColor || 'black'}
+                                textColor={props.botMessage?.textColor}
+                              />
+                            </div>
+                          );
+                        } else {
+                          return (
+                            <div
+                              class="twi-w-11/12 twi-mr-auto twi-ml-2"
+                              id={`twini-message-${i()}`}
+                              classList={{
+                                'twi-mt-20': i() == 0,
+                              }}
+                            >
+                              <BotBubble
+                                getMessage={() => message}
+                                backgroundColor={props.botMessage?.backgroundColor || 'black'}
+                                textColor={props.botMessage.textColor}
+                                faviconUrl={props.botMessage?.faviconUrl}
+                                sourceProducts={message.sourceProducts}
+                                sourceContent={message.sourceContents}
+                                suggestedProduct={message.suggestedProduct || undefined}
+                                enableMultipricing={props.botMessage?.enableMultipricing}
+                                purchaseButtonText={props.botMessage?.purchaseButtonText}
+                                purchaseButtonBackgroundColor={props.botMessage?.purchaseButtonBackgroundColor}
+                                purchaseButtonTextColor={props.botMessage?.purchaseButtonTextColor}
+                                setProductHandle={props.setProductHandle as Setter<string>}
+                              />
+                            </div>
+                          );
+                        }
+                      }
+                    }}
+                  </For>
+                  <Show when={isWaitingForResponse()}>
+                    <LoadingBubble />
                   </Show>
+                  <Show when={!isWaitingForResponse() && streamingBotResponse()?.message}>
+                    <div class="twi-w-11/12 twi-mr-auto twi-ml-2" id="twini-message-last-streaming">
+                      <BotBubble
+                        getMessage={streamingBotResponse as Accessor<MessageType>}
+                        backgroundColor={props.botMessage?.backgroundColor || 'black'}
+                        textColor={props.botMessage.textColor}
+                        faviconUrl={props.botMessage?.faviconUrl}
+                        sourceProducts={streamingBotResponse()?.sourceProducts}
+                        sourceContent={streamingBotResponse()?.sourceContents}
+                        suggestedProduct={streamingBotResponse()?.suggestedProduct}
+                        enableMultipricing={props.botMessage?.enableMultipricing || false}
+                        purchaseButtonText={props.botMessage?.purchaseButtonText}
+                        purchaseButtonBackgroundColor={props.botMessage?.purchaseButtonBackgroundColor}
+                        purchaseButtonTextColor={props.botMessage?.purchaseButtonTextColor}
+                        setProductHandle={props.setProductHandle as Setter<string>}
+                      />
+                    </div>
+                  </Show>
+                  <div ref={hintsRef} class="twi-flex twi-flex-col twi-gap-2 twi-mr-2">
+                    <Show when={props.isOpened() && !isBusy() && !messages()[messages().length - 1].suggestedProduct}>
+                      <For each={props.nextQuestions().toSorted((a, b) => b.length - a.length)}>
+                        {(prompt, i) => (
+                          <HintBubble
+                            class="twi-text-brand-dark twi-bg-brand-action-primary/10"
+                            starsColor={props.starterPrompts.actionColor}
+                            message={prompt}
+                            onClick={() => handleSubmit(prompt)}
+                            delayMilliseconds={400 + i() * 400} // 200ms is bot opening animation
+                          />
+                        )}
+                      </For>
+                    </Show>
+                  </div>
                 </div>
               </div>
-              <div class="twi-block twi-w-full" style={{ 'min-height': `${bottomSpacerHeight() + chatSpacerHeight()}px` }}></div>
+              <div class="twi-block twi-w-full" style={{ 'min-height': `${chatSpacerHeight()}px` }}></div>
             </div>
           </div>
           <Show when={error()}>
