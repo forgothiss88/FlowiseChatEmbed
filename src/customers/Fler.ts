@@ -20,14 +20,14 @@ export const flerProps = (): FullBotProps => {
     shopRef: 'fler',
     starterPrompts: {
       prompts: [
-        "Do you have any shoes for this winter?",
-        "What makes your shoes sustainable?",
-        "Do you offer international shipping?"
+        "What makes Fler razors different from other brands?",
+        "How often can I receive new razor cartridges?",
+        "What are your suggested steps for shaving?"
       ],
       productPagePrompts: [
-        "How do they fit?",
-        "Can you tell me more about the material? ",
-        "Are they good for winter?",
+        "What's in this set?",
+        "What are your suggested steps for shaving?",
+        "Is it Nichel free?",
       ],
       textColor: brandColors.actionPrimaryTextColor,
       actionColor: brandColors.actionPrimary,
