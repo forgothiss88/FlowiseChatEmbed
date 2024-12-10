@@ -110,6 +110,13 @@ if (process.env.NODE_ENV == 'production') {
     setProductHandle={setProductHandle}
     shopifyProduct={product}
     shopifyCart={cart}
+    bubbleDrawerMessage={
+      <span>
+        Hi there!
+        <br />
+        I’m your personal shopper from Viron 🌱
+      </span>
+    }
   />
 </Portal>;
 

@@ -49,6 +49,7 @@ export const BubbleBot = (
         >
           <BubbleDrawer
             customerName={props.customerName}
+            bubbleDrawerMessage={props.bubbleDrawerMessage}
             setDrawerIsOpen={setDrawerIsOpen}
             drawerIsOpen={drawerIsOpen}
             openBot={props.openBot}

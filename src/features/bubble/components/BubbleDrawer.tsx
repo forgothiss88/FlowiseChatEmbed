@@ -1,10 +1,11 @@
 import { HintBubble } from '@/components/bubbles/HintBubble';
 import { SendIcon } from '@/components/icons/SendIcon';
-import { Accessor, For, Setter } from 'solid-js';
+import { Accessor, For, JSXElement, Setter } from 'solid-js';
 import { BubbleWidget } from './BubbleWidget';
 
 export const BubbleDrawer = (props: {
   customerName: string;
+  bubbleDrawerMessage: JSXElement;
   nextQuestions: Accessor<string[]>;
   closeBot: () => void;
   drawerIsOpen: Accessor<boolean>;
@@ -34,11 +35,7 @@ export const BubbleDrawer = (props: {
           'clip-path': 'ellipse(100% 100% at 50% 100%)',
         }}
       >
-        <p class="twi-text-left twi-text-sm twi-mt-14">
-          Hi there!
-          <br />
-          I’m your personal shopper from Virón 🌱
-        </p>
+        <p class="twi-text-left twi-text-sm twi-mt-14">{props.bubbleDrawerMessage}</p>
         <div class="twi-w-full twi-flex twi-flex-col twi-space-y-2">
           <For each={props.nextQuestions().toSorted((a, b) => a.length - b.length)}>
             {(prompt, i) => (

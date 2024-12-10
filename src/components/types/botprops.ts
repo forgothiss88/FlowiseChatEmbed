@@ -1,5 +1,5 @@
 import { BotMessageTheme, BubbleParams, TextInputTheme, UserMessageTheme } from '@/features/bubble/types';
-import { Accessor, Setter } from 'solid-js';
+import { Accessor, JSXElement, Setter } from 'solid-js';
 import { ShopifyCart } from './cart';
 import { SourceContent, SourceProduct } from './documents';
 import { ShopifyProduct } from './product';
@@ -62,6 +62,8 @@ export type BotProps = {
   closeBot: () => void;
 };
 
-export type FullBotProps = BotConfig & BubbleParams & BrandProps;
+export type FullBotProps = BotConfig & BubbleParams & BrandProps & {
+  bubbleDrawerMessage: JSXElement;
+};
 
 export type messageType = 'apiMessage' | 'userMessage' | 'usermessagewaiting';
