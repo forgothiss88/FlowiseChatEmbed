@@ -88,7 +88,6 @@ export const ProductCarousel = (props: ProductCarouselProps) => {
         <Show when={props.showViewProductButton}>
           <a
             href={props.product()?.url}
-            target="_blank"
             class="twi-bg-brand-action-primary twi-text-brand-action-primary twi-rounded-md twi-mt-auto twi-text-sm twi-font-normal twi-px-4 twi-py-2 twi-whitespace-nowrap twi-self-center twi-block twi-text-center"
           >
             View product
