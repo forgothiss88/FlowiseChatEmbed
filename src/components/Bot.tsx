@@ -395,25 +395,44 @@ export const Bot = (props: BotConfig & BotProps) => {
           temporary: true,
         },
       ]);
-
-      setTimeout(() => {
-        const lastBotMessage = document.querySelector('#twini-message-container')?.lastElementChild?.previousElementSibling;
-
-        // 80px is the topbar height
-        // 12px is the chatContainer padding
-        // 32px is the lastBotMessage margin
-        setChatSpacerHeight(
-          props.bot.clientHeight - (80 + 12 + 32 + bottomSpacerHeight() + (lastBotMessage?.clientHeight || 0) + (hintsRef?.clientHeight || 0)),
-        );
-        scrollToBottom();
-      }, 100);
     }),
+  );
+
+  createEffect(
+    on(
+      () => [props.productHandle(), bottomSpacerHeight(), askMoreClicked()],
+      () => {
+        if (props.productHandle() == null) {
+          return;
+        }
+        setTimeout(() => {
+          const lastBotMessage = props.bot.querySelector('.twini-message-container')?.lastElementChild?.previousElementSibling;
+
+          // 80px is the topbar height
+          // 12px is the chatContainer padding
+          // 32px is the lastBotMessage margin
+
+          console.debug('bot.clientHeight', props.bot.clientHeight);
+          console.debug('lastBotMessage?.clientHeight', lastBotMessage?.clientHeight);
+          console.debug('hintsRef?.clientHeight', hintsRef?.clientHeight);
+          console.debug('bottomSpacerHeight', bottomSpacerHeight());
+
+          const newHeight =
+            (props.bot.clientHeight - (80 + 12 + 32 + (lastBotMessage?.clientHeight || 0) + (hintsRef?.clientHeight || 0) + bottomSpacerHeight())) /
+            2;
+
+          setChatSpacerHeight(newHeight > bottomSpacerHeight() ? newHeight : bottomSpacerHeight());
+          scrollToBottom();
+        }, 300);
+      },
+    ),
   );
 
   const [bottomSpacerHeight, setBottomSpacerHeight] = createSignal(0);
   const [chatSpacerHeight, setChatSpacerHeight] = createSignal(0);
   const [error, setError] = createSignal<boolean | null>(null);
   const [lastProductMessageIndex, setLastProductMessageIndex] = createSignal<number>(0);
+  const [askMoreClicked, setAskMoreClicked] = createSignal<number>(0);
 
   createEffect(
     on(messages, () => {
@@ -476,8 +495,8 @@ export const Bot = (props: BotConfig & BotProps) => {
             }}
           >
             <div ref={chatContainer} class="twi-flex-1 twi-overflow-auto twi-scroll-smooth twi-no-scrollbar-container">
-              <div class="twi-px-4 twi-pb-3 twi-flex twi-flex-col twi-gap-4" id="twini-message-container">
-                <For each={messages().slice(0, lastProductMessageIndex())}>
+              <div class="twi-px-4 twi-pb-3 twi-flex twi-flex-col twi-gap-4 twi-pt-20 twini-message-container">
+                <For each={messages()}>
                   {(message, i) => {
                     if (message.type === 'userMessage') {
                       return (
@@ -494,15 +513,20 @@ export const Bot = (props: BotConfig & BotProps) => {
                     } else if (message.type === 'apiMessage') {
                       if (message.productHandle) {
                         return (
-                          <div class="twi-w-full twi-mb-4 twi-mt-20" id={`twini-message-${i()}`}>
-                            <AskMoreAboutProductBubble
-                              showViewProductButton={message.productHandle != props.shopifyProduct?.handle}
-                              productHandle={message.productHandle}
-                              product={message.productHandle == props.shopifyProduct?.handle ? props.shopifyProduct : undefined}
-                              backgroundColor={props.botMessage?.backgroundColor || 'black'}
-                              textColor={props.botMessage?.textColor}
-                            />
-                          </div>
+                          <>
+                            <Show when={i() > 0}>
+                              <div class="twi-block twi-w-full twi-h-20"></div>
+                            </Show>
+                            <div class="twi-w-full twi-mb-4" id={`twini-message-${i()}`}>
+                              <AskMoreAboutProductBubble
+                                showViewProductButton={message.productHandle != props.shopifyProduct?.handle}
+                                productHandle={message.productHandle}
+                                product={message.productHandle == props.shopifyProduct?.handle ? props.shopifyProduct : undefined}
+                                backgroundColor={props.botMessage?.backgroundColor || 'black'}
+                                textColor={props.botMessage?.textColor}
+                              />
+                            </div>
+                          </>
                         );
                       } else {
                         return (
@@ -519,7 +543,12 @@ export const Bot = (props: BotConfig & BotProps) => {
                               purchaseButtonText={props.botMessage?.purchaseButtonText}
                               purchaseButtonBackgroundColor={props.botMessage?.purchaseButtonBackgroundColor}
                               purchaseButtonTextColor={props.botMessage?.purchaseButtonTextColor}
-                              setProductHandle={props.setProductHandle as Setter<string>}
+                              setProductHandle={
+                                ((value: string) => {
+                                  props.setProductHandle(value);
+                                  setAskMoreClicked((i) => i + 1);
+                                }) as Setter<string>
+                              }
                             />
                           </div>
                         );
@@ -544,7 +573,12 @@ export const Bot = (props: BotConfig & BotProps) => {
                       purchaseButtonText={props.botMessage?.purchaseButtonText}
                       purchaseButtonBackgroundColor={props.botMessage?.purchaseButtonBackgroundColor}
                       purchaseButtonTextColor={props.botMessage?.purchaseButtonTextColor}
-                      setProductHandle={props.setProductHandle as Setter<string>}
+                      setProductHandle={
+                        ((value: string) => {
+                          props.setProductHandle(value);
+                          setAskMoreClicked((i) => i + 1);
+                        }) as Setter<string>
+                      }
                     />
                   </div>
                 </Show>
@@ -564,7 +598,7 @@ export const Bot = (props: BotConfig & BotProps) => {
                   </Show>
                 </div>
               </div>
-              <div class="twi-block twi-w-full twi-flex-1" style={{ 'min-height': `${bottomSpacerHeight() + chatSpacerHeight()}px` }}></div>
+              <div class="twi-block twi-w-full twi-flex-1" style={{ 'min-height': `${chatSpacerHeight() + bottomSpacerHeight()}px` }}></div>
             </div>
           </div>
           <Show when={error()}>
@@ -593,6 +627,7 @@ export const Bot = (props: BotConfig & BotProps) => {
             inputBorderColor={props.textInput.inputBorderColor}
             scrollToBottom={scrollToBottom}
             isLoading={isBusy}
+            isOpened={props.isOpened}
           />
         </main>
       </div>
