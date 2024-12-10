@@ -20,14 +20,14 @@ export const flerProps = (): FullBotProps => {
     shopRef: 'fler',
     starterPrompts: {
       prompts: [
-        "What makes Fler razors different from other brands?",
+        "Are Fler products suited for sensitive skin?",
         "How often can I receive new razor cartridges?",
-        "What are your suggested steps for shaving?"
+        "What are fler advantages over other razors?"
       ],
       productPagePrompts: [
-        "What's in this set?",
-        "What are your suggested steps for shaving?",
-        "Is it Nichel free?",
+        "How do I use it for optimal results?",
+        "How can I prevent irritations?",
+        "Is is suitable for sensitive skin?",
       ],
       textColor: brandColors.actionPrimaryTextColor,
       actionColor: brandColors.actionPrimary,
