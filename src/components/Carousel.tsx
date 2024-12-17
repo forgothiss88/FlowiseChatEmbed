@@ -208,7 +208,7 @@ export const SingleProductShowcase = (props: { setProductHandle: Setter<string>;
             props.setProductHandle(props.product.metadata.slug);
           }}
         >
-          <HintStars class="twi-mr-1 twi-fill-brand-action-secondary" />
+          <HintStars class="twi-mr-1 twi-fill-brand-action-primary" />
           Ask more...
         </button>
       </div>

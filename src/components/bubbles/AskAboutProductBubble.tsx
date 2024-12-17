@@ -159,7 +159,7 @@ export const AskMoreAboutProductBubble = (props: {
         }}
       >
         <span class="twi-pb-4 twi-inline-flex twi-text-sm twi-font-normal twi-text-brand-action-secondary">
-          <HintStars class="twi-mr-1 twi-fill-brand-secondary" />
+          <HintStars class="twi-mr-1 twi-fill-brand-action-primary" />
           {props.askMoreTitle || 'Asking more about...'}
         </span>
         <ProductCarousel product={product} showViewProductButton={props.showViewProductButton} />
