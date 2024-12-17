@@ -9,10 +9,9 @@ export const HintStars = (props: JSX.SvgSVGAttributes<SVGSVGElement>) => {
       width={selectedProps.width || '14'}
       height={selectedProps.height || '14'}
       viewBox="0 0 14 14"
-      class="twi-fill-brand-action-primary"
       {...otherProps}
     >
-      <g opacity="0.65">
+      <g>
         <path
           fill-rule="evenodd"
           clip-rule="evenodd"

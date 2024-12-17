@@ -22,10 +22,6 @@ export const FullBot = (props: FullBotProps & { getElement: () => HTMLElement })
           }}
         >
           <Bot
-            getElement={props.getElement}
-            bubbleButtonColor={props.theme?.button?.bubbleButtonColor ?? defaultButtonColor}
-            topbarColor={props.theme?.button?.topbarColor ?? defaultButtonColor}
-            bubbleTextColor={props.theme?.button?.iconColor ?? defaultIconColor}
             title={props.theme?.chatWindow?.title}
             titleColor={props.theme?.chatWindow?.titleColor}
             titleAvatarSrc={props.theme?.chatWindow?.titleAvatarSrc}

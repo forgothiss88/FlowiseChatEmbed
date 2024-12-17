@@ -4,7 +4,6 @@ import { Portal } from 'solid-js/web';
 import customerStyles from './assets/fler.css';
 import indexStyles from './assets/index.css';
 import ChatWithProduct from './components/ChatWithProduct';
-import { ShopifyCart } from './components/types/cart';
 import { ShopifyProduct } from './components/types/product';
 import { brandColors, flerProps } from './customers/Fler';
 import { BubbleBot } from './features/bubble';
@@ -16,8 +15,6 @@ if (!twiniChatbot) {
   console.error('Element with id "twini-chatbot" not found.');
 }
 const props = flerProps();
-// dev
-props.apiUrl = 'http://localhost:8001/twini-stream/viron-agents';
 
 const avatarShopifyCdnUrl = twiniChatbot.getAttribute('data-avatar-shopify-cdn-url');
 if (avatarShopifyCdnUrl) {
@@ -28,6 +25,7 @@ if (avatarShopifyCdnUrl) {
 } else {
   console.warn('Attribute "data-shopify-cdn-url" not found.');
 }
+
 const twiniApiUrl = twiniChatbot.getAttribute('data-twini-api-url');
 if (twiniApiUrl) {
   console.log('Twini API URL:', twiniApiUrl);
@@ -40,13 +38,6 @@ if (twiniChatbot.hasAttribute('data-product')) {
   product = JSON.parse(twiniChatbot.getAttribute('data-product') as string);
 } else {
   console.warn('Attribute "data-product" not found. Not on product page?');
-}
-
-let cart: ShopifyCart | undefined = undefined;
-if (twiniChatbot.hasAttribute('data-cart')) {
-  cart = JSON.parse(twiniChatbot.getAttribute('data-cart') as string);
-} else {
-  console.error('Attribute "data-cart" not found.');
 }
 
 // const img = document.querySelector('.page-container .swiper-container');
@@ -109,12 +100,11 @@ if (process.env.NODE_ENV == 'production') {
     productHandle={productHandle}
     setProductHandle={setProductHandle}
     shopifyProduct={product}
-    shopifyCart={cart}
     bubbleDrawerMessage={
       <span>
-        Hi there!
+        Ciao!
         <br />
-        I’m your personal shopper from Fler 🌱
+        Sono il tuo assistente personale di Fler 🌱
       </span>
     }
   />
@@ -143,7 +133,7 @@ const chatWithProductWidget = document.getElementsByTagName('twini-chat-with-pro
       summary={summary}
       setSummary={setSummary}
       shopRef={props.shopRef}
+      askMeMessage={props.askMeMessage}
     />
   </Portal>
-  ;
 </Show>;

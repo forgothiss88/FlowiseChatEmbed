@@ -50,6 +50,7 @@ module.exports = {
         'brand-secondary': 'rgb(var(--brand-secondary))',
         'brand-action-primary': 'rgb(var(--brand-action-primary))',
         'brand-action-secondary': 'rgb(var(--brand-action-secondary))',
+        'brand-action-hints': 'rgb(var(--brand-action-hints))',
         'brand-gradient': 'var(--brand-gradient)',
         'brand-gradient-reversed': 'var(--brand-gradient-reversed)',
       },
@@ -58,6 +59,7 @@ module.exports = {
         'brand-secondary': 'rgb(var(--brand-secondary-text-color))',
         'brand-action-primary': 'rgb(var(--brand-action-primary-text-color))',
         'brand-action-secondary': 'rgb(var(--brand-action-secondary-text-color))',
+        'brand-action-hints': 'rgb(var(--brand-action-hints-text-color))',
       },
       gradientColorStops: {
         brand: 'var(--brand-gradient)',

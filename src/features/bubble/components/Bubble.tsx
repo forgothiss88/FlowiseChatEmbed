@@ -26,8 +26,10 @@ export const BubbleBot = (
   let bubbleDrawerRef: HTMLDivElement | undefined;
 
   const handleClickOutside = (event: Event) => {
+    event.preventDefault();
     if (bubbleDrawerRef && !bubbleDrawerRef.contains(event.target as Node)) {
       setDrawerIsOpen(false);
+      event.stopPropagation();
     }
   };
 
@@ -56,6 +58,7 @@ export const BubbleBot = (
             closeBot={props.closeBot}
             handleSubmit={(text: string) => props.askQuestion(text)}
             nextQuestions={props.nextQuestions}
+            askMeMessage={props.askMeMessage}
           ></BubbleDrawer>
         </div>
       </Show>
@@ -86,7 +89,7 @@ export const BubbleBot = (
         }
       >
         <Bot
-          bot={botRef}
+          bot={botRef as HTMLDivElement}
           titleAvatarSrc={props.theme.chatWindow.titleAvatarSrc}
           welcomeMessage={welcomeMessage}
           poweredByTextColor={props.theme.chatWindow.poweredByTextColor}
@@ -103,7 +106,6 @@ export const BubbleBot = (
           nextQuestions={props.nextQuestions}
           setNextQuestions={props.setNextQuestions}
           setSummary={props.setSummary}
-          shopifyCart={props.shopifyCart}
           shopifyProduct={props.shopifyProduct}
           productHandle={props.productHandle}
           setProductHandle={props.setProductHandle}

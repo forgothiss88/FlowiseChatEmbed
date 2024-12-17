@@ -4,6 +4,7 @@ import { SendIcon } from './icons/SendIcon';
 import { ShopifyProduct } from './types/product';
 
 export type Props = {
+  askMeMessage?: string;
   textColor: string;
   isBotOpened: Accessor<boolean>;
   openBot: () => void;
@@ -120,7 +121,6 @@ export const ChatWithProduct = (props: Props) => {
             {(prompt, i) => (
               <HintBubble
                 class="twi-text-brand-action-secondary"
-                starsColor={props.textColor}
                 message={prompt}
                 delayMilliseconds={200 + i() * 400}
                 onClick={() => {
@@ -140,11 +140,9 @@ export const ChatWithProduct = (props: Props) => {
           }}
         >
           <span class="twi-w-full twi-text-left twi-text-sm" style={'font-weight: bold !important;'}>
-            Ask me anything...
+            {props.askMeMessage || 'Ask me anything...'}
           </span>
-          <span>
-            <SendIcon class="twi-fill-brand-action-primary" />
-          </span>
+          <SendIcon class="twi-fill-brand-action-primary" />
         </button>
       </div>
     </div>

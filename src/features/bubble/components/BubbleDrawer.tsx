@@ -10,6 +10,7 @@ export const BubbleDrawer = (props: {
   closeBot: () => void;
   drawerIsOpen: Accessor<boolean>;
   setDrawerIsOpen: Setter<boolean>;
+  askMeMessage?: string;
   openBot: () => void;
   handleSubmit: (text: string) => void;
 }) => {
@@ -42,7 +43,7 @@ export const BubbleDrawer = (props: {
               <HintBubble
                 message={prompt}
                 delayMilliseconds={200 + i() * 400}
-                class="twi-text-brand-action-secondary"
+                class="twi-text-brand-dark"
                 onClick={() => {
                   props.setDrawerIsOpen(false);
                   props.openBot();
@@ -61,10 +62,8 @@ export const BubbleDrawer = (props: {
             props.openBot();
           }}
         >
-          <span class="twi-w-full twi-text-left twi-text-sm twi-font-bold">Ask me anything...</span>
-          <span>
-            <SendIcon class="twi-fill-brand-action-primary" />
-          </span>
+          <span class="twi-w-full twi-text-left twi-text-sm twi-font-bold">{props.askMeMessage || 'Ask me anything...'}</span>
+          <SendIcon class="twi-fill-brand-action-primary" />
         </button>
       </div>
     </>

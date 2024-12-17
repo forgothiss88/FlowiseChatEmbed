@@ -104,13 +104,21 @@ export const AskMoreAboutProductBubble = (props: {
   backgroundColor: string;
   textColor?: string;
   showViewProductButton: boolean;
+  askMoreTitle?: string;
 }) => {
+  const getPriceDiscount = (tags: string[]) => {
+    console.log('Getting discount', tags);
+    // 0-1.0
+    const discountTag = tags?.find((tag) => tag.length === 2);
+    return discountTag ? (100 - Number.parseInt(discountTag)) / 100 : 1;
+  };
+
   const [product, setProduct] = createSignal<Product | undefined>(
     props.product
       ? {
           name: props.product.title,
           images: props.product.images,
-          price: Number.parseInt(props.product.price.toString()) / 100,
+          price: (Number.parseInt(props.product.price.toString()) * getPriceDiscount(props.product.tags)) / 100,
           url: props.product.url,
         }
       : undefined,
@@ -127,14 +135,14 @@ export const AskMoreAboutProductBubble = (props: {
         }
         return res.json();
       })
-      .then((p: ShopifyProduct) =>
-        setProduct({
+      .then((p: ShopifyProduct) => {
+        return setProduct({
           name: p.title,
           images: p.images,
-          price: Number.parseInt((p.price / 100).toString()),
+          price: Number.parseInt((p.price / 100).toString()) * getPriceDiscount(p.tags),
           url: p.url,
-        }),
-      )
+        });
+      })
       .catch((error) => {
         console.error('There was a problem with the fetch operation:', error);
       });
@@ -151,8 +159,8 @@ export const AskMoreAboutProductBubble = (props: {
         }}
       >
         <span class="twi-pb-4 twi-inline-flex twi-text-sm twi-font-normal twi-text-brand-action-secondary">
-          <HintStars class="twi-mr-1 twi-fill-brand-primary" />
-          Asking more about...
+          <HintStars class="twi-mr-1 twi-fill-brand-secondary" />
+          {props.askMoreTitle || 'Asking more about...'}
         </span>
         <ProductCarousel product={product} showViewProductButton={props.showViewProductButton} />
       </div>

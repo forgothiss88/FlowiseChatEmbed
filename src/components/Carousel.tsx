@@ -186,30 +186,29 @@ export const SingleProductShowcase = (props: { setProductHandle: Setter<string>;
       <div class="twi-flex twi-flex-col twi-self-center twi-h-full twi-ml-7">
         <a
           href={props.product.metadata.item_url}
-          target="_blank"
-          class="twi-animate-fade-in twi-w-full twi-rounded-md twi-my-2 twi-text-sm twi-font-normal twi-px-4 twi-py-2 twi-whitespace-nowrap twi-self-center twi-block twi-text-center"
+          class="twi-bg-brand-action-primary twi-text-brand-action-primary twi-animate-fade-in twi-w-full twi-rounded-md twi-my-2 twi-text-sm twi-font-normal twi-px-4 twi-py-2 twi-whitespace-nowrap twi-self-center twi-block twi-text-center"
           style={{
-            background: props.purchaseButtonBackgroundColor,
-            color: props.purchaseButtonTextColor,
-            'border-color': props.purchaseButtonBackgroundColor,
+            // background: props.purchaseButtonBackgroundColor,
+            // color: props.purchaseButtonTextColor,
+            // 'border-color': props.purchaseButtonBackgroundColor,
             'animation-delay': '0.5s',
           }}
         >
           {props.purchaseButtonText}
         </a>
         <button
-          class="twi-animate-fade-in twi-inline-flex twi-w-full twi-rounded-md twi-my-2 twi-text-sm twi-font-normal twi-px-4 twi-py-2 twi-whitespace-nowrap twi-cursor-pointer"
+          class="twi-bg-brand-action-secondary twi-text-brand-action-secondary twi-animate-fade-in twi-inline-flex twi-w-full twi-rounded-md twi-my-2 twi-text-sm twi-font-normal twi-px-4 twi-py-2 twi-whitespace-nowrap twi-cursor-pointer"
           style={{
-            background: props.purchaseButtonTextColor,
-            color: props.purchaseButtonBackgroundColor,
-            'border-color': props.purchaseButtonTextColor,
+            // background: props.purchaseButtonTextColor,
+            //color: props.purchaseButtonBackgroundColor,
+            //'border-color': props.purchaseButtonTextColor,
             'animation-delay': '0.5s',
           }}
           onClick={() => {
             props.setProductHandle(props.product.metadata.slug);
           }}
         >
-          <HintStars class="twi-mr-1 twi-fill-brand-action-primary" />
+          <HintStars class="twi-mr-1 twi-fill-brand-action-secondary" />
           Ask more...
         </button>
       </div>

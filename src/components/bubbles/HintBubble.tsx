@@ -13,7 +13,7 @@ export const HintBubble = (props: Props) => {
     <div class="twi-flex twi-justify-end twi-guest-container twi-w-full">
       <button
         class={
-          'twi-animate-fade-in twi-bg-brand-action-primary/10 twi-border-brand-action-primary twi-flex twi-cursor-pointer twi-items-center twi-p-2 twi-max-w-[80%] twi-rounded-l-4xl twi-rounded-tr-2xl twi-rounded-br-none twi-whitespace-pre-wrap twi-font-normal twi-text-sm twi-text-left twi-border-dashed twi-border ' +
+          'twi-animate-fade-in twi-bg-brand-action-hints/10 twi-border-brand-action-hints twi-flex twi-cursor-pointer twi-items-center twi-p-2 twi-max-w-[80%] twi-rounded-l-4xl twi-rounded-tr-2xl twi-rounded-br-none twi-whitespace-pre-wrap twi-font-normal twi-text-sm twi-text-left twi-border-dashed twi-border ' +
           props.class
         }
         onClick={props.onClick}

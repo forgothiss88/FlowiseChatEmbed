@@ -524,6 +524,7 @@ export const Bot = (props: BotConfig & BotProps) => {
                                 product={message.productHandle == props.shopifyProduct?.handle ? props.shopifyProduct : undefined}
                                 backgroundColor={props.botMessage?.backgroundColor || 'black'}
                                 textColor={props.botMessage?.textColor}
+                                askMoreTitle={props.botMessage?.askMoreTitle}
                               />
                             </div>
                           </>
@@ -587,7 +588,7 @@ export const Bot = (props: BotConfig & BotProps) => {
                     <For each={props.nextQuestions().toSorted((a, b) => b.length - a.length)}>
                       {(prompt, i) => (
                         <HintBubble
-                          class="twi-text-brand-dark twi-bg-brand-action-primary/10"
+                          class="twi-text-brand-dark"
                           starsColor={props.starterPrompts.actionColor}
                           message={prompt}
                           onClick={() => handleSubmit(prompt)}

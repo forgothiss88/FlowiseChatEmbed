@@ -20,20 +20,21 @@ export const flerProps = (): FullBotProps => {
     shopRef: 'fler',
     starterPrompts: {
       prompts: [
-        "Are Fler products suited for sensitive skin?",
-        "How often can I receive new razor cartridges?",
-        "What are fler advantages over other razors?"
+        "Posso comprare le lamette senza abbonamento?",
+        "Come posso prevenire irritazioni e peli incarniti?",
+        "Quali sono i vantaggi del rasoio Fler rispetto ai rasoi usa e getta?"
       ],
       productPagePrompts: [
-        "How do I use it for optimal results?",
-        "How can I prevent irritations?",
-        "Is is suitable for sensitive skin?",
+        "Va bene anche per pelli sensibili?",
+        "È adatto anche agli uomini?",
+        "Come si usa questo prodotto per risultati ottimali?"
       ],
       textColor: brandColors.actionPrimaryTextColor,
       actionColor: brandColors.actionPrimary,
       backgroundColor: brandColors.hintsBackgroundColor,
       borderColor: brandColors.gradient,
     },
+    askMeMessage: 'Chiedimi quello che vuoi...',
     theme: {
       button: {
         topbarColor: brandColors.primary,
@@ -45,13 +46,13 @@ export const flerProps = (): FullBotProps => {
         title: '',
         titleAvatarSrc: '/public/avatars/viron.png',
         titleColor: brandColors.primary,
-        welcomeMessage: 'Hey there!\nI’m your personal shopper from Fler 🌱',
-        templateWelcomeMessageOnProductPage: 'Hey there 🌱\nI’m here to help you with the **{{product}}**. How can I help you?',
+        welcomeMessage: 'Ciao!\nSono il tuo shopper personale di Fler 🌱',
+        templateWelcomeMessageOnProductPage: 'Eccomi!\nChiedimi quello che vuoi su **{{product}}**. Come posso aiutarti?',
         backgroundColor: 'rgba(255, 255, 255, 0.65)',
         poweredByTextColor: '#333333',
         firstMessage: undefined,
         textInput: {
-          placeholder: 'Ask me anything...',
+          placeholder: 'Scrivi qui...',
           inputBackgroundColor: '#F9F9F9',
           inputBorderColor: '#e5e5e5',
           backgroundColor: 'white',

@@ -27,7 +27,7 @@ export const vironProps = (): FullBotProps => {
       productPagePrompts: [
         "How do they fit?",
         "Can you tell me more about the material? ",
-        "Are they good for winter?",
+        "How do I take care of these?",
       ],
       textColor: brandColors.actionPrimaryTextColor,
       actionColor: brandColors.actionPrimary,

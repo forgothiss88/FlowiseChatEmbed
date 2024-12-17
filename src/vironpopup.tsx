@@ -4,7 +4,6 @@ import { Portal } from 'solid-js/web';
 import indexStyles from './assets/index.css';
 import customerStyles from './assets/viron.css';
 import ChatWithProduct from './components/ChatWithProduct';
-import { ShopifyCart } from './components/types/cart';
 import { ShopifyProduct } from './components/types/product';
 import { brandColors, vironProps } from './customers/Viron';
 import { BubbleBot } from './features/bubble';
@@ -16,8 +15,6 @@ if (!twiniChatbot) {
   console.error('Element with id "twini-chatbot" not found.');
 }
 const props = vironProps();
-// dev
-props.apiUrl = 'http://localhost:8001/twini-stream/viron-agents';
 
 const avatarShopifyCdnUrl = twiniChatbot.getAttribute('data-avatar-shopify-cdn-url');
 if (avatarShopifyCdnUrl) {
@@ -41,14 +38,6 @@ if (twiniChatbot.hasAttribute('data-product')) {
 } else {
   console.warn('Attribute "data-product" not found. Not on product page?');
 }
-
-let cart: ShopifyCart | undefined = undefined;
-if (twiniChatbot.hasAttribute('data-cart')) {
-  cart = JSON.parse(twiniChatbot.getAttribute('data-cart') as string);
-} else {
-  console.error('Attribute "data-cart" not found.');
-}
-
 // const img = document.querySelector('.page-container .swiper-container');
 
 const [isBotOpened, setIsBotOpened] = createSignal(false);
@@ -109,7 +98,6 @@ if (process.env.NODE_ENV == 'production') {
     productHandle={productHandle}
     setProductHandle={setProductHandle}
     shopifyProduct={product}
-    shopifyCart={cart}
     bubbleDrawerMessage={
       <span>
         Hi there!
@@ -132,10 +120,7 @@ const chatWithProductWidget = document.getElementsByTagName('twini-chat-with-pro
       isBotOpened={isBotOpened}
       openBot={openBot}
       textColor={brandColors.actionPrimary}
-      backgroundColor={brandColors.secondary}
-      hintsBackgroundColor={brandColors.hintsBackgroundColor}
-      hintsBorderColor={brandColors.gradient}
-      product={product} // is defined when on product page
+      product={product as ShopifyProduct} // is defined when on product page
       productHandle={productHandle}
       setProductHandle={setProductHandle}
       askQuestion={askQuestion}
@@ -145,5 +130,4 @@ const chatWithProductWidget = document.getElementsByTagName('twini-chat-with-pro
       shopRef={props.shopRef}
     />
   </Portal>
-  ;
 </Show>;
