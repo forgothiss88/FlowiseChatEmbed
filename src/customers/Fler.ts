@@ -20,21 +20,20 @@ export const flerProps = (): FullBotProps => {
     shopRef: 'fler',
     starterPrompts: {
       prompts: [
-        "Posso comprare le lamette senza abbonamento?",
-        "Come posso prevenire irritazioni e peli incarniti?",
-        "Quali sono i vantaggi del rasoio Fler rispetto ai rasoi usa e getta?"
+        "Cosa rende Fler diverso dagli altri?",
+        "Quanto costa la spedizione?",
+        "Consigliami un prodotto"
       ],
       productPagePrompts: [
-        "Va bene anche per pelli sensibili?",
-        "È adatto anche agli uomini?",
-        "Come si usa questo prodotto per risultati ottimali?"
+        "Come funziona l’abbonamento?",
+        "È adatto per pelli sensibili?",
+        "Quanto dura una lametta?"
       ],
       textColor: brandColors.actionPrimaryTextColor,
       actionColor: brandColors.actionPrimary,
       backgroundColor: brandColors.hintsBackgroundColor,
       borderColor: brandColors.gradient,
     },
-    askMeMessage: 'Chiedimi quello che vuoi...',
     theme: {
       button: {
         topbarColor: brandColors.primary,
@@ -46,8 +45,8 @@ export const flerProps = (): FullBotProps => {
         title: '',
         titleAvatarSrc: '/public/avatars/viron.png',
         titleColor: brandColors.primary,
-        welcomeMessage: 'Ciao!\nSono il tuo shopper personale di Fler 🌱',
-        templateWelcomeMessageOnProductPage: 'Eccomi!\nChiedimi quello che vuoi su **{{product}}**. Come posso aiutarti?',
+        welcomeMessage: 'Ciao!\nSono il tuo personal shopper 🪒',
+        templateWelcomeMessageOnProductPage: 'Eccomi!\nChiedimiw di più su **{{product}}**. Come posso aiutarti?',
         backgroundColor: 'rgba(255, 255, 255, 0.65)',
         poweredByTextColor: '#333333',
         firstMessage: undefined,
@@ -65,7 +64,8 @@ export const flerProps = (): FullBotProps => {
           textColor: brandColors.primary,
           showAvatar: false,
           enableMultipricing: false,
-          purchaseButtonText: 'View product',
+          purchaseButtonText: 'Vai al prodotto',
+          askMoreText: 'Chiedi di più...',
           purchaseButtonBackgroundColor: brandColors.actionPrimary,
           purchaseButtonTextColor: brandColors.primaryTextColor,
           faviconUrl: '/public/avatars/fler.png',

@@ -61,7 +61,6 @@ export type BotProps = {
 
 export type FullBotProps = BotConfig & BubbleParams & BrandProps & {
   bubbleDrawerMessage: JSXElement;
-  askMeMessage: string;
 };
 
 export type messageType = 'apiMessage' | 'userMessage' | 'usermessagewaiting';

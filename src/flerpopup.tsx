@@ -5,6 +5,7 @@ import customerStyles from './assets/fler.css';
 import indexStyles from './assets/index.css';
 import ChatWithProduct from './components/ChatWithProduct';
 import { ShopifyProduct } from './components/types/product';
+import { CustomerProvider } from './context';
 import { brandColors, flerProps } from './customers/Fler';
 import { BubbleBot } from './features/bubble';
 import { isMobile } from './utils/isMobileSignal';
@@ -86,28 +87,30 @@ if (process.env.NODE_ENV == 'production') {
     {indexStyles}
     {customerStyles}
   </style>
-  <BubbleBot
-    {...props}
-    customerName={props.shopRef}
-    isBotOpened={isBotOpened}
-    openBot={openBot}
-    closeBot={closeBot}
-    question={question}
-    askQuestion={askQuestion}
-    nextQuestions={nextQuestions}
-    setNextQuestions={setNextQuestions}
-    setSummary={setSummary}
-    productHandle={productHandle}
-    setProductHandle={setProductHandle}
-    shopifyProduct={product}
-    bubbleDrawerMessage={
-      <span>
-        Ciao!
-        <br />
-        Sono il tuo assistente personale di Fler 🌱
-      </span>
-    }
-  />
+  <CustomerProvider {...props}>
+    <BubbleBot
+      {...props}
+      customerName={props.shopRef}
+      isBotOpened={isBotOpened}
+      openBot={openBot}
+      closeBot={closeBot}
+      question={question}
+      askQuestion={askQuestion}
+      nextQuestions={nextQuestions}
+      setNextQuestions={setNextQuestions}
+      setSummary={setSummary}
+      productHandle={productHandle}
+      setProductHandle={setProductHandle}
+      shopifyProduct={product}
+      bubbleDrawerMessage={
+        <span>
+          Ciao!
+          <br />
+          Sono il tuo personal shopper 🪒
+        </span>
+      }
+    />
+  </CustomerProvider>
 </Portal>;
 
 const chatWithProductWidget = document.getElementsByTagName('twini-chat-with-product')[0];
@@ -118,22 +121,24 @@ const chatWithProductWidget = document.getElementsByTagName('twini-chat-with-pro
       {indexStyles}
       {customerStyles}
     </style>
-    <ChatWithProduct
-      isBotOpened={isBotOpened}
-      openBot={openBot}
-      textColor={brandColors.actionPrimary}
-      backgroundColor={brandColors.secondary}
-      hintsBackgroundColor={brandColors.hintsBackgroundColor}
-      hintsBorderColor={brandColors.gradient}
-      product={product} // is defined when on product page
-      productHandle={productHandle}
-      setProductHandle={setProductHandle}
-      askQuestion={askQuestion}
-      nextQuestions={nextQuestions}
-      summary={summary}
-      setSummary={setSummary}
-      shopRef={props.shopRef}
-      askMeMessage={props.askMeMessage}
-    />
+    <CustomerProvider {...props}>
+      <ChatWithProduct
+        isBotOpened={isBotOpened}
+        openBot={openBot}
+        textColor={brandColors.actionPrimary}
+        backgroundColor={brandColors.secondary}
+        hintsBackgroundColor={brandColors.hintsBackgroundColor}
+        hintsBorderColor={brandColors.gradient}
+        product={product} // is defined when on product page
+        productHandle={productHandle}
+        setProductHandle={setProductHandle}
+        askQuestion={askQuestion}
+        nextQuestions={nextQuestions}
+        summary={summary}
+        setSummary={setSummary}
+        shopRef={props.shopRef}
+        askMeMessage={props.theme.chatWindow.botMessage.askMoreText}
+      />
+    </CustomerProvider>
   </Portal>
 </Show>;

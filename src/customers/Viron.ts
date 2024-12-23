@@ -20,13 +20,13 @@ export const vironProps = (): FullBotProps => {
     shopRef: 'viron',
     starterPrompts: {
       prompts: [
-        "Do you have any shoes for this winter?",
-        "What makes your shoes sustainable?",
-        "Do you offer international shipping?"
+        "Tell me more about Virón",
+        "What size should I take?",
+        "Do you have any shoes for winter?"
       ],
       productPagePrompts: [
         "How do they fit?",
-        "Can you tell me more about the material? ",
+        "Tell me more about the materials",
         "How do I take care of these?",
       ],
       textColor: brandColors.actionPrimaryTextColor,
@@ -45,7 +45,7 @@ export const vironProps = (): FullBotProps => {
         title: '',
         titleAvatarSrc: '/public/avatars/viron.png',
         titleColor: brandColors.primary,
-        welcomeMessage: 'Hey there!\nI’m your personal shopper from Virón 🌱',
+        welcomeMessage: 'Welcome to Virón 🌱.\nHow can I assist you today?',
         templateWelcomeMessageOnProductPage: 'Hey there 🌱\nI’m here to help you with the **{{product}}**. How can I help you?',
         backgroundColor: 'rgba(255, 255, 255, 0.65)',
         poweredByTextColor: '#333333',

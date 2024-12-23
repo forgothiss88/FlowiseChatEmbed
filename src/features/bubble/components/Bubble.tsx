@@ -58,7 +58,7 @@ export const BubbleBot = (
             closeBot={props.closeBot}
             handleSubmit={(text: string) => props.askQuestion(text)}
             nextQuestions={props.nextQuestions}
-            askMeMessage={props.askMeMessage}
+            askMeMessage={props.theme.chatWindow.botMessage.askMoreText}
           ></BubbleDrawer>
         </div>
       </Show>

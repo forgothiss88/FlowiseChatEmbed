@@ -10,7 +10,7 @@ export const BubbleDrawer = (props: {
   closeBot: () => void;
   drawerIsOpen: Accessor<boolean>;
   setDrawerIsOpen: Setter<boolean>;
-  askMeMessage?: string;
+  askMeMessage: string;
   openBot: () => void;
   handleSubmit: (text: string) => void;
 }) => {
@@ -62,7 +62,7 @@ export const BubbleDrawer = (props: {
             props.openBot();
           }}
         >
-          <span class="twi-w-full twi-text-left twi-text-sm twi-font-bold">{props.askMeMessage || 'Ask me anything...'}</span>
+          <span class="twi-w-full twi-text-left twi-text-sm twi-font-bold">{props.askMeMessage}</span>
           <SendIcon class="twi-fill-brand-action-primary" />
         </button>
       </div>

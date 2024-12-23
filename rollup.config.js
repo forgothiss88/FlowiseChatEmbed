@@ -20,6 +20,8 @@ const env = process.env.NODE_ENV || 'local';
 console.log('serveFiles', serveFiles);
 console.log('env', env);
 
+const customerSuffix = env === 'development' || env === 'local' ? '-dev' : '';
+
 const randomPort = 12345;
 
 const servePlugins = () => [
@@ -69,7 +71,7 @@ const configs = [
     input: './src/vironpopup.tsx',
     output: {
       sourcemap: true,
-      file: 'dist/vironpopup.js',
+      file: `dist/viron${customerSuffix}.js`,
       format: 'es',
     },
     plugins: pluginsConfig(serveFiles),
@@ -78,7 +80,7 @@ const configs = [
     input: './src/flerpopup.tsx',
     output: {
       sourcemap: true,
-      file: 'dist/flerpopup.js',
+      file: `dist/fler${customerSuffix}.js`,
       format: 'es',
     },
     plugins: pluginsConfig(serveFiles),

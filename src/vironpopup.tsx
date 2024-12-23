@@ -5,6 +5,7 @@ import indexStyles from './assets/index.css';
 import customerStyles from './assets/viron.css';
 import ChatWithProduct from './components/ChatWithProduct';
 import { ShopifyProduct } from './components/types/product';
+import { CustomerProvider } from './context';
 import { brandColors, vironProps } from './customers/Viron';
 import { BubbleBot } from './features/bubble';
 import { isMobile } from './utils/isMobileSignal';
@@ -73,6 +74,9 @@ if (process.env.NODE_ENV == 'production') {
     tracesSampleRate: 1.0, //  Capture 100% of the transactions
     // Set 'tracePropagationTargets' to control for which URLs distributed tracing should be enabled
     tracePropagationTargets: ['localhost', /^https:\/\/twini-be-production\.up\.railway\.app/],
+    // set allow url with a regex pattern grabbing the domain and the filename of the script
+    // https://cdn.shopify.com/extensions/cfc2d806-0be7-4192-93af-058ab641220c/twini-for-viron-207/assets/viron.js
+    // allowUrls: [/^https:\/\/cdn\.shopify\.com\/extensions\/[a-f0-9-]+\/[a-f0-9-]+\/assets\/viron\.js/],
     // Session Replay
     replaysSessionSampleRate: 1.0, // This sets the sample rate at 10%. You may want to change it to 100% while in development and then sample at a lower rate in production.
     replaysOnErrorSampleRate: 1.0, // If you're not already sampling the entire session, change the sample rate to 100% when sampling sessions where errors occur.
@@ -84,28 +88,30 @@ if (process.env.NODE_ENV == 'production') {
     {indexStyles}
     {customerStyles}
   </style>
-  <BubbleBot
-    {...props}
-    customerName={props.shopRef}
-    isBotOpened={isBotOpened}
-    openBot={openBot}
-    closeBot={closeBot}
-    question={question}
-    askQuestion={askQuestion}
-    nextQuestions={nextQuestions}
-    setNextQuestions={setNextQuestions}
-    setSummary={setSummary}
-    productHandle={productHandle}
-    setProductHandle={setProductHandle}
-    shopifyProduct={product}
-    bubbleDrawerMessage={
-      <span>
-        Hi there!
-        <br />
-        I’m your personal shopper from Viron 🌱
-      </span>
-    }
-  />
+  <CustomerProvider {...props}>
+    <BubbleBot
+      {...props}
+      customerName={props.shopRef}
+      isBotOpened={isBotOpened}
+      openBot={openBot}
+      closeBot={closeBot}
+      question={question}
+      askQuestion={askQuestion}
+      nextQuestions={nextQuestions}
+      setNextQuestions={setNextQuestions}
+      setSummary={setSummary}
+      productHandle={productHandle}
+      setProductHandle={setProductHandle}
+      shopifyProduct={product}
+      bubbleDrawerMessage={
+        <span>
+          Hi there!
+          <br />
+          Welcome to Viron 🌱 How can I assist you today?
+        </span>
+      }
+    />
+  </CustomerProvider>
 </Portal>;
 
 const chatWithProductWidget = document.getElementsByTagName('twini-chat-with-product')[0];

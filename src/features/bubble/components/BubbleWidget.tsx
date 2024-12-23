@@ -1,7 +1,7 @@
 export const BubbleWidget = (props: { onClick: () => void; customerName: string }) => {
   if (props.customerName === 'fler') {
     return (
-      <svg width="172" height="172" viewBox="0 0 172 172" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <svg width="138" height="138" viewBox="0 0 172 172" fill="none" xmlns="http://www.w3.org/2000/svg">
         <g filter="url(#filter0_dd_2524_2478)">
           <circle cx="86" cy="82" r="30" fill="#EFEFEF" />
           <circle cx="86" cy="82" r="30" stroke="url(#paint0_linear_2524_2478)" stroke-width="2" />

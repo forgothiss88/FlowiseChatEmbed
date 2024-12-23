@@ -456,12 +456,7 @@ export const Bot = (props: BotConfig & BotProps) => {
   });
 
   return (
-    <div
-      class="twi-relative twi-flex twi-flex-col twi-z-0 twi-h-full twi-w-full twi-overflow-hidden"
-      style={{
-        'font-family': 'Poppins, sans-serif',
-      }}
-    >
+    <div class="twi-relative twi-flex twi-flex-col twi-z-0 twi-h-full twi-w-full twi-overflow-hidden">
       <div class="twi-relative twi-flex twi-h-full twi-w-full twi-flex-1 twi-flex-col twi-overflow-hidden">
         <div class="twi-flex twi-w-full twi-items-center twi-justify-center twi-overflow-hidden"></div>
         <main class="twi-relative twi-h-full twi-w-full twi-flex-1 twi-overflow-hidden">
@@ -524,7 +519,7 @@ export const Bot = (props: BotConfig & BotProps) => {
                                 product={message.productHandle == props.shopifyProduct?.handle ? props.shopifyProduct : undefined}
                                 backgroundColor={props.botMessage?.backgroundColor || 'black'}
                                 textColor={props.botMessage?.textColor}
-                                askMoreTitle={props.botMessage?.askMoreTitle}
+                                askMoreText={props.botMessage?.askMoreText}
                               />
                             </div>
                           </>

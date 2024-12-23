@@ -1,5 +1,7 @@
+import { accessFullBotProps } from '@/context';
 import { Accessor, createEffect, createSignal, Index, JSX, on, onMount, Show, splitProps } from 'solid-js';
 import { HintStars } from '../icons/HintStars';
+import { FullBotProps } from '../types/botprops';
 import { ShopifyProduct } from '../types/product';
 
 const defaultTextColor = '#303235';
@@ -23,6 +25,8 @@ export type ProductCarouselProps = {
 
 export const ProductCarousel = (props: ProductCarouselProps) => {
   const [loadedImg, setLoadedImg] = createSignal<boolean[]>([]);
+
+  const botConfig: FullBotProps = accessFullBotProps();
 
   createEffect(
     on(
@@ -82,7 +86,7 @@ export const ProductCarousel = (props: ProductCarouselProps) => {
         >
           <div>
             <span class="twi-text-base twi-block twi-font-medium twi-text-brand-primary">{props.product()?.name}</span>
-            <span class="twi-text-sm twi-mt-2 twi-block twi-text-brand-primary">{props.product()?.price}€</span>
+            <span class="twi-text-sm twi-mt-2 twi-block twi-text-brand-primary">{props.product()?.price.toFixed(2)}€</span>
           </div>
         </Show>
         <Show when={props.showViewProductButton}>
@@ -90,7 +94,7 @@ export const ProductCarousel = (props: ProductCarouselProps) => {
             href={props.product()?.url}
             class="twi-bg-brand-action-primary twi-text-brand-action-primary twi-rounded-md twi-mt-auto twi-text-sm twi-font-normal twi-px-4 twi-py-2 twi-whitespace-nowrap twi-self-center twi-block twi-text-center"
           >
-            View product
+            {botConfig.theme.chatWindow.botMessage.purchaseButtonText}
           </a>
         </Show>
       </div>
@@ -104,13 +108,20 @@ export const AskMoreAboutProductBubble = (props: {
   backgroundColor: string;
   textColor?: string;
   showViewProductButton: boolean;
-  askMoreTitle?: string;
+  askMoreText?: string;
 }) => {
-  const getPriceDiscount = (tags: string[]) => {
-    console.log('Getting discount', tags);
-    // 0-1.0
-    const discountTag = tags?.find((tag) => tag.length === 2);
-    return discountTag ? (100 - Number.parseInt(discountTag)) / 100 : 1;
+  const botConfig: FullBotProps = accessFullBotProps();
+
+  const getPriceWithDiscount = (product: ShopifyProduct) => {
+    // apply discount only for viron shop
+
+    if (botConfig.shopRef != 'viron') {
+      return product.price / 100; // price is in cents
+    }
+
+    const discountTag = product.tags?.find((tag) => tag.length === 2); // will be 50 for 50% discount
+    const percDiscount = discountTag ? (100 - Number.parseInt(discountTag)) / 100 : 1; // 0. - 1.
+    return (product.price * percDiscount) / 100; // price is in cents
   };
 
   const [product, setProduct] = createSignal<Product | undefined>(
@@ -118,7 +129,7 @@ export const AskMoreAboutProductBubble = (props: {
       ? {
           name: props.product.title,
           images: props.product.images,
-          price: (Number.parseInt(props.product.price.toString()) * getPriceDiscount(props.product.tags)) / 100,
+          price: getPriceWithDiscount(props.product),
           url: props.product.url,
         }
       : undefined,
@@ -128,7 +139,9 @@ export const AskMoreAboutProductBubble = (props: {
     if (props.product != null) {
       return;
     }
-    fetch(`/products/${props.productHandle}.js`)
+    const baseUrl = botConfig.shopRef == 'fler' ? `/it/products` : `/products`;
+
+    fetch(`${baseUrl}/${props.productHandle}.js`)
       .then((res) => {
         if (!res.ok) {
           throw new Error('Network response was not ok');
@@ -139,7 +152,7 @@ export const AskMoreAboutProductBubble = (props: {
         return setProduct({
           name: p.title,
           images: p.images,
-          price: Number.parseInt((p.price / 100).toString()) * getPriceDiscount(p.tags),
+          price: getPriceWithDiscount(p),
           url: p.url,
         });
       })
@@ -160,7 +173,7 @@ export const AskMoreAboutProductBubble = (props: {
       >
         <span class="twi-pb-4 twi-inline-flex twi-text-sm twi-font-normal twi-text-brand-action-secondary">
           <HintStars class="twi-mr-1 twi-fill-brand-action-primary" />
-          {props.askMoreTitle || 'Asking more about...'}
+          {props.askMoreText || 'Asking more about...'}
         </span>
         <ProductCarousel product={product} showViewProductButton={props.showViewProductButton} />
       </div>

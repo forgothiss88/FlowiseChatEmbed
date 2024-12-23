@@ -4,7 +4,7 @@ import { SendIcon } from './icons/SendIcon';
 import { ShopifyProduct } from './types/product';
 
 export type Props = {
-  askMeMessage?: string;
+  askMeMessage: string;
   textColor: string;
   isBotOpened: Accessor<boolean>;
   openBot: () => void;
@@ -140,7 +140,7 @@ export const ChatWithProduct = (props: Props) => {
           }}
         >
           <span class="twi-w-full twi-text-left twi-text-sm" style={'font-weight: bold !important;'}>
-            {props.askMeMessage || 'Ask me anything...'}
+            {props.askMeMessage}
           </span>
           <SendIcon class="twi-fill-brand-action-primary" />
         </button>

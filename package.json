@@ -14,6 +14,7 @@
     "dev": "NODE_ENV=local rollup --watch --config rollup.config.js",
     "live": "SERVE=true NODE_ENV=local rollup --watch --config rollup.config.js",
     "build": "NODE_ENV=production rollup --config rollup.config.js",
+    "build-dev": "NODE_ENV=development rollup --config rollup.config.js",
     "lint": "eslint \"src/**/*.ts*\"",
     "lint-fix": "eslint --fix \"src/**/*.ts*\"",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,md,mdx}\"",
