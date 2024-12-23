@@ -18,3 +18,11 @@
   --brand-ai-box-shadow-2: 0px 10px 20px 5px rgba(0, 191, 125, 0.2);
   --brand-ai-drop-shadow-2: 0px 10px 20px rgba(0, 191, 125, 0.2);
 }
+
+.twini-base .twi-text-sm {
+  font-size: 12px;
+  line-height: 18px;
+}
+.twini-base {
+  font-family: 'Poppins';
+}

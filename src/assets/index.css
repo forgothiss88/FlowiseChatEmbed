@@ -91,30 +91,6 @@
   animation-delay: 0s;
 }
 
-.twini-base .twi-text-jost {
-  font-family: 'Jost';
-}
-
-.twini-base .twi-text-poppins {
-  font-family: 'Poppins';
-}
-
-.twini-base a,
-.twini-base p,
-.twini-base span,
-.twini-base button,
-.twini-base h1,
-.twini-base h2,
-.twini-base h3,
-.twini-base h4,
-.twini-base h5,
-.twini-base h6,
-.twini-base li,
-.twini-base input,
-.twini-base textarea {
-  font-family: 'Poppins';
-}
-
 .twini-base a,
 .twini-base p,
 .twini-base span,
@@ -122,11 +98,6 @@
 .twini-base textarea {
   font-weight: 400;
   margin: 0;
-}
-
-.twini-base .twi-text-sm {
-  font-size: 12px;
-  line-height: 18px;
 }
 
 .twini-base .twi-shadow-brand-ai {

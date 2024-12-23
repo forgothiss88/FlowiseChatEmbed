@@ -3,12 +3,12 @@
   --brand-primary-text-color: 51 51 51;
   --brand-secondary: 51 51 51;
   --brand-secondary-text-color: 255 255 255;
-  --brand-action-hints: 207 90 46;
+  --brand-action-hints: 208 90 46;
   --brand-action-hints-text-color: 51 51 51;
-  --brand-action-primary: 207 90 46;
+  --brand-action-primary: 208 90 46;
   --brand-action-primary-text-color: 255 255 255;
   --brand-action-secondary: 255 255 255;
-  --brand-action-secondary-text-color: 207 90 46;
+  --brand-action-secondary-text-color: 208 90 46;
   --brand-gradient-step-1: 226 81 27;
   --brand-gradient-step-2: 146 63 32;
   --brand-gradient: linear-gradient(90deg, rgb(var(--brand-gradient-step-1)) 0%, rgb(var(--brand-gradient-step-2)) 100%);
@@ -17,4 +17,8 @@
   --brand-ai-drop-shadow-1: 0px 4px 50px rgba(146, 63, 32, 0.4);
   --brand-ai-box-shadow-2: 0px 10px 20px 5px rgba(226, 81, 27, 0.2);
   --brand-ai-drop-shadow-2: 0px 10px 20px rgba(226, 81, 27, 0.2);
+}
+
+.twini-base {
+  font-family: 'Raleway';
 }
