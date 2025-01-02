@@ -82,40 +82,42 @@ if (process.env.NODE_ENV == 'production') {
   });
 }
 
-<Portal mount={twiniChatbot} useShadow={true}>
-  <style>
-    {indexStyles}
-    {customerStyles}
-  </style>
-  <CustomerProvider {...props}>
-    <BubbleBot
-      {...props}
-      customerName={props.shopRef}
-      isBotOpened={isBotOpened}
-      openBot={openBot}
-      closeBot={closeBot}
-      question={question}
-      askQuestion={askQuestion}
-      nextQuestions={nextQuestions}
-      setNextQuestions={setNextQuestions}
-      setSummary={setSummary}
-      productHandle={productHandle}
-      setProductHandle={setProductHandle}
-      shopifyProduct={product}
-      bubbleDrawerMessage={
-        <span>
-          Ciao!
-          <br />
-          Sono il tuo personal shopper 🪒
-        </span>
-      }
-    />
-  </CustomerProvider>
-</Portal>;
+<Show when={window.location.pathname.startsWith('/it')}>
+  <Portal mount={twiniChatbot} useShadow={true}>
+    <style>
+      {indexStyles}
+      {customerStyles}
+    </style>
+    <CustomerProvider {...props}>
+      <BubbleBot
+        {...props}
+        customerName={props.shopRef}
+        isBotOpened={isBotOpened}
+        openBot={openBot}
+        closeBot={closeBot}
+        question={question}
+        askQuestion={askQuestion}
+        nextQuestions={nextQuestions}
+        setNextQuestions={setNextQuestions}
+        setSummary={setSummary}
+        productHandle={productHandle}
+        setProductHandle={setProductHandle}
+        shopifyProduct={product}
+        bubbleDrawerMessage={
+          <span>
+            Ciao!
+            <br />
+            Sono Twini, il tuo personal shopper Fler 🪒
+          </span>
+        }
+      />
+    </CustomerProvider>
+  </Portal>
+</Show>;
 
 const chatWithProductWidget = document.getElementsByTagName('twini-chat-with-product')[0];
 
-<Show when={chatWithProductWidget && product}>
+<Show when={chatWithProductWidget && product && window.location.pathname.startsWith('/it')}>
   <Portal mount={chatWithProductWidget} useShadow={true}>
     <style>
       {indexStyles}
