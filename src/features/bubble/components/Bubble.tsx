@@ -92,6 +92,7 @@ export const BubbleBot = (
           bot={botRef as HTMLDivElement}
           titleAvatarSrc={props.theme.chatWindow.titleAvatarSrc}
           welcomeMessage={welcomeMessage}
+          templateWelcomeMessageOnProductPage={props.theme.chatWindow.templateWelcomeMessageOnProductPage}
           poweredByTextColor={props.theme.chatWindow.poweredByTextColor}
           textInput={props.theme.chatWindow.textInput}
           botMessage={props.theme.chatWindow.botMessage}

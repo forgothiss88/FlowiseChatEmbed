@@ -389,7 +389,7 @@ export const Bot = (props: BotConfig & BotProps) => {
         ...messages(),
         {
           type: 'apiMessage',
-          message: `Let's talk about this product: ${handle}`,
+          message: props.templateWelcomeMessageOnProductPage.replace('{{product}}', handle),
           nextQuestions: [...(lastMsg.nextQuestions || props.starterPrompts.productPagePrompts)],
           productHandle: handle,
           temporary: true,

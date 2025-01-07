@@ -46,7 +46,7 @@ export const flerProps = (): FullBotProps => {
         titleAvatarSrc: '/public/avatars/viron.png',
         titleColor: brandColors.primary,
         welcomeMessage: 'Ciao!\nSono il tuo personal shopper 🪒',
-        templateWelcomeMessageOnProductPage: 'Eccomi!\nChiedimiw di più su **{{product}}**. Come posso aiutarti?',
+        templateWelcomeMessageOnProductPage: 'Eccomi!\nChiedimi di più su **{{product}}**. Come posso aiutarti?',
         backgroundColor: 'rgba(255, 255, 255, 0.65)',
         poweredByTextColor: '#333333',
         firstMessage: undefined,

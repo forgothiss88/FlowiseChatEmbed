@@ -53,6 +53,7 @@ export type BotProps = {
   setProductHandle: Setter<string>;
   setSummary: Setter<string>;
   welcomeMessage: string;
+  templateWelcomeMessageOnProductPage: string;
   shopifyProduct?: ShopifyProduct;
   bot: HTMLDivElement;
   isOpened: Accessor<boolean>;
