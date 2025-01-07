@@ -82,7 +82,28 @@ if (process.env.NODE_ENV == 'production') {
   });
 }
 
-<Show when={window.location.pathname.startsWith('/it')}>
+const ignoredUrls = [
+  '/it/pages/contatti',
+  '/it/pages/loyalty',
+  '/it/pages/rewards',
+  '/it/pages/blog',
+  '/it/pages/store-locator-fler',
+  '/it/account/',
+  '/it/account/login',
+  '/a/loop_subscriptions/get-subscription-link',
+  '/it/policies/privacy-policy',
+  '/it/pages/cookie-policy',
+  '/it/policies/terms-of-service',
+  '/it/cart',
+];
+
+const isUrlIgnored = () => {
+  return (
+    !window.location.pathname.startsWith('/it') || window.location.pathname.startsWith('/it/lp') || ignoredUrls.includes(window.location.pathname)
+  );
+};
+
+<Show when={!isUrlIgnored()}>
   <Portal mount={twiniChatbot} useShadow={true}>
     <style>
       {indexStyles}
@@ -117,7 +138,7 @@ if (process.env.NODE_ENV == 'production') {
 
 const chatWithProductWidget = document.getElementsByTagName('twini-chat-with-product')[0];
 
-<Show when={chatWithProductWidget && product && window.location.pathname.startsWith('/it')}>
+<Show when={!isUrlIgnored() && chatWithProductWidget && product}>
   <Portal mount={chatWithProductWidget} useShadow={true}>
     <style>
       {indexStyles}
