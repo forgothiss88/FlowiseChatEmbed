@@ -86,7 +86,8 @@ export const ChatWithProduct = (props: Props) => {
         props.productHandle() == props.product.handle
       ) {
         console.debug('Writing summary to product description');
-        summaryParagraph.innerHTML = '<br/>';
+        // summaryParagraph.innerHTML = '<br/>';
+        summaryParagraph.innerHTML = '';
         writeTo(summaryParagraph, props.summary());
       } else {
         console.debug('Not writing summary to product description');
@@ -109,7 +110,7 @@ export const ChatWithProduct = (props: Props) => {
           'line-height': 'inherit',
         }}
       >
-        <br />
+        {/* <br /> */}
         {onMountSummary()}
       </p>
       <Show when={onMountSummary() || props.summary()}>
