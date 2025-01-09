@@ -45,7 +45,7 @@ export const flerProps = (): FullBotProps => {
         title: '',
         titleAvatarSrc: '/public/avatars/viron.png',
         titleColor: brandColors.primary,
-        welcomeMessage: 'Ciao!\nSono il tuo personal shopper 🪒',
+        welcomeMessage: 'Ciao!\nSono Twini, il tuo personal shopper Fler 🪒\nSto ancora imparando, ma posso già rispondere alle tue domande e aiutarti a scegliere il prodotto più adatto a te 🧡',
         templateWelcomeMessageOnProductPage: 'Eccomi!\nChiedimi di più su **{{product}}**. Come posso aiutarti?',
         backgroundColor: 'rgba(255, 255, 255, 0.65)',
         poweredByTextColor: '#333333',
