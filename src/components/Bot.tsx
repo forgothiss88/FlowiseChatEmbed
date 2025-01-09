@@ -70,6 +70,8 @@ export const Bot = (props: BotConfig & BotProps) => {
    * Add each chat message into localStorage
    */
   const saveChatToLocalStorage = () => {
+    localStorage.setItem(`${storageKey}-chatRef`, chatRef() || '');
+
     if (messages().length < 2) {
       console.warn('Not saving chat to storage because there are no messages');
       return;
@@ -86,13 +88,16 @@ export const Bot = (props: BotConfig & BotProps) => {
 
   const restoreChatFromStorage = (): boolean => {
     const data = localStorage.getItem(storageKey) as string;
+    const localChats: storedChat = JSON.parse(data || '{}');
+
+    // backward compatibility for when chatRef was saved in localChats
+    setChatRef(localStorage.getItem(`${storageKey}-chatRef`) || localChats?.chatRef || uuidv4());
     if (data == null) {
       console.warn('No chat data found in storage for key ', storageKey);
       return false;
     }
-    const localChats: storedChat = JSON.parse(data);
     console.log('Restoring chats with chatRef', localChats.chatRef);
-    setChatRef(localChats.chatRef);
+
     const pageProductHandle: string | undefined = props.shopifyProduct?.handle;
     let chatProductHandle: string | undefined = undefined;
     if (localChats.chatHistory.length >= 2) {
@@ -326,7 +331,8 @@ export const Bot = (props: BotConfig & BotProps) => {
   const clearChat = () => {
     try {
       localStorage.removeItem(`twini-${props.shopRef}`);
-      setChatRef(uuidv4());
+
+      // keeping the same chatRef
       const prompts = [...(props.shopifyProduct?.handle ? props.starterPrompts.productPagePrompts : props.starterPrompts.prompts)];
       setMessages([
         {
@@ -346,9 +352,7 @@ export const Bot = (props: BotConfig & BotProps) => {
   };
 
   onMount(async () => {
-    if (!restoreChatFromStorage()) {
-      setChatRef(uuidv4());
-    }
+    restoreChatFromStorage();
 
     // Scroll to bottom on first render if there are messages
     messages().length > 1 ? scrollToBottom(100) : scrollToTop(100);
