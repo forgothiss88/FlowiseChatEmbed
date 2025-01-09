@@ -17,9 +17,10 @@ export const SingleProductShowcase = (props: { setProductHandle: Setter<string>;
   const botConfig = accessFullBotProps();
 
   const [product, setProduct] = createSignal<ShopifyProduct>();
+  const baseUrl = botConfig.shopRef == 'fler' ? `/it/products` : `/products`;
 
   onMount(async () => {
-    await fetch(`${props.product.metadata.item_url}.js`)
+    await fetch(`${baseUrl}/${props.product.metadata.slug}.js`)
       .then((res) => {
         if (!res.ok) {
           throw new Error('Network response was not ok');
@@ -71,7 +72,7 @@ export const SingleProductShowcase = (props: { setProductHandle: Setter<string>;
       </div>
       <div class="twi-flex twi-flex-col twi-self-center twi-h-full twi-ml-7">
         <a
-          href={props.product.metadata.item_url}
+          href={product()?.url || `${baseUrl}/${props.product.metadata.slug}`}
           class="twi-bg-brand-action-primary twi-text-brand-action-primary twi-animate-fade-in twi-w-full twi-rounded-md twi-my-2 twi-text-sm twi-font-normal twi-px-4 twi-py-2 twi-whitespace-nowrap twi-self-center twi-block twi-text-center"
           style={{
             // background: props.purchaseButtonBackgroundColor,
