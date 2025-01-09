@@ -1,4 +1,3 @@
-import * as Sentry from '@sentry/solid';
 import { createSignal, Show } from 'solid-js';
 import { Portal } from 'solid-js/web';
 import customerStyles from './assets/fler.css';
@@ -67,27 +66,15 @@ const closeBot = () => {
   // screen md
 };
 
-if (process.env.NODE_ENV == 'production') {
-  Sentry.init({
-    dsn: 'https://0e923b8b2f8f5f284443d82e730e5fd8@o4508080401088512.ingest.de.sentry.io/4508132557717584',
-    environment: process.env.NODE_ENV,
-    integrations: [Sentry.browserTracingIntegration(), Sentry.replayIntegration()],
-    // Tracing
-    tracesSampleRate: 1.0, //  Capture 100% of the transactions
-    // Set 'tracePropagationTargets' to control for which URLs distributed tracing should be enabled
-    tracePropagationTargets: ['localhost', /^https:\/\/twini-be-production\.up\.railway\.app/],
-    // Session Replay
-    replaysSessionSampleRate: 1.0, // This sets the sample rate at 10%. You may want to change it to 100% while in development and then sample at a lower rate in production.
-    replaysOnErrorSampleRate: 1.0, // If you're not already sampling the entire session, change the sample rate to 100% when sampling sessions where errors occur.
-  });
-}
-
 const ignoredUrls = [
   '/it/pages/contatti',
   '/it/pages/loyalty',
   '/it/pages/rewards',
   '/it/pages/blog',
   '/it/pages/store-locator-fler',
+  '/it/pages/signup',
+  '/it/pages/welcome',
+  '/it/pages/referral',
   '/it/account/',
   '/it/account/login',
   '/a/loop_subscriptions/get-subscription-link',
@@ -102,6 +89,8 @@ const isUrlIgnored = () => {
     !window.location.pathname.startsWith('/it') || window.location.pathname.startsWith('/it/lp') || ignoredUrls.includes(window.location.pathname)
   );
 };
+
+const chatWithProductWidget = document.getElementsByTagName('twini-chat-with-product')[0];
 
 <Show when={!isUrlIgnored()}>
   <Portal mount={twiniChatbot} useShadow={true}>
@@ -135,9 +124,6 @@ const isUrlIgnored = () => {
     </CustomerProvider>
   </Portal>
 </Show>;
-
-const chatWithProductWidget = document.getElementsByTagName('twini-chat-with-product')[0];
-
 <Show when={!isUrlIgnored() && chatWithProductWidget && product}>
   <Portal mount={chatWithProductWidget} useShadow={true}>
     <style>
