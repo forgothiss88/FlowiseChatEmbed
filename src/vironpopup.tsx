@@ -4,66 +4,42 @@ import { Portal } from 'solid-js/web';
 import indexStyles from './assets/index.css';
 import customerStyles from './assets/viron.css';
 import ChatWithProduct from './components/ChatWithProduct';
-import { ShopifyProduct } from './components/types/product';
 import { CustomerProvider } from './context';
 import { brandColors, vironProps } from './customers/Viron';
 import { BubbleBot } from './features/bubble';
-import { isMobile } from './utils/isMobileSignal';
+import { midaConfig } from './mida';
+import {
+  askQuestion,
+  chatWithProductWidget,
+  closeBot,
+  isBotOpened,
+  openBot,
+  product,
+  productHandle,
+  question,
+  setProductHandle,
+  setSummary,
+  summary,
+  twiniApiUrl,
+  twiniChatbot,
+} from './twini';
 
-const getChatbot = (): HTMLElement => document.getElementsByTagName('twini-chatbot')[0];
-const twiniChatbot = getChatbot();
+const props = vironProps();
+
 if (!twiniChatbot) {
   console.error('Element with id "twini-chatbot" not found.');
 }
-const props = vironProps();
 
-const avatarShopifyCdnUrl = twiniChatbot.getAttribute('data-avatar-shopify-cdn-url');
-if (avatarShopifyCdnUrl) {
-  console.log('Shopify CDN URL:', avatarShopifyCdnUrl);
-  props.theme.chatWindow.titleAvatarSrc = avatarShopifyCdnUrl;
-  props.theme.chatWindow.botMessage.avatarSrc = avatarShopifyCdnUrl;
-  props.theme.chatWindow.botMessage.faviconUrl = avatarShopifyCdnUrl;
-} else {
-  console.warn('Attribute "data-shopify-cdn-url" not found.');
-}
-const twiniApiUrl = twiniChatbot.getAttribute('data-twini-api-url');
 if (twiniApiUrl) {
   console.log('Twini API URL:', twiniApiUrl);
   props.chatbotUrl = twiniApiUrl;
 } else {
   console.warn('Attribute "data-twini-api-url" not found.');
 }
-let product: ShopifyProduct | undefined = undefined;
-if (twiniChatbot.hasAttribute('data-product')) {
-  product = JSON.parse(twiniChatbot.getAttribute('data-product') as string);
-} else {
-  console.warn('Attribute "data-product" not found. Not on product page?');
-}
-// const img = document.querySelector('.page-container .swiper-container');
-
-const [isBotOpened, setIsBotOpened] = createSignal(false);
-const [question, askQuestion] = createSignal<string>('');
 
 const [nextQuestions, setNextQuestions] = createSignal<string[]>([
   ...(product ? props.starterPrompts.productPagePrompts : props.starterPrompts.prompts),
 ]);
-const [summary, setSummary] = createSignal<string>('');
-const [productHandle, setProductHandle] = createSignal<string>(product?.handle ?? '');
-
-let bodyOverflow = 'unset';
-
-const openBot = () => {
-  bodyOverflow = document.body.style.overflow;
-  if (isMobile()) document.body.style.overflow = 'hidden';
-  setIsBotOpened(true);
-  // screen md
-};
-
-const closeBot = () => {
-  if (isMobile()) document.body.style.overflow = bodyOverflow;
-  setIsBotOpened(false);
-  // screen md
-};
 
 if (process.env.NODE_ENV == 'production') {
   Sentry.init({
@@ -83,41 +59,41 @@ if (process.env.NODE_ENV == 'production') {
   });
 }
 
-<Portal mount={twiniChatbot} useShadow={true}>
-  <style>
-    {indexStyles}
-    {customerStyles}
-  </style>
-  <CustomerProvider {...props}>
-    <BubbleBot
-      {...props}
-      disableDrawer={true}
-      customerName={props.shopRef}
-      isBotOpened={isBotOpened}
-      openBot={openBot}
-      closeBot={closeBot}
-      question={question}
-      askQuestion={askQuestion}
-      nextQuestions={nextQuestions}
-      setNextQuestions={setNextQuestions}
-      setSummary={setSummary}
-      productHandle={productHandle}
-      setProductHandle={setProductHandle}
-      shopifyProduct={product}
-      bubbleDrawerMessage={
-        <span>
-          Hi there!
-          <br />
-          Welcome to Viron 🌱 How can I assist you today?
-        </span>
-      }
-    />
-  </CustomerProvider>
-</Portal>;
+<Show when={midaConfig().isEnabled}>
+  <Portal mount={twiniChatbot} useShadow={true}>
+    <style>
+      {indexStyles}
+      {customerStyles}
+    </style>
+    <CustomerProvider {...props}>
+      <BubbleBot
+        {...props}
+        disableDrawer={true}
+        customerName={props.shopRef}
+        isBotOpened={isBotOpened}
+        openBot={openBot}
+        closeBot={closeBot}
+        question={question}
+        askQuestion={askQuestion}
+        nextQuestions={nextQuestions}
+        setNextQuestions={setNextQuestions}
+        setSummary={setSummary}
+        productHandle={productHandle}
+        setProductHandle={setProductHandle}
+        shopifyProduct={product}
+        bubbleDrawerMessage={
+          <span>
+            Hi there!
+            <br />
+            Welcome to Viron 🌱 How can I assist you today?
+          </span>
+        }
+      />
+    </CustomerProvider>
+  </Portal>
+</Show>;
 
-const chatWithProductWidget = document.getElementsByTagName('twini-chat-with-product')[0];
-
-<Show when={chatWithProductWidget && product}>
+<Show when={midaConfig().isEnabled && chatWithProductWidget && product}>
   <Portal mount={chatWithProductWidget} useShadow={true}>
     <style>
       {indexStyles}

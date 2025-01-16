@@ -81,4 +81,31 @@ export const vironProps = (): FullBotProps => {
   };
 };
 
+
+const ignoredUrls = [
+  '/it/pages/contatti',
+  '/it/pages/loyalty',
+  '/it/pages/rewards',
+  '/it/pages/blog',
+  '/it/pages/store-locator-fler',
+  '/it/pages/signup',
+  '/it/pages/welcome',
+  '/it/pages/referral',
+  '/it/pages/cookie-policy',
+  '/a/loop_subscriptions',
+  '/it/policies/privacy-policy',
+  '/it/policies/terms-of-service',
+  '/it/cart',
+];
+
+const ignoredRegex = [/\/it\/account.*/, /\/it\/policies.*/, /\/it\/pages\/lp.*/];
+
+export const isUrlIgnored = () => {
+  return (
+    !window.location.pathname.startsWith('/it') ||
+    ignoredRegex.some((regex) => regex.test(window.location.pathname)) ||
+    ignoredUrls.includes(window.location.pathname)
+  );
+};
+
 export default vironProps;

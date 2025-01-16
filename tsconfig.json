@@ -1,7 +1,7 @@
 {
     "extends": "./base.json",
     "include": [
-        "src/**/*"
+        "src"
     ],
     "exclude": [
         "dist",
