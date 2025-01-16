@@ -17,6 +17,7 @@
   --brand-ai-drop-shadow-1: 0px 4px 50px rgba(0, 123, 75, 0.4);
   --brand-ai-box-shadow-2: 0px 10px 20px 5px rgba(0, 191, 125, 0.2);
   --brand-ai-drop-shadow-2: 0px 10px 20px rgba(0, 191, 125, 0.2);
+  --brand-font-family: Canela Web, sans-serif;
 }
 
 .twini-base .twi-text-sm {

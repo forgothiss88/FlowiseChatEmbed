@@ -61,6 +61,9 @@ module.exports = {
         'brand-action-secondary': 'rgb(var(--brand-action-secondary-text-color))',
         'brand-action-hints': 'rgb(var(--brand-action-hints-text-color))',
       },
+      fontFamily: {
+        brand: 'var(--brand-font-family)',
+      },
       gradientColorStops: {
         brand: 'var(--brand-gradient)',
         'brand-reversed': 'var(--brand-gradient-reversed)',

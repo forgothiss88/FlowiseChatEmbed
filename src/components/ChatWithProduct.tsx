@@ -103,14 +103,13 @@ export const ChatWithProduct = (props: Props) => {
     <div class="twini-base">
       <p
         ref={summaryParagraph}
+        class="twi-font-brand twi-text-brand-primary"
         style={{
           color: props.textColor,
-          'font-family': 'inherit',
           'font-weight': 'inherit',
           'line-height': 'inherit',
         }}
       >
-        {/* <br /> */}
         {onMountSummary()}
       </p>
       <Show when={onMountSummary() || props.summary()}>
