@@ -29,7 +29,7 @@ if (avatarShopifyCdnUrl) {
 const twiniApiUrl = twiniChatbot.getAttribute('data-twini-api-url');
 if (twiniApiUrl) {
   console.log('Twini API URL:', twiniApiUrl);
-  props.apiUrl = twiniApiUrl;
+  props.chatbotUrl = twiniApiUrl;
 } else {
   console.warn('Attribute "data-twini-api-url" not found.');
 }
@@ -75,18 +75,20 @@ const ignoredUrls = [
   '/it/pages/signup',
   '/it/pages/welcome',
   '/it/pages/referral',
-  '/it/account/',
-  '/it/account/login',
-  '/a/loop_subscriptions/get-subscription-link',
-  '/it/policies/privacy-policy',
   '/it/pages/cookie-policy',
+  '/a/loop_subscriptions',
+  '/it/policies/privacy-policy',
   '/it/policies/terms-of-service',
   '/it/cart',
 ];
 
+const ignoredRegex = [/\/it\/account.*/, /\/it\/policies.*/, /\/it\/pages\/lp.*/];
+
 const isUrlIgnored = () => {
   return (
-    !window.location.pathname.startsWith('/it') || window.location.pathname.startsWith('/it/lp') || ignoredUrls.includes(window.location.pathname)
+    !window.location.pathname.startsWith('/it') ||
+    ignoredRegex.some((regex) => regex.test(window.location.pathname)) ||
+    ignoredUrls.includes(window.location.pathname)
   );
 };
 

@@ -1,10 +1,11 @@
 import { accessFullBotProps } from '@/context';
 import { Marked } from '@ts-stack/markdown';
-import { createSignal, onMount, Setter, Show } from 'solid-js';
+import { Accessor, createSignal, onMount, Setter, Show } from 'solid-js';
 import { HintStars } from '../icons/HintStars';
 import { MessageType } from '../types/botprops';
 import { SourceContent, SourceProduct } from '../types/documents';
 import { ShopifyProduct } from '../types/product';
+import { ProductClickedPayload } from '../types/productclick';
 
 export type PurchaseButtonAspect = {
   purchaseButtonText: string;
@@ -13,7 +14,9 @@ export type PurchaseButtonAspect = {
   askMoreText?: string;
 };
 
-export const SingleProductShowcase = (props: { setProductHandle: Setter<string>; product: SourceProduct } & PurchaseButtonAspect) => {
+export const SingleProductShowcase = (
+  props: { setProductHandle: Setter<string>; product: SourceProduct; chatRef: Accessor<string>; cartToken: Accessor<string> } & PurchaseButtonAspect,
+) => {
   const botConfig = accessFullBotProps();
 
   const [product, setProduct] = createSignal<ShopifyProduct>();
@@ -80,6 +83,21 @@ export const SingleProductShowcase = (props: { setProductHandle: Setter<string>;
             // 'border-color': props.purchaseButtonBackgroundColor,
             'animation-delay': '0.5s',
           }}
+          onClick={() => {
+            const payload: ProductClickedPayload = {
+              shopifyProductId: product()?.id.toString(),
+              chatRef: props.chatRef(),
+              cartToken: props.cartToken(),
+            };
+            fetch(`${botConfig.apiUrl}/shopify/${botConfig.shopRef}/product-clicked`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(payload),
+              mode: 'cors',
+            });
+          }}
         >
           {props.purchaseButtonText}
         </a>
@@ -114,6 +132,8 @@ type Props = {
   faviconUrl?: string;
   suggestedProduct?: SourceProduct;
   setProductHandle: Setter<string>;
+  chatRef: Accessor<string>;
+  cartToken: Accessor<string>;
 } & PurchaseButtonAspect;
 
 const defaultBackgroundColor = '#f7f8ff';
@@ -137,6 +157,8 @@ export const BotBubble = (props: Props) => {
         </div>
         <Show when={props.suggestedProduct != null}>
           <SingleProductShowcase
+            chatRef={props.chatRef}
+            cartToken={props.cartToken}
             purchaseButtonText={props.purchaseButtonText}
             purchaseButtonBackgroundColor={props.purchaseButtonBackgroundColor}
             purchaseButtonTextColor={props.purchaseButtonTextColor}

@@ -209,7 +209,7 @@ export const Bot = (props: BotConfig & BotProps) => {
     let sourceContents: SourceContent[] = [];
     let suggestedProductSlugs: string[] | null = null;
 
-    await fetchEventSource(`${props.apiUrl}/stream`, {
+    await fetchEventSource(`${props.chatbotUrl}/stream`, {
       signal: abortCtrl.signal,
       method: 'POST',
       body: JSON.stringify(body),
@@ -518,6 +518,8 @@ export const Bot = (props: BotConfig & BotProps) => {
                             </Show>
                             <div class="twi-w-full twi-mb-4" id={`twini-message-${i()}`}>
                               <AskMoreAboutProductBubble
+                                chatRef={chatRef}
+                                cartToken={cartToken}
                                 showViewProductButton={message.productHandle != props.shopifyProduct?.handle}
                                 productHandle={message.productHandle}
                                 product={message.productHandle == props.shopifyProduct?.handle ? props.shopifyProduct : undefined}
@@ -532,6 +534,8 @@ export const Bot = (props: BotConfig & BotProps) => {
                         return (
                           <div class="twi-w-11/12 twi-mr-auto twi-ml-2" id={`twini-message-${i()}`}>
                             <BotBubble
+                              chatRef={chatRef}
+                              cartToken={cartToken}
                               getMessage={() => message}
                               backgroundColor={props.botMessage?.backgroundColor || 'black'}
                               textColor={props.botMessage.textColor}
@@ -562,6 +566,8 @@ export const Bot = (props: BotConfig & BotProps) => {
                 <Show when={!isWaitingForResponse() && streamingBotResponse()?.message}>
                   <div class="twi-w-11/12 twi-mr-auto twi-ml-2" id="twini-message-last-streaming">
                     <BotBubble
+                      chatRef={chatRef}
+                      cartToken={cartToken}
                       getMessage={streamingBotResponse as Accessor<MessageType>}
                       backgroundColor={props.botMessage?.backgroundColor || 'black'}
                       textColor={props.botMessage.textColor}

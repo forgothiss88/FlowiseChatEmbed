@@ -29,7 +29,7 @@ if (avatarShopifyCdnUrl) {
 const twiniApiUrl = twiniChatbot.getAttribute('data-twini-api-url');
 if (twiniApiUrl) {
   console.log('Twini API URL:', twiniApiUrl);
-  props.apiUrl = twiniApiUrl;
+  props.chatbotUrl = twiniApiUrl;
 } else {
   console.warn('Attribute "data-twini-api-url" not found.');
 }
@@ -91,6 +91,7 @@ if (process.env.NODE_ENV == 'production') {
   <CustomerProvider {...props}>
     <BubbleBot
       {...props}
+      disableDrawer={true}
       customerName={props.shopRef}
       isBotOpened={isBotOpened}
       openBot={openBot}
@@ -122,18 +123,24 @@ const chatWithProductWidget = document.getElementsByTagName('twini-chat-with-pro
       {indexStyles}
       {customerStyles}
     </style>
-    <ChatWithProduct
-      isBotOpened={isBotOpened}
-      openBot={openBot}
-      textColor={brandColors.actionPrimary}
-      product={product as ShopifyProduct} // is defined when on product page
-      productHandle={productHandle}
-      setProductHandle={setProductHandle}
-      askQuestion={askQuestion}
-      nextQuestions={nextQuestions}
-      summary={summary}
-      setSummary={setSummary}
-      shopRef={props.shopRef}
-    />
+    <CustomerProvider {...props}>
+      <ChatWithProduct
+        isBotOpened={isBotOpened}
+        openBot={openBot}
+        textColor={brandColors.actionPrimary}
+        backgroundColor={brandColors.secondary}
+        hintsBackgroundColor={brandColors.hintsBackgroundColor}
+        hintsBorderColor={brandColors.gradient}
+        product={product} // is defined when on product page
+        productHandle={productHandle}
+        setProductHandle={setProductHandle}
+        askQuestion={askQuestion}
+        nextQuestions={nextQuestions}
+        summary={summary}
+        setSummary={setSummary}
+        shopRef={props.shopRef}
+        askMeMessage={props.theme.chatWindow.botMessage.askMoreText}
+      />
+    </CustomerProvider>
   </Portal>
 </Show>;

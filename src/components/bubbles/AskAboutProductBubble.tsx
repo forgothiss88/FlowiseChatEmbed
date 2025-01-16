@@ -3,6 +3,7 @@ import { Accessor, createEffect, createSignal, Index, JSX, on, onMount, Show, sp
 import { HintStars } from '../icons/HintStars';
 import { FullBotProps } from '../types/botprops';
 import { ShopifyProduct } from '../types/product';
+import { ProductClickedPayload } from '../types/productclick';
 
 const defaultTextColor = '#303235';
 
@@ -11,6 +12,7 @@ type Product = {
   images: string[];
   price: number;
   url: string;
+  shopifyProductId: string;
 };
 
 const ImagesPlaceholder = (props: { n: number } & JSX.HTMLAttributes<HTMLDivElement>) => {
@@ -21,6 +23,8 @@ const ImagesPlaceholder = (props: { n: number } & JSX.HTMLAttributes<HTMLDivElem
 export type ProductCarouselProps = {
   product: Accessor<Product | undefined>;
   showViewProductButton: boolean;
+  chatRef: Accessor<string>;
+  cartToken: Accessor<string>;
 };
 
 export const ProductCarousel = (props: ProductCarouselProps) => {
@@ -93,6 +97,21 @@ export const ProductCarousel = (props: ProductCarouselProps) => {
           <a
             href={props.product()?.url}
             class="twi-bg-brand-action-primary twi-text-brand-action-primary twi-rounded-md twi-mt-auto twi-text-sm twi-font-normal twi-px-4 twi-py-2 twi-whitespace-nowrap twi-self-center twi-block twi-text-center"
+            onClick={() => {
+              const payload: ProductClickedPayload = {
+                shopifyProductId: props.product()?.shopifyProductId.toString(),
+                chatRef: props.chatRef(),
+                cartToken: props.cartToken(),
+              };
+              fetch(`${botConfig.apiUrl}/shopify/${botConfig.shopRef}/product-clicked`, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload),
+                mode: 'cors',
+              });
+            }}
           >
             {botConfig.theme.chatWindow.botMessage.purchaseButtonText}
           </a>
@@ -109,6 +128,8 @@ export const AskMoreAboutProductBubble = (props: {
   textColor?: string;
   showViewProductButton: boolean;
   askMoreText?: string;
+  chatRef: Accessor<string>;
+  cartToken: Accessor<string>;
 }) => {
   const botConfig: FullBotProps = accessFullBotProps();
 
@@ -131,6 +152,7 @@ export const AskMoreAboutProductBubble = (props: {
           images: props.product.images,
           price: getPriceWithDiscount(props.product),
           url: props.product.url,
+          shopifyProductId: props.product.id.toString(),
         }
       : undefined,
   );
@@ -154,6 +176,7 @@ export const AskMoreAboutProductBubble = (props: {
           images: p.images,
           price: getPriceWithDiscount(p),
           url: p.url,
+          shopifyProductId: p.id.toString(),
         });
       })
       .catch((error) => {
@@ -175,7 +198,7 @@ export const AskMoreAboutProductBubble = (props: {
           <HintStars class="twi-mr-1 twi-fill-brand-action-primary" />
           {props.askMoreText || 'Asking more about...'}
         </span>
-        <ProductCarousel product={product} showViewProductButton={props.showViewProductButton} />
+        <ProductCarousel product={product} showViewProductButton={props.showViewProductButton} chatRef={props.chatRef} cartToken={props.cartToken} />
       </div>
     </div>
   );

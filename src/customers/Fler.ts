@@ -16,7 +16,8 @@ export const brandColors = {
 
 export const flerProps = (): FullBotProps => {
   return {
-    apiUrl: 'http://localhost:8000/twini-stream/fler-agents',
+    chatbotUrl: 'http://localhost:8000/twini-stream/fler-agents',
+    apiUrl: 'https://twini-api-production.up.railway.app',
     shopRef: 'fler',
     starterPrompts: {
       prompts: [

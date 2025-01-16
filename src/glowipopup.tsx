@@ -14,7 +14,7 @@ if (!cb) {
 const props = glowiProps();
 
 // dev
-props.apiUrl = 'http://localhost:8000/twini-stream/viron-agents';
+props.chatbotUrl = 'http://localhost:8000/twini-stream/viron-agents';
 
 const avatarShopifyCdnUrl = cb.getAttribute('data-avatar-shopify-cdn-url');
 if (avatarShopifyCdnUrl) {
@@ -28,7 +28,7 @@ if (avatarShopifyCdnUrl) {
 const twiniApiUrl = cb.getAttribute('data-twini-api-url');
 if (twiniApiUrl) {
   console.log('Twini API URL:', twiniApiUrl);
-  props.apiUrl = twiniApiUrl;
+  props.chatbotUrl = twiniApiUrl;
 } else {
   console.warn('Attribute "data-twini-api-url" not found.');
 }

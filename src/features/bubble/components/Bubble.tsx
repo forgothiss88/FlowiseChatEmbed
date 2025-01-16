@@ -8,6 +8,7 @@ import { BubbleWidget } from './BubbleWidget';
 export const BubbleBot = (
   props: FullBotProps &
     Omit<BotProps, 'welcomeMessage' | 'closeBot' | 'bot'> & {
+      disableDrawer?: boolean;
       customerName: string;
       isBotOpened: Accessor<boolean>;
       openBot: () => void;
@@ -43,7 +44,7 @@ export const BubbleBot = (
 
   return (
     <div class="twini-base">
-      <Show when={!props.shopifyProduct && isMobile()}>
+      <Show when={!props.disableDrawer && !props.shopifyProduct && isMobile()}>
         <div
           ref={bubbleDrawerRef}
           class="twi-fixed twi-bottom-0 twi-w-full twi-h-1/2 twi-z-max twi-transition-all twi-duration-500"
@@ -62,7 +63,7 @@ export const BubbleBot = (
           ></BubbleDrawer>
         </div>
       </Show>
-      <Show when={!drawerIsOpen() && !props.shopifyProduct && !props.isBotOpened()}>
+      <Show when={!props.disableDrawer && !drawerIsOpen() && !props.shopifyProduct && !props.isBotOpened()}>
         <span ref={bubbleWidgetRef} class=" twi-bubble-widget twi-left-1/2 twi-bottom-5 twi-fixed twi-z-50 -twi-translate-x-1/2">
           <BubbleWidget
             customerName={props.customerName}
@@ -99,7 +100,7 @@ export const BubbleBot = (
           userMessage={props.theme.chatWindow.userMessage}
           fontSize={props.theme.chatWindow.fontSize}
           shopRef={props.shopRef}
-          apiUrl={props.apiUrl}
+          chatbotUrl={props.chatbotUrl}
           starterPrompts={props.starterPrompts || {}}
           isOpened={props.isBotOpened}
           closeBot={props.closeBot}

@@ -34,6 +34,7 @@ export type StarterPromptsType = {
 
 export type BotConfig = {
   shopRef: string;
+  chatbotUrl: string;
   apiUrl: string;
   starterPrompts: StarterPromptsType;
   botMessage: BotMessageTheme;

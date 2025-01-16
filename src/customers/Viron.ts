@@ -16,7 +16,8 @@ export const brandColors = {
 
 export const vironProps = (): FullBotProps => {
   return {
-    apiUrl: 'http://localhost:8000/twini-stream/viron-agents',
+    chatbotUrl: 'http://localhost:8000/twini-stream/viron-agents',
+    apiUrl: 'https://twini-api-production.up.railway.app',
     shopRef: 'viron',
     starterPrompts: {
       prompts: [
@@ -51,7 +52,7 @@ export const vironProps = (): FullBotProps => {
         poweredByTextColor: '#333333',
         firstMessage: undefined,
         textInput: {
-          placeholder: 'Ask me anything...',
+          placeholder: 'Ask more about...',
           inputBackgroundColor: '#F9F9F9',
           inputBorderColor: '#e5e5e5',
           backgroundColor: 'white',
@@ -65,6 +66,7 @@ export const vironProps = (): FullBotProps => {
           showAvatar: false,
           enableMultipricing: false,
           purchaseButtonText: 'View product',
+          askMoreText: 'Ask more about...',
           purchaseButtonBackgroundColor: brandColors.actionPrimary,
           purchaseButtonTextColor: brandColors.primaryTextColor,
           faviconUrl: '/public/avatars/viron.png',

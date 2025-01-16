@@ -32,7 +32,7 @@ export const FullBot = (props: FullBotProps & { getElement: () => HTMLElement })
             userMessage={props.theme?.chatWindow?.userMessage}
             fontSize={props.theme?.chatWindow?.fontSize}
             shopRef={props.shopRef}
-            apiUrl={props.apiUrl}
+            chatbotUrl={props.chatbotUrl}
             isFullPage={true}
             starterPrompts={props.starterPrompts || {}}
             firstMessage={props.theme?.chatWindow?.firstMessage}
