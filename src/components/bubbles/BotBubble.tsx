@@ -1,6 +1,6 @@
 import { accessFullBotProps } from '@/context';
 import { Marked } from '@ts-stack/markdown';
-import { Accessor, createSignal, onMount, Setter, Show } from 'solid-js';
+import { Accessor, createSignal, Match, onMount, Setter, Show, Switch } from 'solid-js';
 import { HintStars } from '../icons/HintStars';
 import { MessageType } from '../types/botprops';
 import { SourceContent, SourceProduct } from '../types/documents';
@@ -69,7 +69,12 @@ export const SingleProductShowcase = (
         <div class="twi-px-4 twi-py-3">
           <span class="twi-text-base twi-font-normal twi-text-start twi-block">{product()?.title || props.product.metadata.name}</span>
           <span class="twi-text-xs twi-font-normal twi-text-start twi-mt-2 twi-block">
-            {product()?.price ? (product()?.price / 100).toFixed(2) : Number.parseFloat(props.product.metadata.price).toFixed(2)}€
+            <Switch>
+              <Match when={botConfig.shopRef == 'viron'}>{Number.parseFloat(props.product.metadata.price).toFixed()}€</Match>
+              <Match when={botConfig.shopRef == 'fler'}>
+                {product()?.price ? (product()?.price / 100).toFixed(2) : Number.parseFloat(props.product.metadata.price).toFixed(2)}€
+              </Match>
+            </Switch>
           </span>
         </div>
       </div>
