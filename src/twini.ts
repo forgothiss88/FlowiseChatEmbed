@@ -5,21 +5,27 @@ import { isMobile } from './utils/isMobileSignal';
 export const getChatbot = (): HTMLElement => document.getElementsByTagName('twini-chatbot')[0];
 
 export const twiniChatbot = getChatbot();
-export const twiniApiUrl = twiniChatbot.getAttribute('data-twini-api-url');
+if (!twiniChatbot) {
+  throw new Error('Element with id "twini-chatbot" not found.')
+}
+
+console.log(window.twiniConfig)
+
+export const customerName = window.twiniConfig.customerName;
+export const apiUrl = window.twiniConfig.apiUrl;
+if (!apiUrl) {
+  console.warn('Attribute "data-twini-api-url" not found. Using localhost.');
+}
 
 export const [isBotOpened, setIsBotOpened] = createSignal(false);
 export const [question, askQuestion] = createSignal<string>('');
 export const [summary, setSummary] = createSignal<string>('');
 
-if (!twiniChatbot) {
-  console.error('Element with id "twini-chatbot" not found.');
-}
-
 export let product: ShopifyProduct | undefined = undefined;
-if (twiniChatbot.hasAttribute('data-product')) {
-  product = JSON.parse(twiniChatbot.getAttribute('data-product') as string);
+if (window.twiniConfig.shopifyProduct) {
+  product = window.twiniConfig.shopifyProduct;
 } else {
-  console.warn('Attribute "data-product" not found. Not on product page?');
+  console.warn('Attribute "data-shopify-product" not found. Not on product page?');
 }
 export const [productHandle, setProductHandle] = createSignal<string>(product?.handle ?? '');
 

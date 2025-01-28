@@ -4,11 +4,11 @@ import customerStyles from './assets/fler.css';
 import indexStyles from './assets/index.css';
 import ChatWithProduct from './components/ChatWithProduct';
 import { CustomerProvider } from './context';
-import { brandColors, flerProps } from './customers/Fler';
-import { isUrlIgnored } from './customers/Viron';
+import { brandColors, flerProps, isUrlIgnored } from './customers/Fler';
 import { BubbleBot } from './features/bubble';
 import { midaConfig } from './mida';
 import {
+  apiUrl,
   askQuestion,
   chatWithProductWidget,
   closeBot,
@@ -20,21 +20,14 @@ import {
   setProductHandle,
   setSummary,
   summary,
-  twiniApiUrl,
   twiniChatbot,
 } from './twini';
 
 const props = flerProps();
 
-if (!twiniChatbot) {
-  console.error('Element with id "twini-chatbot" not found.');
-}
-
-if (twiniApiUrl) {
-  console.log('Twini API URL:', twiniApiUrl);
-  props.chatbotUrl = twiniApiUrl;
-} else {
-  console.warn('Attribute "data-twini-api-url" not found.');
+if (apiUrl) {
+  console.log('Twini API URL:', apiUrl);
+  props.chatbotUrl = apiUrl;
 }
 
 const [nextQuestions, setNextQuestions] = createSignal<string[]>([

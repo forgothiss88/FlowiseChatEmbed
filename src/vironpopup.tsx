@@ -9,6 +9,7 @@ import { brandColors, vironProps } from './customers/Viron';
 import { BubbleBot } from './features/bubble';
 import { midaConfig } from './mida';
 import {
+  apiUrl,
   askQuestion,
   chatWithProductWidget,
   closeBot,
@@ -20,21 +21,14 @@ import {
   setProductHandle,
   setSummary,
   summary,
-  twiniApiUrl,
   twiniChatbot,
 } from './twini';
 
-const props = vironProps();
+export const props = vironProps();
 
-if (!twiniChatbot) {
-  console.error('Element with id "twini-chatbot" not found.');
-}
-
-if (twiniApiUrl) {
-  console.log('Twini API URL:', twiniApiUrl);
-  props.chatbotUrl = twiniApiUrl;
-} else {
-  console.warn('Attribute "data-twini-api-url" not found.');
+if (apiUrl) {
+  console.log('Twini API URL:', apiUrl);
+  props.chatbotUrl = apiUrl;
 }
 
 const [nextQuestions, setNextQuestions] = createSignal<string[]>([

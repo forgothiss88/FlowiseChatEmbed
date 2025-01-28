@@ -1,13 +1,19 @@
 declare module '*.css';
 
-type TwiniGlobalConfig = {
+type TwiniMidaConfig = {
     isEnabled: boolean;
 }
 
+type TwiniConfig = {
+    shopifyProduct?: ShopifyProduct;
+    apiUrl?: string;
+    customerName?: string;
+}
+
 interface Window {
-    twiniGlobalConfig?: TwiniGlobalConfig;
+    twiniConfig: TwiniConfig
 }
 
 interface WindowEventMap {
-    'twini-mida-config-ready': CustomEvent<TwiniGlobalConfig>;
+    'twini-mida-config-ready': CustomEvent<TwiniMidaConfig>;
 }
