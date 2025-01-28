@@ -1,6 +1,6 @@
 import { MessageBE, RunInput } from '@/components/types/api';
 import { fetchEventSource } from '@microsoft/fetch-event-source';
-import { Accessor, For, Setter, Show, createEffect, createSignal, on, onMount } from 'solid-js';
+import { Accessor, For, Match, Setter, Show, Switch, createEffect, createSignal, on, onMount } from 'solid-js';
 import { v4 as uuidv4 } from 'uuid';
 import { StarsAvatar } from './avatars/StarsAvatar';
 import { Bottombar } from './Bottombar';
@@ -205,8 +205,8 @@ export const Bot = (props: BotConfig & BotProps) => {
 
     const abortCtrl = new AbortController();
 
-    let sourceProducts: SourceProduct[] = [];
-    let sourceContents: SourceContent[] = [];
+    const sourceProducts: SourceProduct[] = [];
+    const sourceContents: SourceContent[] = [];
     let suggestedProductSlugs: string[] | null = null;
 
     await fetchEventSource(`${props.chatbotUrl}/stream`, {
@@ -462,7 +462,7 @@ export const Bot = (props: BotConfig & BotProps) => {
   return (
     <div class="twi-relative twi-flex twi-flex-col twi-z-0 twi-h-full twi-w-full twi-overflow-hidden">
       <div class="twi-relative twi-flex twi-h-full twi-w-full twi-flex-1 twi-flex-col twi-overflow-hidden">
-        <div class="twi-flex twi-w-full twi-items-center twi-justify-center twi-overflow-hidden"></div>
+        <div class="twi-flex twi-w-full twi-items-center twi-justify-center twi-overflow-hidden" />
         <main class="twi-relative twi-h-full twi-w-full twi-flex-1 twi-overflow-hidden">
           <div
             id="twini-topbar"
@@ -471,14 +471,14 @@ export const Bot = (props: BotConfig & BotProps) => {
               'twi-pointer-events-none': error() === true,
             }}
           >
-            <div class="twi-absolute twi-inset-0 twi-blur-lg twi-bg-gradient-to-t twi-from-transparent twi-via-white/100 twi-to-white/100"></div>
+            <div class="twi-absolute twi-inset-0 twi-blur-lg twi-bg-gradient-to-t twi-from-transparent twi-via-white/100 twi-to-white/100" />
             <div class="twi-relative twi-flex twi-items-center twi-bg-gradient-to-t twi-from-transparent twi-via-white/80 twi-to-white/100">
               <button
                 class="twi-cursor-pointer twi-absolute twi-pl-7 twi-py-7 twi-rounded-full twi-bg-transparent twi-z-10"
                 onClick={props.closeBot}
                 style={{ 'line-height': 0 }}
               >
-                <XIcon fill="#333333" width={24} height={24}></XIcon>
+                <XIcon fill="#333333" width={24} height={24} />
               </button>
               <div class="twi-flex-1 twi-flex twi-py-7 twi-justify-center">
                 <StarsAvatar width={24} height={24} />
@@ -497,45 +497,41 @@ export const Bot = (props: BotConfig & BotProps) => {
               <div class="twi-px-4 twi-pb-3 twi-flex twi-flex-col twi-gap-4 twi-pt-20 twini-message-container">
                 <For each={messages()}>
                   {(message, i) => {
-                    if (message.type === 'userMessage') {
-                      return (
-                        <div class="twi-w-11/12 twi-ml-auto twi-mr-2" id={`twini-message-${i()}`}>
-                          <GuestBubble
-                            message={message.message}
-                            backgroundColor={props.userMessage?.backgroundColor}
-                            textColor={props.userMessage?.textColor}
-                            showAvatar={false}
-                            avatarSrc={undefined}
-                          />
-                        </div>
-                      );
-                    } else if (message.type === 'apiMessage') {
-                      if (message.productHandle) {
-                        return (
-                          <>
-                            <Show when={i() > 0}>
-                              <div class="twi-block twi-w-full twi-h-20"></div>
-                            </Show>
-                            <div class="twi-w-full twi-mb-4" id={`twini-message-${i()}`}>
-                              <AskMoreAboutProductBubble
-                                chatRef={chatRef}
-                                cartToken={cartToken}
-                                showViewProductButton={message.productHandle != props.shopifyProduct?.handle}
-                                productHandle={message.productHandle}
-                                product={message.productHandle == props.shopifyProduct?.handle ? props.shopifyProduct : undefined}
-                                backgroundColor={props.botMessage?.backgroundColor || 'black'}
-                                textColor={props.botMessage?.textColor}
-                                askMoreText={props.botMessage?.askMoreText}
-                              />
-                            </div>
-                          </>
-                        );
-                      } else {
-                        return (
+                    return (
+                      <Switch>
+                        <Match when={message.type === 'userMessage'}>
+                          <div class="twi-w-11/12 twi-ml-auto twi-mr-2" id={`twini-message-${i()}`}>
+                            <GuestBubble
+                              message={message.message}
+                              backgroundColor={props.userMessage?.backgroundColor}
+                              textColor={props.userMessage?.textColor}
+                              showAvatar={false}
+                              avatarSrc={undefined}
+                            />
+                          </div>
+                        </Match>
+                        <Match when={message.type === 'apiMessage' && message.productHandle}>
+                          <Show when={i() > 0}>
+                            <div class="twi-block twi-w-full twi-h-20" />
+                          </Show>
+                          <div class="twi-w-full twi-mb-4" id={`twini-message-${i()}`}>
+                            <AskMoreAboutProductBubble
+                              chatRef={chatRef as Accessor<string>}
+                              cartToken={cartToken as Accessor<string>}
+                              showViewProductButton={message.productHandle != props.shopifyProduct?.handle}
+                              productHandle={message.productHandle}
+                              product={message.productHandle == props.shopifyProduct?.handle ? props.shopifyProduct : undefined}
+                              backgroundColor={props.botMessage?.backgroundColor || 'black'}
+                              textColor={props.botMessage?.textColor}
+                              askMoreText={props.botMessage?.askMoreText}
+                            />
+                          </div>
+                        </Match>
+                        <Match when={message.type === 'apiMessage'}>
                           <div class="twi-w-11/12 twi-mr-auto twi-ml-2" id={`twini-message-${i()}`}>
                             <BotBubble
-                              chatRef={chatRef}
-                              cartToken={cartToken}
+                              chatRef={chatRef as Accessor<string>}
+                              cartToken={cartToken as Accessor<string>}
                               getMessage={() => message}
                               backgroundColor={props.botMessage?.backgroundColor || 'black'}
                               textColor={props.botMessage.textColor}
@@ -555,9 +551,9 @@ export const Bot = (props: BotConfig & BotProps) => {
                               }
                             />
                           </div>
-                        );
-                      }
-                    }
+                        </Match>
+                      </Switch>
+                    );
                   }}
                 </For>
                 <Show when={isWaitingForResponse()}>
@@ -566,8 +562,8 @@ export const Bot = (props: BotConfig & BotProps) => {
                 <Show when={!isWaitingForResponse() && streamingBotResponse()?.message}>
                   <div class="twi-w-11/12 twi-mr-auto twi-ml-2" id="twini-message-last-streaming">
                     <BotBubble
-                      chatRef={chatRef}
-                      cartToken={cartToken}
+                      chatRef={chatRef as Accessor<string>}
+                      cartToken={cartToken as Accessor<string>}
                       getMessage={streamingBotResponse as Accessor<MessageType>}
                       backgroundColor={props.botMessage?.backgroundColor || 'black'}
                       textColor={props.botMessage.textColor}
@@ -604,7 +600,7 @@ export const Bot = (props: BotConfig & BotProps) => {
                   </Show>
                 </div>
               </div>
-              <div class="twi-block twi-w-full twi-flex-1" style={{ 'min-height': `${chatSpacerHeight() + bottomSpacerHeight()}px` }}></div>
+              <div class="twi-block twi-w-full twi-flex-1" style={{ 'min-height': `${chatSpacerHeight() + bottomSpacerHeight()}px` }} />
             </div>
           </div>
           <Show when={error()}>
